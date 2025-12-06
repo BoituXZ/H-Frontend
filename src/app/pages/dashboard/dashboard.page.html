@@ -1,0 +1,58 @@
+<div class="min-h-screen bg-cream-100">
+  <!-- Header -->
+  <header class="bg-white shadow-sm">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center">
+        <img src="/hivefundLogo.png" alt="HiveFund" class="h-10 w-auto" />
+      </div>
+      <div class="flex items-center gap-4">
+        @if (user(); as currentUser) {
+          <span class="text-text-secondary">
+            Welcome, {{ currentUser.name }}
+          </span>
+        }
+        <button
+          (click)="logout()"
+          class="btn-outline py-2 px-4"
+        >
+          Logout
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8">
+    <div class="glass-card rounded-card p-8 text-center max-w-2xl mx-auto">
+      <h1 class="text-3xl font-display font-bold text-text-primary mb-4">
+        Dashboard
+      </h1>
+      <p class="text-text-secondary mb-6">
+        Welcome to your HiveFund dashboard! This is a placeholder page.
+      </p>
+
+      @if (user(); as currentUser) {
+        <div class="bg-cream-50 rounded-hive p-6 mb-6">
+          <h2 class="text-xl font-semibold text-text-primary mb-4">
+            Your Information
+          </h2>
+          <div class="text-left space-y-2">
+            <p><strong>Name:</strong> {{ currentUser.name }}</p>
+            <p><strong>Phone:</strong> {{ currentUser.phoneNumber }}</p>
+            <p><strong>EcoCash:</strong> {{ currentUser.ecocashNumber }}</p>
+            <p>
+              <strong>Status:</strong>
+              <span [class]="currentUser.verified ? 'badge-success' : 'badge-warning'">
+                {{ currentUser.verified ? 'Verified' : 'Pending Verification' }}
+              </span>
+            </p>
+          </div>
+        </div>
+      }
+
+      <div class="text-text-secondary">
+        The full dashboard with circles, credit score, and other features will be implemented later.
+      </div>
+    </div>
+  </main>
+</div>

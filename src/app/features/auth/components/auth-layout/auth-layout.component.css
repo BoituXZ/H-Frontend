@@ -1,0 +1,24 @@
+.auth-background {
+  background-image: url("/authBackground.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+}
+
+/* Add overlay for better readability */
+.auth-background::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+.auth-background > * {
+  position: relative;
+  z-index: 2;
+}
