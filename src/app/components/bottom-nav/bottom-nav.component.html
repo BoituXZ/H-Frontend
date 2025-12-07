@@ -1,0 +1,33 @@
+<nav
+  class="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 lg:hidden w-[90%] max-w-md"
+>
+  <div
+    class="bottom-nav-container text-cream-50 p-2 rounded-2xl flex items-center justify-around gap-1"
+  >
+    @for (item of navItems; track item.route) {
+      <a
+        [routerLink]="item.route"
+        routerLinkActive="nav-btn-active"
+        #rla="routerLinkActive"
+        [class.nav-btn-inactive]="!rla.isActive"
+        class="nav-btn flex-1 flex justify-center p-3 rounded-xl relative group"
+        [attr.aria-label]="item.label"
+      >
+        <lucide-icon
+          [name]="item.lucideIcon"
+          [size]="24"
+          [strokeWidth]="2.5"
+          class="nav-icon"
+          [class.text-hive-900]="rla.isActive"
+          [class.text-cream-100]="!rla.isActive"
+        >
+        </lucide-icon>
+        <span
+          class="nav-tooltip absolute -top-12 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-lg text-xs font-bold text-hive-900 opacity-0 group-hover:opacity-100 transition-opacity"
+        >
+          {{ item.label }}
+        </span>
+      </a>
+    }
+  </div>
+</nav>

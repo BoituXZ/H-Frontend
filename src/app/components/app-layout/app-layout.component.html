@@ -1,0 +1,17 @@
+<div class="flex h-screen bg-cream-100 font-sans overflow-hidden">
+  <app-sidebar
+    [isCollapsed]="sidebarCollapsed"
+    (toggleCollapse)="onSidebarToggle($event)"
+  >
+  </app-sidebar>
+
+  <main
+    class="flex-1 flex flex-col overflow-y-auto transition-all duration-300"
+    [class.lg:ml-20]="sidebarCollapsed"
+    [class.lg:ml-64]="!sidebarCollapsed"
+  >
+    <router-outlet></router-outlet>
+  </main>
+
+  <app-bottom-nav></app-bottom-nav>
+</div>

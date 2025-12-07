@@ -1,0 +1,39 @@
+<div class="bg-white p-6 rounded-2xl shadow-md flex flex-col">
+  <div class="flex justify-between items-center mb-4">
+    <h3 class="text-xl font-bold font-display text-hive-900">Your Circles</h3>
+    <div class="flex gap-2">
+      <button (click)="prev()" class="bg-cream-200 text-hive-800 p-2 rounded-full hover:bg-cream-300">
+        <lucide-icon name="chevron-left" [size]="20"></lucide-icon>
+      </button>
+      <button (click)="next()" class="bg-cream-200 text-hive-800 p-2 rounded-full hover:bg-cream-300">
+        <lucide-icon name="chevron-right" [size]="20"></lucide-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="relative w-full h-48 overflow-hidden">
+    @for (circle of circles; track circle.name; let i = $index) {
+      <div 
+        class="absolute top-0 left-0 w-full h-full transition-all duration-500 ease-in-out p-1"
+        [style.transform]="'translateX(' + (i - currentIndex) * 100 + '%) scale(' + (i === currentIndex ? 1 : 0.9) + ')'"
+        [style.opacity]="i === currentIndex ? 1 : 0"
+        [style.pointer-events]="i === currentIndex ? 'auto' : 'none'"
+      >
+        <div class="bg-cream-100 p-4 rounded-xl h-full flex flex-col justify-between border-2 border-cream-200">
+          <div>
+            <div class="flex justify-between items-start mb-2">
+              <h4 class="text-lg font-bold text-hive-900">{{ circle.name }}</h4>
+              <span class="font-semibold text-sm" [class.text-green-600]="circle.progress >= 80" [class.text-yellow-600]="circle.progress >= 50 && circle.progress < 80" [class.text-red-600]="circle.progress < 50">{{ circle.progress }}%</span>
+            </div>
+            <p class="text-3xl font-bold font-display text-hive-800">{{ circle.balance | currency:'USD':'symbol' }}</p>
+            <p class="text-sm text-gray-500">of {{ circle.goal | currency:'USD':'symbol' }} goal</p>
+          </div>
+          
+          <div class="w-full bg-cream-300 rounded-full h-2.5 mt-2">
+            <div class="h-2.5 rounded-full" [class]="circle.color" [style.width]="circle.progress + '%'"></div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

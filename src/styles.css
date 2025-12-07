@@ -408,3 +408,63 @@
   outline: 2px solid #ffb800;
   outline-offset: 2px;
 }
+
+/* ===================== */
+/* NAVIGATION UTILITIES  */
+/* ===================== */
+
+/* App content wrapper with consistent padding */
+.app-content-wrapper {
+  @apply min-h-screen bg-cream-100 pb-24 lg:pb-8;
+}
+
+.app-content-inner {
+  @apply container mx-auto px-4 lg:px-8 pt-6;
+}
+
+/* Navigation glass effect mixin */
+.nav-glass-effect {
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  background: linear-gradient(
+    135deg,
+    rgba(15, 41, 55, 0.95) 0%,
+    rgba(22, 61, 80, 0.92) 100%
+  );
+}
+
+/* Active navigation glow */
+.nav-active-glow {
+  background: linear-gradient(135deg, #ffb800 0%, #e6a600 100%);
+  box-shadow:
+    0 0 20px rgba(255, 184, 0, 0.6),
+    0 4px 16px rgba(255, 184, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Inactive navigation hover state */
+.nav-inactive-hover {
+  background: linear-gradient(
+    135deg,
+    rgba(22, 61, 80, 0.6) 0%,
+    rgba(29, 81, 105, 0.5) 100%
+  );
+}
+
+/* Navigation transition utilities */
+.nav-transition {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+.nav-icon-transition {
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Page header standardization */
+.page-header {
+  @apply font-display text-4xl lg:text-5xl font-bold text-hive-900 mb-4;
+}
+
+.page-subheader {
+  @apply text-hive-700 font-medium text-lg;
+}

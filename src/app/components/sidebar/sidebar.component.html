@@ -1,0 +1,80 @@
+<aside
+  [class.w-20]="isCollapsed"
+  [class.w-64]="!isCollapsed"
+  [class.sidebar-collapsed]="isCollapsed"
+  [class.sidebar-expanded]="!isCollapsed"
+  class="hidden lg:flex flex-col fixed left-0 top-0 h-full sidebar-glass text-cream-50 transition-all duration-300 z-50 sidebar-border"
+>
+  <!-- Logo Section -->
+  <div
+    class="flex items-center gap-4 px-4 h-20 border-b-2 border-hive-700/50"
+    [class.justify-center]="isCollapsed"
+  >
+    <div
+      class="w-10 h-10 logo-badge rounded-full shrink-0 flex items-center justify-center cursor-pointer"
+    >
+      <lucide-icon name="gem" [size]="24" class="text-hive-900"></lucide-icon>
+    </div>
+    @if (!isCollapsed) {
+      <span
+        class="font-display font-bold text-xl tracking-wider transition-all duration-300 bg-linear-to-r from-honey-400 to-honey-500 bg-clip-text text-transparent"
+      >
+        HIVEFUND
+      </span>
+    }
+  </div>
+
+  <!-- Navigation Items -->
+  <nav class="flex-1 p-3 flex flex-col gap-2 overflow-y-auto sidebar-nav">
+    @for (item of navItems; track item.route) {
+      <a
+        [routerLink]="item.route"
+        routerLinkActive="nav-item-active"
+        #rla="routerLinkActive"
+        [class.nav-item-hover]="!rla.isActive"
+        class="nav-item flex items-center gap-4 p-3 rounded-hive transition-all duration-200"
+        [class.justify-center]="isCollapsed"
+        [attr.aria-label]="item.label"
+      >
+        <lucide-icon
+          [name]="item.lucideIcon"
+          [size]="24"
+          class="shrink-0 nav-icon"
+          [class.text-hive-900]="rla.isActive"
+          [class.text-cream-100]="!rla.isActive"
+        >
+        </lucide-icon>
+        @if (!isCollapsed) {
+          <span
+            class="nav-label transition-all duration-300"
+            [class.text-hive-900]="rla.isActive"
+            [class.text-cream-50]="!rla.isActive"
+          >
+            {{ item.label }}
+          </span>
+        }
+      </a>
+    }
+  </nav>
+
+  <!-- Toggle Button -->
+  <div class="p-3 border-t-2 border-hive-700/50">
+    <button
+      (click)="toggleSidebar()"
+      class="toggle-btn w-full flex items-center gap-4 p-3 rounded-hive hover:bg-hive-800/50 transition-all duration-200"
+      [class.justify-center]="isCollapsed"
+      [attr.aria-label]="isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'"
+      [attr.aria-expanded]="!isCollapsed"
+    >
+      <lucide-icon
+        [name]="isCollapsed ? 'chevrons-right' : 'chevrons-left'"
+        [size]="24"
+        class="transition-all duration-300 text-honey-400"
+      >
+      </lucide-icon>
+      @if (!isCollapsed) {
+        <span class="text-sm font-semibold text-cream-100">Collapse</span>
+      }
+    </button>
+  </div>
+</aside>

@@ -1,0 +1,23 @@
+<div class="bg-white p-6 rounded-2xl shadow-md">
+  <div class="flex justify-between items-center mb-4">
+    <h3 class="text-xl font-bold font-display text-hive-900">Activity Feed</h3>
+    <a href="#" class="text-honey-600 font-semibold hover:underline">View All</a>
+  </div>
+
+  <div class="space-y-4">
+    @for (activity of activities; track activity.description) {
+      <div class="flex items-center gap-4">
+        <div class="p-3 rounded-full" [ngClass]="{'bg-green-100 text-green-700': activity.type === 'deposit', 'bg-red-100 text-red-700': activity.type === 'transfer', 'bg-blue-100 text-blue-700': activity.type === 'payment'}">
+          <lucide-icon [name]="activity.icon" [size]="24"></lucide-icon>
+        </div>
+        <div class="flex-1">
+          <p class="font-semibold text-gray-800">{{ activity.description }}</p>
+          <p class="text-sm text-gray-500">{{ activity.date }}</p>
+        </div>
+        <p class="font-bold text-lg" [ngClass]="{'text-green-600': activity.amount > 0, 'text-gray-900': activity.amount < 0}">
+          {{ activity.amount | currency:'USD':'symbol' }}
+        </p>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,15 @@
+<div class="fixed bottom-24 right-6 z-40 lg:hidden">
+  <div class="relative">
+    <div class="flex flex-col items-center gap-3 transition-all duration-300" [class.opacity-100]="menuOpen" [class.opacity-0]="!menuOpen" [class.translate-y-0]="menuOpen" [class.translate-y-4]="!menuOpen">
+      <button class="w-14 h-14 rounded-full bg-white text-hive-800 shadow-lg flex items-center justify-center hover:bg-cream-200">
+        <lucide-icon name="scan-line" [size]="28"></lucide-icon>
+      </button>
+      <button class="w-14 h-14 rounded-full bg-white text-hive-800 shadow-lg flex items-center justify-center hover:bg-cream-200">
+        <lucide-icon name="send" [size]="28"></lucide-icon>
+      </button>
+    </div>
+    <button (click)="toggleMenu()" class="w-16 h-16 rounded-full bg-honey-500 text-hive-900 shadow-xl flex items-center justify-center mt-3 transform transition-transform duration-300" [class.rotate-45]="menuOpen">
+      <lucide-icon name="plus" [size]="32"></lucide-icon>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,29 @@
+<div class="bg-hive-800 p-6 rounded-2xl shadow-lg text-white">
+  <div>
+    <div class="flex justify-between items-center mb-2">
+      <h3 class="text-lg font-semibold text-cream-200">Total Balance</h3>
+      <button (click)="toggleBalanceVisibility()" class="text-cream-300 hover:text-white">
+        <lucide-icon [name]="showBalance ? 'eye-off' : 'eye'" [size]="20"></lucide-icon>
+      </button>
+    </div>
+    
+    @if (showBalance) {
+      <p class="text-4xl font-bold font-display text-honey-400">
+        {{ totalBalance | currency:currency:'symbol':'1.2-2' }}
+      </p>
+    } @else {
+      <p class="text-4xl font-bold font-display text-honey-400">
+        ••••••••
+      </p>
+    }
+  </div>
+
+  <div class="flex gap-4 mt-6">
+    <button class="flex-1 bg-honey-500 text-hive-900 font-bold py-3 px-4 rounded-xl hover:bg-honey-400 transition-colors shadow-md">
+      Add Funds
+    </button>
+    <button class="flex-1 bg-hive-700 text-white font-bold py-3 px-4 rounded-xl hover:bg-hive-600 transition-colors">
+      Withdraw
+    </button>
+  </div>
+</div>
