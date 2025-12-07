@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { AuthGuard } from './core/guards/auth.guard';
+import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   // Landing page
@@ -14,19 +14,19 @@ export const routes: Routes = [
   {
     path: 'register',
     loadComponent: () =>
-      import('./features/auth/pages/register/register.page').then((m) => m.RegisterPage),
+      import('./pages/register/register.page').then((m) => m.RegisterPage),
     title: 'Register - HiveFund'
   },
   {
     path: 'login',
     loadComponent: () =>
-      import('./features/auth/pages/login/login.page').then((m) => m.LoginPage),
+      import('./pages/login/login.page').then((m) => m.LoginPage),
     title: 'Login - HiveFund'
   },
   {
     path: 'verify-otp',
     loadComponent: () =>
-      import('./features/auth/pages/verify-otp/verify-otp.page').then((m) => m.VerifyOtpPage),
+      import('./pages/verify-otp/verify-otp.page').then((m) => m.VerifyOtpPage),
     title: 'Verify OTP - HiveFund'
   },
 

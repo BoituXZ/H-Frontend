@@ -2,13 +2,13 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../../../core/services/auth.service';
-import { StorageService } from '../../../../core/services/storage.service';
+import { AuthService } from '../../services/auth.service';
+import { StorageService } from '../../services/storage.service';
 import { AuthLayoutComponent } from '../../components/auth-layout/auth-layout.component';
 import { FormErrorComponent } from '../../components/form-error/form-error.component';
-import { LoadingSpinnerComponent } from '../../../../shared/components/loading-spinner/loading-spinner.component';
+import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
 import { phoneNumberValidator, getErrorMessage } from '../../validators/custom-validators';
-import { shakeAnimation } from '../../../../shared/utils/animations';
+import { shakeAnimation } from '../../shared/utils/animations';
 
 @Component({
   selector: 'app-login',

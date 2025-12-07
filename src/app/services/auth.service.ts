@@ -4,7 +4,7 @@ import { Observable, tap, BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { StorageService } from './storage.service';
 import { TokenService } from './token.service';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../environments/environment';
 import {
   RegisterRequest,
   RegisterResponse,

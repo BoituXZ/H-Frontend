@@ -1,4 +1,9 @@
-import { AbstractControl, ValidationErrors, ValidatorFn, FormGroup } from '@angular/forms';
+import {
+  AbstractControl,
+  ValidationErrors,
+  ValidatorFn,
+  FormGroup,
+} from '@angular/forms';
 
 /**
  * Validator for Zimbabwe phone numbers
@@ -15,14 +20,14 @@ export function phoneNumberValidator(): ValidatorFn {
     // Pattern for Zimbabwe phone numbers
     // Either starts with 263 followed by 9 digits
     // Or starts with 0 followed by 9 digits
-    const pattern = /^(263[0-9]{9}|0[0-9]{9})$/;
+    const pattern = /^(\+263[0-9]{9}|0[0-9]{9})$/;
 
     if (!pattern.test(phoneNumber)) {
       return {
         invalidPhone: {
           value: control.value,
-          message: 'Phone number must be in format 0XXXXXXXXX or 263XXXXXXXXX'
-        }
+          message: 'Phone number must be in format 0XXXXXXXXX or 263XXXXXXXXX',
+        },
       };
     }
 
@@ -67,8 +72,8 @@ export function passwordStrengthValidator(): ValidatorFn {
       return {
         weakPassword: {
           requirements,
-          message: `Password must contain: ${requirements.join(', ')}`
-        }
+          message: `Password must contain: ${requirements.join(', ')}`,
+        },
       };
     }
 
@@ -80,7 +85,10 @@ export function passwordStrengthValidator(): ValidatorFn {
  * Validator to check if two password fields match
  * Use this as a form group validator
  */
-export function passwordsMatchValidator(passwordField: string, confirmPasswordField: string): ValidatorFn {
+export function passwordsMatchValidator(
+  passwordField: string,
+  confirmPasswordField: string,
+): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const formGroup = control as FormGroup;
 
@@ -105,7 +113,9 @@ export function passwordsMatchValidator(passwordField: string, confirmPasswordFi
       const errors = confirmPassword.errors;
       if (errors) {
         delete errors['passwordMismatch'];
-        confirmPassword.setErrors(Object.keys(errors).length > 0 ? errors : null);
+        confirmPassword.setErrors(
+          Object.keys(errors).length > 0 ? errors : null,
+        );
       }
     }
 
@@ -132,8 +142,8 @@ export function otpCodeValidator(): ValidatorFn {
       return {
         invalidOtp: {
           value: control.value,
-          message: 'OTP code must be exactly 6 digits'
-        }
+          message: 'OTP code must be exactly 6 digits',
+        },
       };
     }
 

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { slideDownAnimation } from '../../../../shared/utils/animations';
+import { slideDownAnimation } from '../../shared/utils/animations';
 
 @Component({
   selector: 'app-form-error',
