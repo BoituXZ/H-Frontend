@@ -67,6 +67,23 @@ export class AuthService {
   }
 
   /**
+   * Extract user information from JWT token
+   */
+  private extractUserFromToken(token: string): User {
+    const decoded = this.tokenService.decodeToken(token);
+
+    return {
+      id: decoded.sub || '',
+      phoneNumber: decoded.phone || '',
+      name: decoded.name || '',
+      ecocashNumber: decoded.ecocashNumber || '',
+      verified: decoded.verified || true,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+  }
+
+  /**
    * Verify OTP after registration
    */
   verifyOtp(userId: string, code: string): Observable<AuthResponse> {
@@ -74,17 +91,17 @@ export class AuthService {
 
     return this.http.post<AuthResponse>(`${this.apiUrl}/auth/verify-otp`, payload).pipe(
       tap(response => {
-        if (response.success) {
-          const rememberMe = this.storageService.getRememberMe();
-          this.setAuthData(
-            {
-              accessToken: response.accessToken,
-              refreshToken: response.refreshToken
-            },
-            response.user,
-            rememberMe
-          );
-        }
+        const rememberMe = this.storageService.getRememberMe();
+        const user = this.extractUserFromToken(response.accessToken);
+
+        this.setAuthData(
+          {
+            accessToken: response.accessToken,
+            refreshToken: response.refreshToken
+          },
+          user,
+          rememberMe
+        );
       })
     );
   }
@@ -106,16 +123,16 @@ export class AuthService {
       password
     }).pipe(
       tap(response => {
-        if (response.success) {
-          this.setAuthData(
-            {
-              accessToken: response.accessToken,
-              refreshToken: response.refreshToken
-            },
-            response.user,
-            rememberMe
-          );
-        }
+        const user = this.extractUserFromToken(response.accessToken);
+
+        this.setAuthData(
+          {
+            accessToken: response.accessToken,
+            refreshToken: response.refreshToken
+          },
+          user,
+          rememberMe
+        );
       })
     );
   }

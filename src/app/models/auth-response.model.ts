@@ -19,15 +19,13 @@ export interface LoginRequest {
 }
 
 export interface AuthResponse {
-  success: boolean;
   accessToken: string;
-  refreshToken: string;
-  user: User;
+  refreshToken?: string;
 }
 
 export interface Tokens {
   accessToken: string;
-  refreshToken: string;
+  refreshToken?: string;
   expiresAt?: number;
 }
 

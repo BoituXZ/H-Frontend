@@ -84,15 +84,13 @@ export class LoginPage {
     this.authService.login(phoneNumber, password, rememberMe).subscribe({
       next: (response) => {
         this.isLoading.set(false);
-        if (response.success) {
-          // Check for redirect URL
-          const redirectUrl = this.storageService.getRedirectUrl();
-          if (redirectUrl) {
-            this.storageService.removeRedirectUrl();
-            this.router.navigateByUrl(redirectUrl);
-          } else {
-            this.router.navigate(['/app/dashboard']);
-          }
+        // Check for redirect URL
+        const redirectUrl = this.storageService.getRedirectUrl();
+        if (redirectUrl) {
+          this.storageService.removeRedirectUrl();
+          this.router.navigateByUrl(redirectUrl);
+        } else {
+          this.router.navigate(['/app/dashboard']);
         }
       },
       error: (error) => {

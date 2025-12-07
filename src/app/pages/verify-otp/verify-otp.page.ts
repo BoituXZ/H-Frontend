@@ -92,12 +92,10 @@ export class VerifyOtpPage implements OnInit {
     this.authService.verifyOtp(this.userId, code).subscribe({
       next: (response) => {
         this.isLoading.set(false);
-        if (response.success) {
-          this.successMessage.set('Verification successful! Redirecting...');
-          setTimeout(() => {
-            this.router.navigate(['/app/dashboard']);
-          }, 1500);
-        }
+        this.successMessage.set('Verification successful! Redirecting...');
+        setTimeout(() => {
+          this.router.navigate(['/app/dashboard']);
+        }, 1500);
       },
       error: (error) => {
         this.isLoading.set(false);
@@ -115,11 +113,9 @@ export class VerifyOtpPage implements OnInit {
 
     this.authService.resendOtp(this.userId).subscribe({
       next: (response) => {
-        if (response.success) {
-          this.successMessage.set('New OTP code sent!');
-          setTimeout(() => this.successMessage.set(''), 3000);
-          this.startCooldown();
-        }
+        this.successMessage.set('New OTP code sent!');
+        setTimeout(() => this.successMessage.set(''), 3000);
+        this.startCooldown();
       },
       error: (error) => {
         this.errorMessage.set(error.message || 'Failed to resend OTP. Please try again.');
