@@ -2,7 +2,8 @@
   position: sticky;
   top: 0;
   z-index: 40;
-  padding: 1.5rem 2rem;
+  padding: 1rem 0rem;
+  max-height: 80px;
   background: var(--bg-secondary);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -17,8 +18,7 @@
 }
 
 .page-header-container {
-  max-width: 1400px;
-  margin: 0 auto;
+  margin: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -47,7 +47,11 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, var(--accent-honey) 0%, var(--accent-honey-dark) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--accent-honey) 0%,
+    var(--accent-honey-dark) 100%
+  );
   color: white;
   font-weight: 600;
   font-size: 0.875rem;
@@ -62,7 +66,11 @@
 .page-header-action:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 20px rgba(255, 184, 0, 0.15);
-  background: linear-gradient(135deg, var(--accent-honey-dark) 0%, var(--accent-honey-darker) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--accent-honey-dark) 0%,
+    var(--accent-honey-darker) 100%
+  );
 }
 
 .page-header-action:active {
