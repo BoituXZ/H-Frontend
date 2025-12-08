@@ -1,0 +1,167 @@
+<div class="public-storefront">
+  @if (loading()) {
+    <div class="flex items-center justify-center min-h-screen">
+      <div class="text-center">
+        <div class="spinner w-12 h-12 mx-auto mb-4"></div>
+        <p class="text-[var(--text-secondary)]">Loading storefront...</p>
+      </div>
+    </div>
+  } @else if (storefront(); as store) {
+    <!-- Store Header -->
+    <div class="store-header">
+      <!-- Banner -->
+      <div class="store-banner">
+        <div class="banner-placeholder"></div>
+      </div>
+
+      <!-- Profile Area (Overlapping Banner) -->
+      <div class="profile-area">
+        <div class="profile-content">
+          <!-- Logo -->
+          <div class="store-logo">
+            <div class="logo-placeholder">
+              {{ store.name.charAt(0) }}
+            </div>
+          </div>
+
+          <!-- Store Info -->
+          <div class="store-info">
+            <h1 class="store-name font-display text-3xl font-bold text-[var(--text-primary)]">
+              {{ store.name }}
+            </h1>
+            <p class="store-description font-sans text-[var(--text-secondary)]">
+              {{ store.description }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Products Section -->
+    <div class="products-section">
+      <div class="container">
+        <h2 class="section-title font-display text-2xl font-bold text-[var(--text-primary)] mb-6">
+          Products
+        </h2>
+
+        @if (getAvailableProducts().length > 0) {
+          <div class="products-grid">
+            @for (product of getAvailableProducts(); track product.id) {
+              <div class="product-card">
+                <!-- Image -->
+                <div class="product-image">
+                  <div class="image-placeholder">
+                    <div class="placeholder-icon">📦</div>
+                  </div>
+                </div>
+
+                <!-- Title/Price -->
+                <div class="product-info">
+                  <h3 class="product-title font-display font-semibold text-[var(--text-primary)]">
+                    {{ product.name }}
+                  </h3>
+                  <p class="product-description font-sans text-sm text-[var(--text-secondary)]">
+                    {{ product.description }}
+                  </p>
+                  <p class="product-price font-display text-2xl font-bold text-honey-500">
+                    ${{ product.price | number: '1.2-2' }}
+                  </p>
+                </div>
+
+                <!-- Action Button -->
+                <button class="btn-primary w-full mt-auto" (click)="openOrderModal(product)">
+                  Order Now
+                </button>
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="empty-state">
+            <p class="text-[var(--text-secondary)] font-sans">
+              No products available at this time.
+            </p>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Order Modal -->
+    @if (showOrderModal() && selectedProduct(); as product) {
+      <div class="modal-overlay" (click)="closeOrderModal()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <h2 class="modal-title font-display text-xl font-bold text-[var(--text-primary)]">
+              Place Order
+            </h2>
+            <button class="modal-close" (click)="closeOrderModal()" type="button">×</button>
+          </div>
+
+          <div class="modal-body">
+            <!-- Order Summary -->
+            <div class="order-summary">
+              <p class="summary-text font-sans text-[var(--text-primary)]">
+                Order: <strong>{{ product.name }}</strong> - ${{ product.price | number: '1.2-2' }}
+              </p>
+            </div>
+
+            <!-- Customer Inputs -->
+            <div class="form-group">
+              <label class="form-label">Your Name</label>
+              <input
+                type="text"
+                class="input-field"
+                [ngModel]="customerName()"
+                (ngModelChange)="customerName.set($event)"
+                placeholder="Enter your name"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Phone Number</label>
+              <input
+                type="tel"
+                class="input-field"
+                [ngModel]="customerPhone()"
+                (ngModelChange)="customerPhone.set($event)"
+                placeholder="Enter your phone number"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Notes (Optional)</label>
+              <textarea
+                class="input-field"
+                rows="3"
+                [ngModel]="customerNotes()"
+                (ngModelChange)="customerNotes.set($event)"
+                placeholder="Any special instructions or notes..."
+              ></textarea>
+            </div>
+
+            <!-- Payment Action -->
+            <button
+              class="btn-primary w-full mt-4"
+              [disabled]="!customerName() || !customerPhone()"
+              (click)="submitOrder()"
+            >
+              Pay ${{ product.price | number: '1.2-2' }} with EcoCash
+            </button>
+
+            <!-- Disclaimer -->
+            <p class="disclaimer font-sans text-sm text-[var(--text-secondary)] mt-4 text-center">
+              After payment, the seller will contact you.
+            </p>
+          </div>
+        </div>
+      </div>
+    }
+  } @else {
+    <div class="flex items-center justify-center min-h-screen">
+      <div class="text-center">
+        <p class="text-[var(--text-secondary)] font-sans">Storefront not found.</p>
+      </div>
+    </div>
+  }
+</div>

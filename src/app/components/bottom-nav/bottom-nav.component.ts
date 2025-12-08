@@ -7,6 +7,9 @@ import {
   Wallet,
   Store,
   Settings,
+  Trophy,
+  Banknote,
+  Tag,
 } from 'lucide-angular';
 
 interface NavItem {
@@ -27,7 +30,10 @@ export class BottomNavComponent {
     { label: 'Circles', route: '/app/circles', icon: Users },
     // Wallet endpoint not supported by backend - commenting out
     // { label: 'Wallet', route: '/app/wallet', icon: Wallet },
+    { label: 'Credit', route: '/app/credit', icon: Trophy },
+    { label: 'Loans', route: '/app/loans', icon: Banknote },
     { label: 'Market', route: '/app/marketplace', icon: Store },
+    { label: 'Store', route: '/app/earn/storefront/manage', icon: Tag },
     { label: 'Settings', route: '/app/settings', icon: Settings },
   ];
 }
