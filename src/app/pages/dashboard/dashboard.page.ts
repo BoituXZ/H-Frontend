@@ -175,7 +175,9 @@ export class DashboardPage implements OnInit {
   }
 
   navigateToWallet(): void {
-    this.router.navigate(['/app/wallet']);
+    // Wallet endpoint not supported by backend - commenting out
+    // this.router.navigate(['/app/wallet']);
+    console.log('Wallet feature not available - backend endpoint not supported');
   }
 
   navigateToCircles(): void {

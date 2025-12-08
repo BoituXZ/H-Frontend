@@ -101,15 +101,23 @@ export class RegisterPage {
     this.authService.register(formData).subscribe({
       next: (response) => {
         this.isLoading.set(false);
-        if (response.success && response.userId) {
-          this.router.navigate(['/verify-otp'], {
-            state: { userId: response.userId }
-          });
+        // Backend returns { message, userId } - check for userId to confirm success
+        if (response.userId) {
+          // OTP verification not supported by backend - redirecting to login instead
+          // this.router.navigate(['/verify-otp'], {
+          //   state: { userId: response.userId }
+          // });
+          this.router.navigate(['/login']);
         }
       },
       error: (error) => {
         this.isLoading.set(false);
-        this.errorMessage.set(error.message || 'Registration failed. Please try again.');
+        // Handle 409 Conflict specifically for registration (user already exists)
+        let errorMsg = error.message || 'Registration failed. Please try again.';
+        if (error.statusCode === 409) {
+          errorMsg = error.message || 'This phone number is already registered. Please login instead.';
+        }
+        this.errorMessage.set(errorMsg);
         this.shakeState.set('shake');
         setTimeout(() => this.shakeState.set(''), 500);
       }

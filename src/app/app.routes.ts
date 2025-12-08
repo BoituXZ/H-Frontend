@@ -23,12 +23,13 @@ export const routes: Routes = [
       import('./pages/login/login.page').then((m) => m.LoginPage),
     title: 'Login - HiveFund',
   },
-  {
-    path: 'verify-otp',
-    loadComponent: () =>
-      import('./pages/verify-otp/verify-otp.page').then((m) => m.VerifyOtpPage),
-    title: 'Verify OTP - HiveFund',
-  },
+  // OTP verification not supported by backend - commenting out
+  // {
+  //   path: 'verify-otp',
+  //   loadComponent: () =>
+  //     import('./pages/verify-otp/verify-otp.page').then((m) => m.VerifyOtpPage),
+  //   title: 'Verify OTP - HiveFund',
+  // },
 
   // Protected routes (require authentication)
   {
@@ -53,12 +54,13 @@ export const routes: Routes = [
           import('./pages/circles/circles.page').then((m) => m.CirclesPage),
         title: 'Circles - HiveFund',
       },
-      {
-        path: 'wallet',
-        loadComponent: () =>
-          import('./pages/wallet/wallet.page').then((m) => m.WalletPage),
-        title: 'Wallet - HiveFund',
-      },
+      // Wallet endpoint not supported by backend - commenting out
+      // {
+      //   path: 'wallet',
+      //   loadComponent: () =>
+      //     import('./pages/wallet/wallet.page').then((m) => m.WalletPage),
+      //   title: 'Wallet - HiveFund',
+      // },
       {
         path: 'marketplace',
         loadComponent: () =>

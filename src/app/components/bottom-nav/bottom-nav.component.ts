@@ -25,7 +25,8 @@ export class BottomNavComponent {
   protected readonly navItems: NavItem[] = [
     { label: 'Home', route: '/app/dashboard', icon: Home },
     { label: 'Circles', route: '/app/circles', icon: Users },
-    { label: 'Wallet', route: '/app/wallet', icon: Wallet },
+    // Wallet endpoint not supported by backend - commenting out
+    // { label: 'Wallet', route: '/app/wallet', icon: Wallet },
     { label: 'Market', route: '/app/marketplace', icon: Store },
     { label: 'Settings', route: '/app/settings', icon: Settings },
   ];

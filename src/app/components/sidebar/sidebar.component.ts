@@ -51,7 +51,8 @@ export class SidebarComponent {
   protected readonly navItems: NavItem[] = [
     { label: 'Home', route: '/app/dashboard', icon: Home },
     { label: 'Circles', route: '/app/circles', icon: HandCoins },
-    { label: 'Wallet', route: '/app/wallet', icon: Wallet },
+    // Wallet endpoint not supported by backend - commenting out
+    // { label: 'Wallet', route: '/app/wallet', icon: Wallet },
     { label: 'Marketplace', route: '/app/marketplace', icon: Store },
     { label: 'Settings', route: '/app/settings', icon: Settings },
   ];
