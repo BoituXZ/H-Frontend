@@ -1,577 +1,207 @@
 <div class="page-wrapper">
   <!-- Loading State -->
   @if (loading()) {
-    <div class="flex items-center justify-center min-h-screen">
-      <app-loading-spinner [size]="60" message="Loading circle details..." />
-    </div>
+  <div class="flex items-center justify-center min-h-screen">
+    <app-loading-spinner [size]="60" message="Loading circle details..." />
+  </div>
   }
 
   <!-- Error State -->
   @if (error() && !loading()) {
-    <div class="flex items-center justify-center min-h-screen p-4">
-      <div class="card-error p-8 max-w-md w-full" @fadeIn>
-        <lucide-angular
-          [img]="AlertCircle"
-          class="w-12 h-12 text-danger mx-auto mb-4"
-        ></lucide-angular>
-        <p class="text-sm mb-4 text-center">{{ error() }}</p>
-        <button (click)="retry()" class="btn-primary text-sm px-6 py-3 w-full">
-          Retry
-        </button>
-      </div>
+  <div class="flex items-center justify-center min-h-screen p-4">
+    <div class="card-error p-8 max-w-md w-full" @fadeIn>
+      <lucide-angular
+        [img]="AlertCircle"
+        class="w-12 h-12 text-danger mx-auto mb-4"
+      ></lucide-angular>
+      <p class="text-sm mb-4 text-center">{{ error() }}</p>
+      <button (click)="retry()" class="btn-primary text-sm px-6 py-3 w-full">
+        Retry
+      </button>
     </div>
+  </div>
   }
 
   <!-- Main Content -->
-  @if (circleDetail(); as circle) {
-    @if (!loading()) {
-      <div class="circle-detail-container" @fadeIn>
-        <!-- Header Section -->
-        <div class="header-section">
-          <!-- Breadcrumb -->
-          <button class="breadcrumb-link" (click)="navigateBack()">
-            <lucide-angular [img]="ArrowLeft" class="w-4 h-4"></lucide-angular>
-            <span>Back to Circles</span>
-          </button>
+  @if (circleDetail(); as circle) { @if (!loading()) {
+  <div class="circle-detail-container" @fadeIn>
+    <!-- Header Section -->
+    <div class="header-section">
+      <!-- Breadcrumb -->
+      <button class="breadcrumb-link" (click)="navigateBack()">
+        <lucide-angular [img]="ArrowLeft" class="w-4 h-4"></lucide-angular>
+        <span>Back to Circles</span>
+      </button>
 
-          <!-- Hero Row -->
-          <div class="hero-row">
-            <div class="hero-left">
-              <h1 class="circle-name">{{ circle.name }}</h1>
-              <span
-                class="status-badge"
-                [ngClass]="getStatusBadgeClass(circle.status)"
+      <!-- Hero Row -->
+      <div class="hero-row">
+        <div class="hero-left">
+          <h1 class="circle-name">{{ circle.name }}</h1>
+          <span
+            class="status-badge"
+            [ngClass]="getStatusBadgeClass(circle.status)"
+          >
+            {{ circle.status }}
+          </span>
+        </div>
+        <div class="hero-right">
+          <button class="dropdown-trigger" (click)="toggleDropdown()">
+            <lucide-angular
+              [img]="MoreVertical"
+              class="w-5 h-5"
+            ></lucide-angular>
+          </button>
+          @if (showDropdown()) {
+          <div class="dropdown-menu">
+            <button class="dropdown-item">Invite Member</button>
+            <button class="dropdown-item text-danger">Leave Circle</button>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="tabs-container">
+      <button
+        class="tab-button"
+        [class.active]="activeTab() === 'overview'"
+        (click)="switchTab('overview')"
+      >
+        Overview
+      </button>
+      <button
+        class="tab-button"
+        [class.active]="activeTab() === 'members'"
+        (click)="switchTab('members')"
+      >
+        Members
+      </button>
+      <button
+        class="tab-button"
+        [class.active]="activeTab() === 'timeline'"
+        (click)="switchTab('timeline')"
+      >
+        Timeline
+      </button>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="tab-content">
+      <!-- Overview Tab -->
+      @if (activeTab() === "overview") {
+      <div class="overview-grid" @slideUp>
+        <!-- Key Info Card -->
+        <div class="dashboard-card">
+          <div class="card-header">
+            <h3 class="card-title">Key Information</h3>
+          </div>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Contribution</span>
+              <span class="info-value"
+                >\${{ circle.contributionAmount }} / {{ circle.frequency }}</span
               >
-                {{ circle.status }}
-              </span>
             </div>
-            <div class="hero-right">
-              <button class="dropdown-trigger" (click)="toggleDropdown()">
-                <lucide-angular
-                  [img]="MoreVertical"
-                  class="w-5 h-5"
-                ></lucide-angular>
-              </button>
-              @if (showDropdown()) {
-                <div class="dropdown-menu">
-                  <button class="dropdown-item">View Settings</button>
-                  <button class="dropdown-item">Invite Member</button>
-                  <button class="dropdown-item text-danger">
-                    Leave Circle
-                  </button>
-                </div>
-              }
+            <div class="info-item">
+              <span class="info-label">Members</span>
+              <span class="info-value"
+                >{{ members().length }} / {{ circle.maxMembers }}</span
+              >
+            </div>
+            <div class="info-item">
+              <span class="info-label">Created On</span>
+              <span class="info-value">{{ formatDate(circle.createdAt) }}</span>
             </div>
           </div>
         </div>
 
-        <!-- Navigation Tabs -->
-        <div class="tabs-container">
-          <button
-            class="tab-button"
-            [class.active]="activeTab() === 'overview'"
-            (click)="switchTab('overview')"
-          >
-            Overview
-          </button>
-          <button
-            class="tab-button"
-            [class.active]="activeTab() === 'members'"
-            (click)="switchTab('members')"
-          >
-            Members
-          </button>
-          <button
-            class="tab-button"
-            [class.active]="activeTab() === 'transactions'"
-            (click)="switchTab('transactions')"
-          >
-            Transactions
-          </button>
-          <button
-            class="tab-button"
-            [class.active]="activeTab() === 'governance'"
-            (click)="switchTab('governance')"
-          >
-            Governance
-          </button>
+        <!-- Invite Code Card -->
+        <div class="dashboard-card">
+          <div class="card-header">
+            <h3 class="card-title">Invite Code</h3>
+          </div>
+          <div class="invite-code-wrapper">
+            <span class="invite-code">{{ circle.inviteCode }}</span>
+            <button
+              class="copy-btn"
+              (click)="copyInviteCode(circle.inviteCode)"
+            >
+              <lucide-angular [img]="Copy" class="w-4 h-4"></lucide-angular>
+              <span>Copy</span>
+            </button>
+          </div>
         </div>
 
-        <!-- Tab Content -->
-        <div class="tab-content">
-          <!-- Overview Tab -->
-          @if (activeTab() === "overview") {
-            <div class="overview-grid" @slideUp>
-              <!-- Cycle Progress Card -->
-              <div class="dashboard-card hero-card">
-                <div class="card-header">
-                  <h3 class="card-title">Cycle Progress</h3>
-                  <span class="progress-badge">
-                    Month {{ circle.cycle.current }} of {{ circle.cycle.total }}
-                  </span>
-                </div>
+        <!-- Description Card -->
+        @if(circle.description) {
+        <div class="dashboard-card description-card">
+          <div class="card-header">
+            <h3 class="card-title">Description</h3>
+          </div>
+          <p class="description-text">{{ circle.description }}</p>
+        </div>
+        }
+      </div>
+      }
 
-                <div class="progress-visual">
-                  <div class="progress-track-large">
-                    <div
-                      class="progress-fill-large"
-                      [style.width.%]="
-                        getProgressPercentage(
-                          circle.cycle.current,
-                          circle.cycle.total
-                        )
-                      "
-                    ></div>
-                  </div>
-                  <div class="progress-info-row">
-                    <span class="progress-label"
-                      >{{
-                        getProgressPercentage(
-                          circle.cycle.current,
-                          circle.cycle.total
-                        )
-                      }}% Complete</span
-                    >
-                    <span class="progress-label"
-                      >{{ circle.cycle.total - circle.cycle.current }} months
-                      remaining</span
-                    >
-                  </div>
-                </div>
-
-                <div class="pot-section">
-                  <div class="pot-item">
-                    <lucide-angular
-                      [img]="DollarSign"
-                      class="w-5 h-5 text-honey-500"
-                    ></lucide-angular>
-                    <div class="pot-details">
-                      <span class="pot-label">Total Pot Value</span>
-                      <span class="pot-amount"
-                        >\${{ circle.potValue | number: "1.2-2" }}</span
-                      >
-                    </div>
-                  </div>
-                  <div class="pot-item">
-                    <lucide-angular
-                      [img]="CreditCard"
-                      class="w-5 h-5 text-hive-500"
-                    ></lucide-angular>
-                    <div class="pot-details">
-                      <span class="pot-label">Your Contribution</span>
-                      <span class="pot-amount"
-                        >\${{
-                          circle.contributionAmount | number: "1.2-2"
-                        }}</span
-                      >
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Your Position Card -->
-              <div class="dashboard-card">
-                <div class="card-header">
-                  <h3 class="card-title">Your Position</h3>
-                  <lucide-angular
-                    [img]="Award"
-                    class="w-5 h-5 text-honey-500"
-                  ></lucide-angular>
-                </div>
-
-                <div class="position-content">
-                  <div class="position-number">#{{ circle.myPosition }}</div>
-                  <p class="position-description">in payout queue</p>
-                </div>
-
-                <div class="next-payment">
-                  <lucide-angular
-                    [img]="Clock"
-                    class="w-4 h-4 text-ui-text-muted"
-                  ></lucide-angular>
-                  <div class="payment-info">
-                    <span class="payment-label">Next Payment Due</span>
-                    <span class="payment-date">{{
-                      formatDate(circle.cycle.nextDueDate)
-                    }}</span>
-                    <span class="payment-countdown">{{
-                      getCountdown(circle.cycle.nextDueDate)
-                    }}</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Payout Timeline -->
-              <div class="dashboard-card timeline-card">
-                <div class="card-header">
-                  <h3 class="card-title">Payout Timeline</h3>
-                  <lucide-angular
-                    [img]="Calendar"
-                    class="w-5 h-5 text-honey-500"
-                  ></lucide-angular>
-                </div>
-
-                <div class="timeline-list">
-                  @for (entry of circle.payoutTimeline; track entry.position) {
-                    <div
-                      class="timeline-item"
-                      [class.completed]="entry.status === 'completed'"
-                      [class.current]="
-                        isCurrentUserPayout(entry.memberId) &&
-                        entry.status === 'completed'
-                      "
-                    >
-                      <div class="timeline-marker">
-                        @if (entry.status === "completed") {
-                          <lucide-angular
-                            [img]="CheckCircle"
-                            class="w-4 h-4"
-                          ></lucide-angular>
-                        } @else {
-                          <span class="position-dot">{{ entry.position }}</span>
-                        }
-                      </div>
-                      <div class="timeline-content">
-                        <div class="timeline-header">
-                          <span class="timeline-name">{{
-                            entry.memberName
-                          }}</span>
-                          <span class="timeline-amount"
-                            >\${{ entry.amount | number: "1.2-2" }}</span
-                          >
-                        </div>
-                        <span class="timeline-date">{{
-                          formatDate(entry.date)
-                        }}</span>
-                      </div>
-                      @if (entry.status === "completed") {
-                        <span class="timeline-status completed">Paid</span>
-                      } @else {
-                        <span class="timeline-status upcoming">Upcoming</span>
-                      }
-                    </div>
-                  }
-                </div>
-              </div>
+      <!-- Members Tab -->
+      @if (activeTab() === "members") {
+      <div class="members-content" @slideUp>
+        <div class="dashboard-card">
+          <div class="card-header">
+            <h3 class="card-title">Circle Members ({{ members().length }})</h3>
+          </div>
+          <div class="members-list">
+            @for (member of members(); track member.id) {
+            <div class="member-item">
+              <img
+                [src]="member.avatarUrl"
+                alt="member avatar"
+                class="member-avatar"
+              />
+              <span class="member-name">{{ member.name }}</span>
             </div>
-          }
-
-          <!-- Members Tab -->
-          @if (activeTab() === "members") {
-            <div class="members-content" @slideUp>
-              <div class="dashboard-card">
-                <div class="card-header">
-                  <h3 class="card-title">
-                    Circle Members ({{ circle.members.length }})
-                  </h3>
-                  <div class="member-stats">
-                    <span class="stat-item">
-                      <span class="stat-dot paid"></span>
-                      {{ getMembersByStatus("paid") }} Paid
-                    </span>
-                    <span class="stat-item">
-                      <span class="stat-dot pending"></span>
-                      {{ getMembersByStatus("pending") }} Pending
-                    </span>
-                  </div>
-                </div>
-
-                <div class="members-table">
-                  <div class="table-header">
-                    <span class="header-cell member-col">Member</span>
-                    <span class="header-cell role-col">Role</span>
-                    <span class="header-cell position-col">Position</span>
-                    <span class="header-cell status-col">Status</span>
-                  </div>
-
-                  @for (member of circle.members; track member.id) {
-                    <div
-                      class="table-row"
-                      [class.current-user]="member.isCurrentUser"
-                    >
-                      <div class="member-cell">
-                        <div
-                          class="member-avatar"
-                          [class.paid]="member.status === 'paid'"
-                        >
-                          {{ member.initials }}
-                        </div>
-                        <div class="member-info">
-                          <span class="member-name">
-                            {{ member.name }}
-                            @if (member.isCurrentUser) {
-                              <span class="you-badge">You</span>
-                            }
-                          </span>
-                          <span class="member-joined"
-                            >Joined {{ formatDate(member.joinedDate) }}</span
-                          >
-                        </div>
-                      </div>
-                      <div class="role-cell">
-                        @if (member.role === "admin") {
-                          <span class="role-badge admin">
-                            <lucide-angular
-                              [img]="Shield"
-                              class="w-3 h-3"
-                            ></lucide-angular>
-                            Admin
-                          </span>
-                        } @else {
-                          <span class="role-badge member">Member</span>
-                        }
-                      </div>
-                      <div class="position-cell">#{{ member.position }}</div>
-                      <div class="status-cell">
-                        @if (member.status === "paid") {
-                          <span class="status-badge-small paid">
-                            <lucide-angular
-                              [img]="CheckCircle"
-                              class="w-3 h-3"
-                            ></lucide-angular>
-                            Paid
-                          </span>
-                        } @else if (member.status === "pending") {
-                          <span class="status-badge-small pending">
-                            <lucide-angular
-                              [img]="Clock"
-                              class="w-3 h-3"
-                            ></lucide-angular>
-                            Pending
-                          </span>
-                        } @else {
-                          <span class="status-badge-small received">
-                            <lucide-angular
-                              [img]="Award"
-                              class="w-3 h-3"
-                            ></lucide-angular>
-                            Received
-                          </span>
-                        }
-                      </div>
-                    </div>
-                  }
-                </div>
-              </div>
-            </div>
-          }
-
-          <!-- Transactions Tab -->
-          @if (activeTab() === "transactions") {
-            <div class="transactions-content" @slideUp>
-              <div class="dashboard-card">
-                <div class="card-header">
-                  <h3 class="card-title">Transaction History</h3>
-                  <div class="filter-buttons">
-                    <button
-                      class="filter-btn"
-                      [class.active]="transactionFilter() === 'all'"
-                      (click)="setTransactionFilter('all')"
-                    >
-                      All
-                    </button>
-                    <button
-                      class="filter-btn"
-                      [class.active]="transactionFilter() === 'contributions'"
-                      (click)="setTransactionFilter('contributions')"
-                    >
-                      Contributions
-                    </button>
-                    <button
-                      class="filter-btn"
-                      [class.active]="transactionFilter() === 'payouts'"
-                      (click)="setTransactionFilter('payouts')"
-                    >
-                      Payouts
-                    </button>
-                  </div>
-                </div>
-
-                <div class="transactions-table">
-                  <div class="table-header">
-                    <span class="header-cell date-col">Date</span>
-                    <span class="header-cell desc-col">Description</span>
-                    <span class="header-cell member-col">Member</span>
-                    <span class="header-cell amount-col">Amount</span>
-                  </div>
-
-                  @for (
-                    transaction of filteredTransactions();
-                    track transaction.id
-                  ) {
-                    <div class="table-row">
-                      <div class="date-cell">
-                        {{ formatDate(transaction.date) }}
-                      </div>
-                      <div class="desc-cell">
-                        <div class="transaction-type">
-                          @if (transaction.type === "payout") {
-                            <lucide-angular
-                              [img]="TrendingUp"
-                              class="w-4 h-4 text-success"
-                            ></lucide-angular>
-                          } @else {
-                            <lucide-angular
-                              [img]="Activity"
-                              class="w-4 h-4 text-hive-500"
-                            ></lucide-angular>
-                          }
-                          <span>{{ transaction.description }}</span>
-                        </div>
-                      </div>
-                      <div class="member-cell-simple">
-                        {{ transaction.memberName }}
-                      </div>
-                      <div
-                        class="amount-cell"
-                        [class.payout]="transaction.type === 'payout'"
-                      >
-                        {{ transaction.type === "payout" ? "+" : "" }}\${{
-                          transaction.amount | number: "1.2-2"
-                        }}
-                      </div>
-                    </div>
-                  }
-
-                  @if (filteredTransactions().length === 0) {
-                    <div class="empty-state">
-                      <lucide-angular
-                        [img]="Activity"
-                        class="w-12 h-12 text-ui-text-muted"
-                      ></lucide-angular>
-                      <p class="empty-text">No transactions found</p>
-                    </div>
-                  }
-                </div>
-              </div>
-            </div>
-          }
-
-          <!-- Governance Tab -->
-          @if (activeTab() === "governance") {
-            <div class="governance-content" @slideUp>
-              @if (activeVotes().length > 0) {
-                <div class="votes-grid">
-                  @for (vote of activeVotes(); track vote.id) {
-                    <div class="dashboard-card vote-card">
-                      <div class="vote-header">
-                        <div
-                          class="vote-type-badge"
-                          [class.exit-request]="vote.type === 'exit_request'"
-                        >
-                          {{
-                            vote.type === "exit_request"
-                              ? "Exit Request"
-                              : vote.type === "rule_change"
-                                ? "Rule Change"
-                                : "Emergency"
-                          }}
-                        </div>
-                        <span class="vote-deadline">
-                          <lucide-angular
-                            [img]="Clock"
-                            class="w-3 h-3"
-                          ></lucide-angular>
-                          Due {{ formatDate(vote.deadline) }}
-                        </span>
-                      </div>
-
-                      <h3 class="vote-title">{{ vote.title }}</h3>
-                      <p class="vote-description">{{ vote.description }}</p>
-
-                      <div class="vote-progress">
-                        <div class="vote-stats">
-                          <span class="vote-count"
-                            >{{ vote.yesVotes + vote.noVotes }} /
-                            {{ vote.totalMembers }} voted</span
-                          >
-                          <span class="vote-percentage"
-                            >{{
-                              getVoteProgress(
-                                vote.yesVotes + vote.noVotes,
-                                vote.totalMembers
-                              )
-                            }}%</span
-                          >
-                        </div>
-                        <div class="vote-bar">
-                          <div
-                            class="vote-bar-yes"
-                            [style.width.%]="
-                              getVoteProgress(vote.yesVotes, vote.totalMembers)
-                            "
-                          ></div>
-                          <div
-                            class="vote-bar-no"
-                            [style.width.%]="
-                              getVoteProgress(vote.noVotes, vote.totalMembers)
-                            "
-                            [style.left.%]="
-                              getVoteProgress(vote.yesVotes, vote.totalMembers)
-                            "
-                          ></div>
-                        </div>
-                        <div class="vote-breakdown">
-                          <span class="vote-yes">{{ vote.yesVotes }} Yes</span>
-                          <span class="vote-no">{{ vote.noVotes }} No</span>
-                        </div>
-                      </div>
-
-                      @if (!vote.hasVoted) {
-                        <div class="vote-actions">
-                          <button
-                            class="btn-vote btn-vote-yes"
-                            (click)="submitVote(vote.id, 'yes')"
-                          >
-                            <lucide-angular
-                              [img]="ThumbsUp"
-                              class="w-4 h-4"
-                            ></lucide-angular>
-                            Vote Yes
-                          </button>
-                          <button
-                            class="btn-vote btn-vote-no"
-                            (click)="submitVote(vote.id, 'no')"
-                          >
-                            <lucide-angular
-                              [img]="ThumbsDown"
-                              class="w-4 h-4"
-                            ></lucide-angular>
-                            Vote No
-                          </button>
-                        </div>
-                      } @else {
-                        <div class="vote-submitted">
-                          <lucide-angular
-                            [img]="CheckCircle"
-                            class="w-5 h-5 text-success"
-                          ></lucide-angular>
-                          <span
-                            >You voted
-                            <strong>{{ vote.userVote }}</strong></span
-                          >
-                        </div>
-                      }
-                    </div>
-                  }
-                </div>
-              } @else {
-                <div class="dashboard-card empty-governance">
-                  <lucide-angular
-                    [img]="Shield"
-                    class="w-16 h-16 text-ui-text-muted"
-                  ></lucide-angular>
-                  <h3 class="empty-title">No Active Votes</h3>
-                  <p class="empty-description">
-                    There are currently no governance decisions pending. Check
-                    back later.
-                  </p>
-                </div>
-              }
-            </div>
-          }
+            }
+          </div>
         </div>
       </div>
-    }
-  }
+      }
+
+      <!-- Timeline Tab -->
+      @if (activeTab() === "timeline") {
+      <div class="timeline-content" @slideUp>
+        <div class="dashboard-card">
+          <div class="card-header">
+            <h3 class="card-title">Payout Timeline</h3>
+          </div>
+          <div class="timeline-list-condensed">
+            @for(entry of timeline(); track entry.turn) {
+            <div
+              class="timeline-entry"
+              [class.completed]="entry.status === 'completed'"
+            >
+              <div class="turn-indicator">
+                <span class="turn-number">{{ entry.turn }}</span>
+              </div>
+              <div class="entry-details">
+                <span class="entry-member">{{ entry.memberName }}</span>
+                <span class="entry-date">{{
+                  formatDate(entry.payoutDate)
+                }}</span>
+              </div>
+              <span class="entry-status" [class.completed]="entry.status === 'completed'">{{ entry.status }}</span>
+            </div>
+            } @empty {
+            <div class="empty-state">
+              <p>Payout timeline is not available yet.</p>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+  } }
 </div>

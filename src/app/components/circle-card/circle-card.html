@@ -18,24 +18,13 @@
 
   <!-- Main Content -->
   <div class="card-content">
-    <div class="payout-section">
-      <p class="payout-label">Total Payout</p>
-      <p class="payout-amount">
-        {{
-          circle.contributionAmount * circle.maxMembers
-            | currency: "USD" : "symbol" : "1.0-0"
-        }}
-      </p>
-    </div>
-
     <!-- Member Avatars -->
     <div class="members-section">
       <div class="avatar-group">
         @for (avatar of getDisplayMembers(); track $index) {
-          <div class="avatar">{{ avatar }}</div>
-        }
-        @if (getRemainingCount() > 0) {
-          <div class="avatar-more">+{{ getRemainingCount() }}</div>
+        <div class="avatar">{{ avatar }}</div>
+        } @if (getRemainingCount() > 0) {
+        <div class="avatar-more">+{{ getRemainingCount() }}</div>
         }
       </div>
       <p class="members-text">
@@ -44,47 +33,8 @@
     </div>
   </div>
 
-  <!-- Progress Bar -->
-  <div class="progress-container">
-    <div class="progress-bar-background">
-      <div
-        class="progress-bar-foreground"
-        [style.width.%]="circle.progress.percentage"
-      ></div>
-    </div>
-    <div class="progress-text">
-      <p>
-        Round {{ circle.progress.currentRound }} of
-        {{ circle.progress.totalRounds }}
-      </p>
-      <p>{{ circle.progress.percentage }}%</p>
-    </div>
-  </div>
-
   <!-- Footer Info -->
   <div class="card-footer">
-    <div class="footer-item">
-      <lucide-icon [img]="DollarSign" class="footer-icon"></lucide-icon>
-      <span
-        >{{ circle.contributionAmount | currency }} /
-        {{ circle.frequency }}</span
-      >
-    </div>
-
-    @if (circle.nextPayout && circle.status !== "completed") {
-      <div class="footer-item">
-        <lucide-icon [img]="Gift" class="footer-icon"></lucide-icon>
-        <span>Payout: {{ formatDate(circle.nextPayout.date) }}</span>
-      </div>
-    }
-
-    @if (circle.status === "completed") {
-      <div class="footer-item footer-item-completed">
-        <lucide-icon [img]="CheckCircle2" class="footer-icon"></lucide-icon>
-        <span>Completed</span>
-      </div>
-    }
-
     <div class="action-buttons">
       <button class="btn-share" (click)="$event.stopPropagation()">
         Share

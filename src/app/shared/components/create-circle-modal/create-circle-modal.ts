@@ -6,6 +6,7 @@ import {
   computed,
   inject,
   HostListener,
+  Signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -19,24 +20,22 @@ import {
   X,
   DollarSign,
   Users,
-  Calendar,
   TrendingUp,
   Repeat,
   Sparkles,
+  Eye,
+  Lock,
 } from 'lucide-angular';
-import { trigger, transition, style, animate } from '@angular/animations';
+import { trigger, transition, style, animate, keyframes } from '@angular/animations';
 import { FormErrorComponent } from '../../../components/form-error/form-error.component';
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
-
-export interface CreateCircleRequest {
-  name: string;
-  description?: string;
-  contributionAmount: number;
-  frequency: 'weekly' | 'monthly';
-  maxMembers: number;
-  startDate: string;
-  positionMethod: 'lottery' | 'vote';
-}
+import { toSignal } from '@angular/core/rxjs-interop';
+import {
+  CreateCircleDto,
+  CircleFrequency,
+} from '../../../models/circle.model';
+import { CirclesService } from '../../../services/circles.service';
+import { finalize, startWith } from 'rxjs';
 
 const scaleAnimation = trigger('scale', [
   transition(':enter', [
@@ -64,43 +63,15 @@ const fadeInAnimation = trigger('fadeIn', [
 
 const shakeAnimation = trigger('shake', [
   transition('* => shake', [
-    animate(
-      '0.5s',
-      style({
-        transform: 'translateX(0)',
-      }),
-    ),
-    animate(
-      '0.1s',
-      style({
-        transform: 'translateX(-10px)',
-      }),
-    ),
-    animate(
-      '0.1s',
-      style({
-        transform: 'translateX(10px)',
-      }),
-    ),
-    animate(
-      '0.1s',
-      style({
-        transform: 'translateX(-10px)',
-      }),
-    ),
-    animate(
-      '0.1s',
-      style({
-        transform: 'translateX(10px)',
-      }),
-    ),
-    animate(
-      '0.1s',
-      style({
-        transform: 'translateX(0)',
-      }),
-    ),
-  ]),
+    animate('0.5s', keyframes([
+      style({ transform: 'translateX(0)', offset: 0 }),
+      style({ transform: 'translateX(-10px)', offset: 0.2 }),
+      style({ transform: 'translateX(10px)', offset: 0.4 }),
+      style({ transform: 'translateX(-10px)', offset: 0.6 }),
+      style({ transform: 'translateX(10px)', offset: 0.8 }),
+      style({ transform: 'translateX(0)', offset: 1.0 })
+    ]))
+  ])
 ]);
 
 @Component({
@@ -119,18 +90,20 @@ const shakeAnimation = trigger('shake', [
 })
 export class CreateCircleModalComponent {
   @Output() closeModal = new EventEmitter<void>();
-  @Output() submitCircle = new EventEmitter<CreateCircleRequest>();
+  @Output() circleCreated = new EventEmitter<void>();
 
   private fb = inject(FormBuilder);
+  private circlesService = inject(CirclesService);
 
   // Icons
   protected readonly X = X;
   protected readonly DollarSign = DollarSign;
   protected readonly Users = Users;
-  protected readonly Calendar = Calendar;
   protected readonly TrendingUp = TrendingUp;
   protected readonly Repeat = Repeat;
   protected readonly Sparkles = Sparkles;
+  protected readonly Eye = Eye;
+  protected readonly Lock = Lock;
 
   // State
   isLoading = signal(false);
@@ -139,13 +112,10 @@ export class CreateCircleModalComponent {
 
   // Form
   circleForm: FormGroup;
+  protected readonly CircleFrequency = CircleFrequency;
+  formValue: Signal<any>;
 
   constructor() {
-    // Get tomorrow's date as minimum
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const minDate = tomorrow.toISOString().split('T')[0];
-
     this.circleForm = this.fb.group({
       name: [
         '',
@@ -158,49 +128,37 @@ export class CreateCircleModalComponent {
       description: ['', [Validators.maxLength(200)]],
       contributionAmount: [
         20,
-        [Validators.required, Validators.min(5), Validators.max(1000)],
+        [Validators.required, Validators.min(1), Validators.max(1000)],
       ],
-      frequency: ['monthly', [Validators.required]],
+      frequency: [CircleFrequency.MONTHLY, [Validators.required]],
       maxMembers: [
         8,
-        [Validators.required, Validators.min(2), Validators.max(12)],
+        [Validators.required, Validators.min(4), Validators.max(10)],
       ],
-      startDate: ['', [Validators.required, this.futureDateValidator()]],
-      positionMethod: ['lottery', [Validators.required]],
+      isPublic: [false],
     });
-  }
 
-  // Future date validator
-  private futureDateValidator() {
-    return (control: any) => {
-      if (!control.value) return null;
-
-      const selectedDate = new Date(control.value);
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-
-      if (selectedDate <= today) {
-        return { futureDate: true };
-      }
-      return null;
-    };
+    this.formValue = toSignal(
+      this.circleForm.valueChanges.pipe(startWith(this.circleForm.value))
+    );
   }
 
   // Smart Summary Computed Values
   cycleDuration = computed(() => {
-    const members = this.circleForm?.get('maxMembers')?.value || 8;
-    const frequency = this.circleForm?.get('frequency')?.value || 'monthly';
+    const { maxMembers, frequency } = this.formValue();
 
-    if (frequency === 'weekly') {
-      return `${members} Weeks`;
+    if (frequency === CircleFrequency.WEEKLY) {
+      return `${maxMembers} Weeks`;
     }
-    return `${members} Months`;
+    if (frequency === CircleFrequency.BI_WEEKLY) {
+      return `${maxMembers * 2} Weeks`;
+    }
+    return `${maxMembers} Months`;
   });
 
   totalCommitment = computed(() => {
-    const amount = this.circleForm?.get('contributionAmount')?.value || 0;
-    const members = this.circleForm?.get('maxMembers')?.value || 8;
-    return amount * members;
+    const { contributionAmount, maxMembers } = this.formValue();
+    return contributionAmount * maxMembers;
   });
 
   payoutValue = computed(() => {
@@ -228,14 +186,6 @@ export class CreateCircleModalComponent {
     return this.circleForm.get('maxMembers');
   }
 
-  get startDate() {
-    return this.circleForm.get('startDate');
-  }
-
-  get positionMethod() {
-    return this.circleForm.get('positionMethod');
-  }
-
   // Utility methods
   getErrorMsg(fieldName: string): string {
     const field = this.circleForm.get(fieldName);
@@ -245,13 +195,12 @@ export class CreateCircleModalComponent {
 
     if (errors['required'])
       return `${this.getFieldLabel(fieldName)} is required`;
-    if (errors['minLength'])
-      return `Minimum ${errors['minLength'].requiredLength} characters required`;
-    if (errors['maxLength'])
-      return `Maximum ${errors['maxLength'].requiredLength} characters allowed`;
+    if (errors['minlength'])
+      return `Minimum ${errors['minlength'].requiredLength} characters required`;
+    if (errors['maxlength'])
+      return `Maximum ${errors['maxlength'].requiredLength} characters allowed`;
     if (errors['min']) return `Minimum value is $${errors['min'].min}`;
     if (errors['max']) return `Maximum value is $${errors['max'].max}`;
-    if (errors['futureDate']) return 'Date must be in the future';
 
     return 'Invalid value';
   }
@@ -262,8 +211,6 @@ export class CreateCircleModalComponent {
       contributionAmount: 'Contribution amount',
       frequency: 'Frequency',
       maxMembers: 'Max members',
-      startDate: 'Start date',
-      positionMethod: 'Position method',
     };
     return labels[fieldName] || fieldName;
   }
@@ -277,13 +224,8 @@ export class CreateCircleModalComponent {
   }
 
   // Frequency selection
-  selectFrequency(freq: 'weekly' | 'monthly'): void {
+  selectFrequency(freq: CircleFrequency): void {
     this.circleForm.patchValue({ frequency: freq });
-  }
-
-  // Position method selection
-  selectPositionMethod(method: 'lottery' | 'vote'): void {
-    this.circleForm.patchValue({ positionMethod: method });
   }
 
   // Close handlers
@@ -320,18 +262,38 @@ export class CreateCircleModalComponent {
     }
 
     this.errorMessage.set('');
+    this.isLoading.set(true);
+
     const formValue = this.circleForm.value;
 
-    const request: CreateCircleRequest = {
+    const request: CreateCircleDto = {
       name: formValue.name.trim(),
       description: formValue.description?.trim() || undefined,
       contributionAmount: Number(formValue.contributionAmount),
       frequency: formValue.frequency,
       maxMembers: Number(formValue.maxMembers),
-      startDate: formValue.startDate,
-      positionMethod: formValue.positionMethod,
+      isPublic: formValue.isPublic,
     };
 
-    this.submitCircle.emit(request);
+    this.circlesService
+      .createCircle(request)
+      .pipe(
+        finalize(() => {
+          this.isLoading.set(false);
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.circleCreated.emit();
+          this.close();
+        },
+        error: (err) => {
+          this.errorMessage.set(
+            err.error?.message || 'An unexpected error occurred.',
+          );
+          this.shakeState.set('shake');
+          setTimeout(() => this.shakeState.set(''), 500);
+        },
+      });
   }
 }

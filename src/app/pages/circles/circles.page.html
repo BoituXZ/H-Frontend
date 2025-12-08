@@ -6,75 +6,70 @@
     (actionClick)="onCreateCircle()"
   ></app-page-header>
 
-  <!-- Active Circles Section -->
-  @if (activeCircles.length === 0) {
-    <!-- Empty State -->
-    <div class="mb-8">
-      <div
-        class="bg-[var(--color-background-secondary)] border border-dashed border-[var(--color-border)] rounded-card p-8 text-center flex flex-col items-center justify-center"
-      >
-        <h3 class="text-xl font-semibold text-[var(--color-text-primary)] mb-2">
-          No Active Circles Yet
-        </h3>
-        <p class="text-[var(--color-text-secondary)] mb-6 max-w-[300px]">
-          When you join or create a circle, it will appear here.
-        </p>
-        <button
-          class="inline-flex items-center gap-2 px-6 py-3 border border-[var(--color-primary)] text-[var(--color-primary)] bg-transparent rounded-[var(--rounded-btn)] font-medium transition-all duration-200 hover:bg-[var(--color-primary)] hover:text-[var(--color-background-primary)]"
-          (click)="onCreateCircle()"
-        >
-          <span>Create a New Circle</span>
-        </button>
-      </div>
-    </div>
+  @if (isLoading()) {
+  <div class="text-center p-8">
+    <p>Loading your circles...</p>
+  </div>
+  } @else if (error()) {
+  <div class="error-banner">
+    {{ error() }}
+  </div>
   } @else {
-    <!-- Featured Circle Section (Full Width) -->
-    @if (featuredCircle) {
-      <div class="featured-section mb-6">
-        <app-circle-card
-          [circle]="featuredCircle"
-          [isFeatured]="true"
-          (circleClick)="onCircleClick($event)"
-        />
-      </div>
-    }
-
-    <!-- Regular Circles Section (2 per row) -->
-    @if (regularCircles.length > 0) {
-      <div class="regular-circles-section mb-8">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          @for (circle of regularCircles; track circle.id) {
-            <app-circle-card
-              [circle]="circle"
-              [isFeatured]="false"
-              (circleClick)="onCircleClick($event)"
-            />
-          }
-        </div>
-      </div>
-    }
+  <!-- Active Circles Section -->
+  @if (activeCircles().length === 0) {
+  <!-- Empty State -->
+  <div class="mb-8">
+    <div
+      class="bg-[var(--color-background-secondary)] border border-dashed border-[var(--color-border)] rounded-card p-8 text-center flex flex-col items-center justify-center"
+    >
+      <h3 class="text-xl font-semibold text-[var(--color-text-primary)] mb-2">
+        No Active Circles Yet
+      </h3>
+      <p class="text-[var(--color-text-secondary)] mb-6 max-w-[300px]">
+        When you join or create a circle, it will appear here.
+      </p>
+      <button
+        class="inline-flex items-center gap-2 px-6 py-3 border border-[var(--color-primary)] text-[var(--color-primary)] bg-transparent rounded-[var(--rounded-btn)] font-medium transition-all duration-200 hover:bg-[var(--color-primary)] hover:text-[var(--color-background-primary)]"
+        (click)="onCreateCircle()"
+      >
+        <span>Create a New Circle</span>
+      </button>
+    </div>
+  </div>
+  } @else {
+  <div class="regular-circles-section mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      @for (circle of activeCircles(); track circle.id) {
+      <app-circle-card
+        [circle]="circle"
+        [isFeatured]="false"
+        (circleClick)="onCircleClick($event)"
+      />
+      }
+    </div>
+  </div>
   }
 
   <!-- Completed Circles Section -->
-  @if (completedCircles.length > 0) {
-    <div class="completed-circles-section mb-8">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        @for (circle of completedCircles; track circle.id) {
-          <app-circle-card
-            [circle]="circle"
-            [isFeatured]="false"
-            (circleClick)="onCircleClick($event)"
-          />
-        }
-      </div>
+  @if (completedCircles().length > 0) {
+  <div class="completed-circles-section mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      @for (circle of completedCircles(); track circle.id) {
+      <app-circle-card
+        [circle]="circle"
+        [isFeatured]="false"
+        (circleClick)="onCircleClick($event)"
+      />
+      }
     </div>
-  }
+  </div>
+  } }
 </div>
 
 <!-- Create Circle Modal -->
 @if (showCreateModal()) {
-  <app-create-circle-modal
-    (closeModal)="onCloseModal()"
-    (submitCircle)="onSubmitCircle($event)"
-  />
+<app-create-circle-modal
+  (closeModal)="onCloseModal()"
+  (circleCreated)="onCircleCreated()"
+/>
 }
