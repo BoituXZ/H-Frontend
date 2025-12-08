@@ -64,3 +64,20 @@ export interface PayoutEntry {
   date: string;
   status: 'completed' | 'upcoming' | 'pending';
 }
+
+export interface CreateCircleRequest {
+  name: string;
+  description?: string;
+  contributionAmount: number;
+  frequency: 'weekly' | 'monthly';
+  maxMembers: number;
+  startDate: string;
+  positionMethod: 'lottery' | 'vote';
+}
+
+export interface CreateCircleResponse {
+  success: boolean;
+  circle?: CircleDetail;
+  inviteCode?: string;
+  message?: string;
+}

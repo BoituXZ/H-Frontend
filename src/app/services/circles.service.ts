@@ -7,6 +7,8 @@ import {
   CircleMember,
   CircleTransaction,
   CircleVote,
+  CreateCircleRequest,
+  CreateCircleResponse,
 } from '../models/circle.model';
 
 @Injectable({
@@ -34,6 +36,42 @@ export class CirclesService {
     return this.http.post<{ success: boolean }>(
       `${this.apiUrl}/circles/${circleId}/votes/${voteId}`,
       { vote },
+    );
+  }
+
+  createCircle(request: CreateCircleRequest): Observable<CreateCircleResponse> {
+    if (environment.useMockData) {
+      const mockCircle: CircleDetail = {
+        id: `circle-${Date.now()}`,
+        name: request.name,
+        description: request.description,
+        status: 'active',
+        myPosition: 1,
+        contributionAmount: request.contributionAmount,
+        potValue: request.contributionAmount * request.maxMembers,
+        cycle: {
+          current: 1,
+          total: request.maxMembers,
+          nextDueDate: request.startDate,
+        },
+        members: [],
+        transactions: [],
+        votes: [],
+        payoutTimeline: [],
+        createdDate: new Date().toISOString(),
+      };
+
+      return of({
+        success: true,
+        circle: mockCircle,
+        inviteCode: `HIVE-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+        message: 'Circle created successfully',
+      }).pipe(delay(1000));
+    }
+
+    return this.http.post<CreateCircleResponse>(
+      `${this.apiUrl}/circles`,
+      request,
     );
   }
 

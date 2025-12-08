@@ -1,0 +1,219 @@
+<!-- Modal Overlay -->
+<div class="modal-overlay" (click)="onBackdropClick($event)" @fadeIn>
+  <!-- Modal Container -->
+  <div class="modal-container" @scale [@shake]="shakeState()">
+    <!-- Header -->
+    <div class="modal-header">
+      <div class="header-content">
+        <h2 class="modal-title">Create New Circle</h2>
+      </div>
+      <button
+        type="button"
+        class="close-button"
+        (click)="close()"
+        [disabled]="isLoading()"
+      >
+        ✕
+      </button>
+    </div>
+
+    <!-- Loading State -->
+    @if (isLoading()) {
+      <div class="loading-state">
+        <app-loading-spinner [size]="50" message="Creating circle..." />
+      </div>
+    } @else {
+      <!-- Form Content -->
+      <form [formGroup]="circleForm" (ngSubmit)="onSubmit()" class="modal-body">
+        <!-- Error Message -->
+        @if (errorMessage()) {
+          <div class="error-banner">
+            {{ errorMessage() }}
+          </div>
+        }
+
+        <!-- Circle Name -->
+        <div class="form-group">
+          <label for="name" class="form-label"> Circle Name </label>
+          <input
+            id="name"
+            type="text"
+            formControlName="name"
+            [class]="getInputClass('name')"
+            placeholder="e.g., MSU Hustlers"
+            maxlength="50"
+          />
+          <app-form-error [message]="getErrorMsg('name')"></app-form-error>
+        </div>
+
+        <!-- Description (Optional) -->
+        <div class="form-group">
+          <label for="description" class="form-label">
+            Description
+            <span class="optional-badge">Optional</span>
+          </label>
+          <textarea
+            id="description"
+            formControlName="description"
+            [class]="getInputClass('description')"
+            placeholder="What's this circle for?"
+            rows="2"
+            maxlength="200"
+          ></textarea>
+          <div class="char-count">
+            {{ description?.value?.length || 0 }}/200
+          </div>
+        </div>
+
+        <!-- Contribution Amount -->
+        <div class="form-group">
+          <label for="contributionAmount" class="form-label">
+            Contribution Amount
+          </label>
+          <div class="input-with-prefix">
+            <span class="input-prefix">$</span>
+            <input
+              id="contributionAmount"
+              type="number"
+              formControlName="contributionAmount"
+              [class]="getInputClass('contributionAmount')"
+              placeholder="20"
+              min="5"
+              max="1000"
+              step="5"
+            />
+          </div>
+          <app-form-error
+            [message]="getErrorMsg('contributionAmount')"
+          ></app-form-error>
+          <p class="field-hint">Minimum $5, Maximum $1000</p>
+        </div>
+
+        <!-- Frequency Pills -->
+        <div class="form-group">
+          <label class="form-label"> Payment Frequency </label>
+          <div class="pill-row">
+            <button
+              type="button"
+              class="pill-button"
+              [class.active]="frequency?.value === 'weekly'"
+              (click)="selectFrequency('weekly')"
+            >
+              Weekly
+            </button>
+            <button
+              type="button"
+              class="pill-button"
+              [class.active]="frequency?.value === 'monthly'"
+              (click)="selectFrequency('monthly')"
+            >
+              Monthly
+            </button>
+          </div>
+        </div>
+
+        <!-- Max Members Slider -->
+        <div class="form-group">
+          <label for="maxMembers" class="form-label">
+            Maximum Members
+            <span class="member-count">{{ maxMembers?.value }} Members</span>
+          </label>
+          <input
+            id="maxMembers"
+            type="range"
+            formControlName="maxMembers"
+            class="slider"
+            min="2"
+            max="12"
+            step="1"
+          />
+          <div class="slider-labels">
+            <span>2</span>
+            <span>12</span>
+          </div>
+        </div>
+
+        <!-- Start Date -->
+        <div class="form-group">
+          <label for="startDate" class="form-label"> First Payment Date </label>
+          <input
+            id="startDate"
+            type="date"
+            formControlName="startDate"
+            [class]="getInputClass('startDate')"
+          />
+          <app-form-error [message]="getErrorMsg('startDate')"></app-form-error>
+          <p class="field-hint">Must be a future date</p>
+        </div>
+
+        <!-- Position Method -->
+        <div class="form-group">
+          <label class="form-label"> Payout Position Method </label>
+          <div class="pill-row">
+            <button
+              type="button"
+              class="pill-button"
+              [class.active]="positionMethod?.value === 'lottery'"
+              (click)="selectPositionMethod('lottery')"
+            >
+              Lottery
+            </button>
+            <button
+              type="button"
+              class="pill-button"
+              [class.active]="positionMethod?.value === 'vote'"
+              (click)="selectPositionMethod('vote')"
+            >
+              Vote
+            </button>
+          </div>
+          <p class="field-hint">How payout positions will be determined</p>
+        </div>
+
+        <!-- Smart Summary -->
+        <div class="summary-card">
+          <div class="summary-header">
+            <h3 class="summary-title">Circle Summary</h3>
+          </div>
+          <div class="summary-grid">
+            <div class="summary-item">
+              <span class="summary-label">Cycle Duration</span>
+              <span class="summary-value">{{ cycleDuration() }}</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Total Commitment</span>
+              <span class="summary-value">
+                ${{ contributionAmount?.value || 0 }} ×
+                {{ maxMembers?.value || 0 }} = ${{ totalCommitment() }}
+              </span>
+            </div>
+            <div class="summary-item highlight">
+              <span class="summary-label">Your Payout Value</span>
+              <span class="summary-value-large"> ${{ payoutValue() }} </span>
+              <span class="summary-sublabel">Lump sum when it's your turn</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn-ghost"
+            (click)="close()"
+            [disabled]="isLoading()"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="btn-primary"
+            [disabled]="circleForm.invalid || isLoading()"
+          >
+            Create Circle
+          </button>
+        </div>
+      </form>
+    }
+  </div>
+</div>

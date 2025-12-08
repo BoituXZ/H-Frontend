@@ -1,8 +1,13 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { PageHeaderComponent } from '../../components/page-header/page-header.component';
 import { CircleCard } from '../../components/circle-card/circle-card';
+import {
+  CreateCircleModalComponent,
+  CreateCircleRequest,
+} from '../../shared/components/create-circle-modal/create-circle-modal';
+import { CirclesService } from '../../services/circles.service';
 import {
   LucideAngularModule,
   Plus,
@@ -51,12 +56,19 @@ interface CircleStats {
 
 @Component({
   selector: 'app-circles',
-  imports: [CommonModule, LucideAngularModule, PageHeaderComponent, CircleCard],
+  imports: [
+    CommonModule,
+    LucideAngularModule,
+    PageHeaderComponent,
+    CircleCard,
+    CreateCircleModalComponent,
+  ],
   templateUrl: './circles.page.html',
   styleUrl: './circles.page.css',
 })
 export class CirclesPage {
-  constructor(private router: Router) {}
+  private router = inject(Router);
+  private circlesService = inject(CirclesService);
 
   protected readonly Plus = Plus;
   protected readonly DollarSign = DollarSign;
@@ -71,6 +83,7 @@ export class CirclesPage {
   protected readonly Award = Award;
 
   showCompleted = signal(false);
+  showCreateModal = signal(false);
 
   stats: CircleStats = {
     totalContributed: 320,
@@ -229,8 +242,30 @@ export class CirclesPage {
   }
 
   onCreateCircle(): void {
-    // TODO: Implement circle creation logic
-    console.log('Create circle clicked');
+    this.showCreateModal.set(true);
+  }
+
+  onCloseModal(): void {
+    this.showCreateModal.set(false);
+  }
+
+  onSubmitCircle(request: CreateCircleRequest): void {
+    this.circlesService.createCircle(request).subscribe({
+      next: (response) => {
+        if (response.success && response.circle) {
+          console.log('Circle created successfully:', response.circle);
+          console.log('Invite code:', response.inviteCode);
+          this.showCreateModal.set(false);
+
+          // Navigate to the new circle detail page
+          this.router.navigate(['/app/circles', response.circle.id]);
+        }
+      },
+      error: (error) => {
+        console.error('Failed to create circle:', error);
+        // Error handling will be done in the modal component if needed
+      },
+    });
   }
 
   onCircleClick(circleId: string): void {
