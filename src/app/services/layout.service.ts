@@ -6,7 +6,7 @@ import { ThemeService, Theme } from './theme.service';
 })
 export class LayoutService {
   private themeService = inject(ThemeService);
-  
+
   readonly isCollapsed = signal(false);
 
   toggleSidebar(): void {

@@ -3,11 +3,11 @@ import { Injectable, signal, effect } from '@angular/core';
 export type Theme = 'light' | 'dark';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ThemeService {
   private readonly THEME_STORAGE_KEY = 'hivefund_theme';
-  
+
   // Reactive theme state using signals
   readonly currentTheme = signal<Theme>(this.getInitialTheme());
 
@@ -24,7 +24,7 @@ export class ThemeService {
   private getInitialTheme(): Theme {
     try {
       const stored = localStorage.getItem(this.THEME_STORAGE_KEY);
-      return (stored === 'dark' || stored === 'light') ? stored : 'light';
+      return stored === 'dark' || stored === 'light' ? stored : 'light';
     } catch (error) {
       console.warn('Failed to read theme from localStorage:', error);
       return 'light';
@@ -54,7 +54,9 @@ export class ThemeService {
    * Toggle between light and dark themes
    */
   toggleTheme(): void {
-    this.currentTheme.update(current => current === 'light' ? 'dark' : 'light');
+    this.currentTheme.update((current) =>
+      current === 'light' ? 'dark' : 'light',
+    );
   }
 
   /**
