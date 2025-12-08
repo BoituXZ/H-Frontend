@@ -1,0 +1,281 @@
+<div class="min-h-screen circles-container">
+  <!-- Page Header -->
+  <app-page-header
+    pageTitle="Circles"
+    actionLabel="Add Circle"
+    [actionIcon]="Plus"
+    (actionClick)="onCreateCircle()"
+  />
+
+  <!-- Summary Stats -->
+  <div class="summary-stats">
+    <div class="stat-card-theme card-blue">
+      <div class="stat-icon">
+        <lucide-angular
+          [img]="DollarSign"
+          class="w-6 h-6 text-white"
+          [strokeWidth]="2"
+        ></lucide-angular>
+      </div>
+      <div class="stat-content">
+        <p class="stat-label">Total Contributed</p>
+        <p class="stat-value">
+          ${{ stats.totalContributed | number: "1.2-2" }}
+        </p>
+      </div>
+    </div>
+
+    <div class="stat-card-theme card-orange">
+      <div class="stat-icon">
+        <lucide-angular
+          [img]="Users"
+          class="w-6 h-6"
+          [strokeWidth]="2"
+        ></lucide-angular>
+      </div>
+      <div class="stat-content">
+        <p class="stat-label">Active Cycles</p>
+        <p class="stat-value">{{ stats.activeCount }}</p>
+      </div>
+    </div>
+
+    <div class="stat-card-theme card-blue">
+      <div class="stat-icon">
+        <lucide-angular
+          [img]="Calendar"
+          class="w-6 h-6 text-white"
+          [strokeWidth]="2"
+        ></lucide-angular>
+      </div>
+      <div class="stat-content">
+        <p class="stat-label">Next Payout</p>
+        <p class="stat-value">
+          ${{ stats.upcomingPayoutAmount | number: "1.2-2" }}
+        </p>
+        <p class="stat-meta">Dec 25</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Active Circles Section -->
+  <div class="section">
+    <h2 class="section-title">Active Circles</h2>
+
+    <div class="circles-grid">
+      @for (circle of activeCircles; track circle.id) {
+        <div class="card-theme circle-card">
+          <!-- Card Header -->
+          <div class="circle-header">
+            <div class="circle-title-row">
+              <h3 class="circle-name">{{ circle.name }}</h3>
+              <span class="status-badge status-active">
+                <lucide-angular
+                  [img]="CheckCircle"
+                  class="w-3 h-3"
+                  [strokeWidth]="2"
+                ></lucide-angular>
+                Active
+              </span>
+            </div>
+          </div>
+
+          <!-- Key Info Row -->
+          <div class="circle-info-row">
+            <div class="info-item">
+              <span class="info-label">Contribution</span>
+              <span class="info-value"
+                >${{ circle.contributionAmount }}/{{
+                  circle.frequency === "monthly" ? "mo" : "wk"
+                }}</span
+              >
+            </div>
+
+            <div class="info-item">
+              <span class="info-label">Members</span>
+              <div class="members-display">
+                <div class="avatar-stack">
+                  @for (i of [1, 2, 3]; track i) {
+                    <div class="avatar-mini">{{ getInitials(i) }}</div>
+                  }
+                  @if (circle.memberCount > 3) {
+                    <div class="avatar-mini avatar-more">
+                      +{{ circle.memberCount - 3 }}
+                    </div>
+                  }
+                </div>
+                <span class="member-count"
+                  >{{ circle.memberCount }}/{{ circle.maxMembers }}</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- User Position -->
+          <div class="user-position">
+            <lucide-angular
+              [img]="User"
+              class="w-4 h-4"
+              [strokeWidth]="2"
+            ></lucide-angular>
+            <span
+              >Your Position: <strong>#{{ circle.userPosition }}</strong></span
+            >
+            @if (circle.hasPaidOut) {
+              <span class="payout-badge">
+                <lucide-angular
+                  [img]="Check"
+                  class="w-3 h-3"
+                  [strokeWidth]="2"
+                ></lucide-angular>
+                Paid Out
+              </span>
+            } @else {
+              <span class="waiting-badge">Waiting</span>
+            }
+          </div>
+
+          <!-- Progress Section -->
+          <div class="progress-section">
+            <div class="progress-header">
+              <span class="progress-label">Cycle Progress</span>
+              <span class="progress-text"
+                >Month {{ circle.progress.currentRound }} of
+                {{ circle.progress.totalRounds }}</span
+              >
+            </div>
+            <div class="progress-bar-container">
+              <div
+                class="progress-bar-fill"
+                [style.width.%]="circle.progress.percentage"
+              ></div>
+            </div>
+          </div>
+
+          <!-- Footer Actions -->
+          <div class="circle-footer">
+            <div class="next-payment">
+              <lucide-angular
+                [img]="Clock"
+                class="w-4 h-4"
+                [strokeWidth]="2"
+              ></lucide-angular>
+              @if (circle.nextPayment) {
+                <span
+                  >Next Payment:
+                  <strong>{{
+                    formatDate(circle.nextPayment.date)
+                  }}</strong></span
+                >
+              } @else if (circle.nextPayout) {
+                <span
+                  >Next Payout:
+                  <strong>{{
+                    formatDate(circle.nextPayout.date)
+                  }}</strong></span
+                >
+              }
+            </div>
+            <button class="btn-view-details">View Details</button>
+          </div>
+        </div>
+      }
+
+      <!-- Empty State -->
+      @if (activeCircles.length === 0) {
+        <div class="empty-state">
+          <div class="empty-icon">
+            <lucide-angular
+              [img]="Users"
+              class="w-12 h-12 text-gray-400"
+              [strokeWidth]="2"
+            ></lucide-angular>
+          </div>
+          <h3 class="empty-title">No Active Circles</h3>
+          <p class="empty-description">
+            Create or join a circle to start saving together
+          </p>
+          <button class="btn-primary mt-4">Browse Circles</button>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Completed Circles Section -->
+  @if (completedCircles.length > 0) {
+    <div class="section">
+      <button class="section-toggle" (click)="toggleCompleted()">
+        <h2 class="section-title">
+          Completed Circles ({{ completedCircles.length }})
+        </h2>
+        <lucide-angular
+          [img]="ChevronDown"
+          class="w-5 h-5 transition-transform"
+          [class.rotate-180]="showCompleted()"
+          [strokeWidth]="2"
+        >
+        </lucide-angular>
+      </button>
+
+      @if (showCompleted()) {
+        <div class="circles-grid">
+          @for (circle of completedCircles; track circle.id) {
+            <div class="card-theme circle-card completed">
+              <div class="circle-header">
+                <div class="circle-title-row">
+                  <h3 class="circle-name">{{ circle.name }}</h3>
+                  <span class="status-badge status-completed">
+                    <lucide-angular
+                      [img]="CheckCircle2"
+                      class="w-3 h-3"
+                      [strokeWidth]="2"
+                    ></lucide-angular>
+                    Completed
+                  </span>
+                </div>
+              </div>
+
+              <div class="circle-info-row">
+                <div class="info-item">
+                  <span class="info-label">Total Contributed</span>
+                  <span class="info-value"
+                    >${{
+                      circle.contributionAmount * circle.progress.totalRounds
+                    }}</span
+                  >
+                </div>
+
+                <div class="info-item">
+                  <span class="info-label">Completed</span>
+                  <span class="info-value">{{
+                    formatDate(circle.nextPayout?.date || "")
+                  }}</span>
+                </div>
+              </div>
+
+              <div class="circle-footer">
+                <div class="completion-badge">
+                  <lucide-angular
+                    [img]="Award"
+                    class="w-4 h-4"
+                    [strokeWidth]="2"
+                  ></lucide-angular>
+                  <span>Successfully Completed</span>
+                </div>
+                <button class="btn-view-details">View History</button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Mobile FAB -->
+  <button class="fab-create" aria-label="Create Circle">
+    <lucide-angular
+      [img]="Plus"
+      class="w-6 h-6"
+      [strokeWidth]="2"
+    ></lucide-angular>
+  </button>
+</div>

@@ -1,0 +1,26 @@
+:host {
+  display: contents;
+}
+
+.app-layout {
+  min-height: 100vh;
+  background: var(--bg-primary);
+  transition: background 0.3s ease;
+}
+
+[data-theme="dark"] .app-layout {
+  background: linear-gradient(135deg, #0a1929 0%, #0f2937 50%, #1a3a4a 100%);
+  background-attachment: fixed;
+}
+
+.main-content {
+  min-height: 100vh;
+  padding-bottom: 4rem;
+  transition: all 0.3s ease;
+}
+
+@media (min-width: 1024px) {
+  .main-content {
+    padding-bottom: 0;
+  }
+}

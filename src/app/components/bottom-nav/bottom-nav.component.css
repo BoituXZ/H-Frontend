@@ -1,0 +1,17 @@
+:host {
+  display: contents;
+}
+
+.nav-active {
+  color: white;
+}
+
+.nav-active lucide-angular {
+  transform: scale(1.1);
+}
+
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  nav {
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+  }
+}

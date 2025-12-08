@@ -1,0 +1,16 @@
+<div class="app-layout">
+  <!-- Desktop Sidebar -->
+  <app-sidebar></app-sidebar>
+
+  <!-- Main Content Area -->
+  <div
+    class="main-content"
+    [class.lg:ml-64]="!layoutService.isCollapsed()"
+    [class.lg:ml-20]="layoutService.isCollapsed()"
+  >
+    <router-outlet></router-outlet>
+  </div>
+
+  <!-- Mobile Bottom Navigation -->
+  <app-bottom-nav></app-bottom-nav>
+</div>

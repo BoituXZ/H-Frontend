@@ -1,0 +1,28 @@
+<div class="page-header">
+  <div class="page-header-container flex justify-between align-middle px-2">
+    <!-- Page Title -->
+    <div class="page-header-title">
+      <h1 class="page-title">
+        {{ pageTitle }}
+      </h1>
+    </div>
+
+    <!-- Action Button -->
+    @if (actionLabel) {
+      <button
+        class="page-header-action"
+        (click)="onActionClick()"
+        type="button"
+      >
+        @if (actionIcon) {
+          <lucide-angular
+            [img]="actionIcon"
+            class="action-icon"
+            [strokeWidth]="2"
+          ></lucide-angular>
+        }
+        <span class="action-label">{{ actionLabel }}</span>
+      </button>
+    }
+  </div>
+</div>

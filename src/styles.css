@@ -408,3 +408,150 @@
   outline: 2px solid #ffb800;
   outline-offset: 2px;
 }
+
+/* ===================== */
+/* GLOBAL THEME SYSTEM   */
+/* ===================== */
+
+/* Light Mode (Default) */
+:root,
+[data-theme="light"] {
+  --bg-primary: #f9fafb;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #fdfcfb;
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --text-tertiary: #9ca3af;
+  --border-color: rgba(235, 230, 221, 0.5);
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --card-border: rgba(235, 230, 221, 0.5);
+  --card-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --overlay-bg: rgba(0, 0, 0, 0.5);
+
+  /* Accent colors */
+  --accent-honey: #ffb800;
+  --accent-honey-dark: #e6a600;
+  --accent-honey-darker: #cc9400;
+  --accent-hive: #2c7a9b;
+  --accent-hive-light: #60d1f6;
+  --accent-success: #059669;
+  --accent-warning: #d97706;
+}
+
+/* Dark Mode */
+[data-theme="dark"] {
+  --bg-primary: linear-gradient(135deg, #0a1929 0%, #0f2937 50%, #1a3a4a 100%);
+  --bg-secondary: rgba(15, 41, 55, 0.4);
+  --bg-tertiary: rgba(255, 255, 255, 0.06);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.8);
+  --text-tertiary: rgba(255, 255, 255, 0.6);
+  --border-color: rgba(255, 255, 255, 0.15);
+  --card-bg: rgba(255, 255, 255, 0.08);
+  --card-border: rgba(255, 255, 255, 0.15);
+  --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  --overlay-bg: rgba(0, 0, 0, 0.7);
+
+  /* Accent colors - same as light mode */
+  --accent-honey: #ffb800;
+  --accent-honey-dark: #e6a600;
+  --accent-honey-darker: #cc9400;
+  --accent-hive: #2c7a9b;
+  --accent-hive-light: #60d1f6;
+  --accent-success: #059669;
+  --accent-warning: #d97706;
+}
+
+/* Global body styles */
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition:
+    background 0.3s ease,
+    color 0.3s ease;
+}
+
+/* Dark mode gradient background */
+[data-theme="dark"] body {
+  background: linear-gradient(135deg, #0a1929 0%, #0f2937 50%, #1a3a4a 100%);
+  background-attachment: fixed;
+}
+
+/* ===================== */
+/* THEME-AWARE CARD UTILITIES */
+/* ===================== */
+
+/* Base Card - Theme Aware */
+.card-theme {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--card-shadow);
+  border-radius: var(--radius-card);
+  transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .card-theme {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.card-theme:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hive);
+}
+
+/* Glassmorphic Stat Card */
+.stat-card-theme {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .stat-card-theme {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.stat-card-theme:hover {
+  transform: scale(1.02);
+}
+
+[data-theme="dark"] .stat-card-theme:hover {
+  box-shadow: 0 0 30px rgba(96, 209, 246, 0.3);
+}
+
+/* Primary Blue Theme Card */
+.card-blue {
+  background: var(--card-bg);
+  border: 1px solid rgba(44, 122, 155, 0.3);
+}
+
+[data-theme="dark"] .card-blue {
+  background: rgba(15, 41, 55, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+[data-theme="dark"] .card-blue:hover {
+  border-color: rgba(96, 209, 246, 0.5);
+  box-shadow: 0 0 30px rgba(96, 209, 246, 0.2);
+}
+
+/* Accent Orange/Gold Theme Card */
+.card-orange {
+  background: var(--card-bg);
+  border: 1px solid rgba(255, 184, 0, 0.3);
+}
+
+[data-theme="dark"] .card-orange {
+  background: rgba(184, 148, 30, 0.2);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+[data-theme="dark"] .card-orange:hover {
+  border-color: rgba(255, 184, 0, 0.5);
+  box-shadow: 0 0 30px rgba(255, 184, 0, 0.2);
+}

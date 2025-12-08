@@ -1,0 +1,140 @@
+<aside
+  [class]="
+    'hidden lg:flex flex-col bg-hive-900 h-screen fixed left-0 top-0 z-40 transition-all duration-300 ' +
+    (isCollapsed() ? 'w-20' : 'w-64')
+  "
+>
+  <!-- Logo & Toggle -->
+  <div class="p-6">
+    @if (!isCollapsed()) {
+      <div class="flex items-center justify-between">
+        <h1
+          class="text-2xl font-display font-bold bg-gradient-to-r from-honey-400 to-honey-600 bg-clip-text text-transparent"
+        >
+          HiveFund
+        </h1>
+        <button
+          (click)="toggleSidebar()"
+          class="p-2 rounded-lg hover:bg-hive-800 text-white transition-colors shrink-0"
+        >
+          <lucide-angular
+            [img]="ChevronLeft"
+            class="w-5 h-5"
+            [strokeWidth]="2"
+          ></lucide-angular>
+        </button>
+      </div>
+    } @else {
+      <div class="flex flex-col items-center gap-3">
+        <div class="w-12 h-12 flex items-center justify-center">
+          <img
+            src="/hivefundLogo.png"
+            alt="HiveFund"
+            class="max-w-full max-h-full object-contain"
+          />
+        </div>
+        <button
+          (click)="toggleSidebar()"
+          class="p-1.5 rounded-lg hover:bg-hive-800 text-white transition-colors"
+        >
+          <lucide-angular
+            [img]="ChevronRight"
+            class="w-4 h-4"
+            [strokeWidth]="2"
+          ></lucide-angular>
+        </button>
+      </div>
+    }
+  </div>
+
+  <!-- Navigation -->
+  <nav class="flex-1 p-4 space-y-2">
+    @for (item of navItems; track item.route) {
+      <a
+        [routerLink]="item.route"
+        routerLinkActive="nav-active"
+        [routerLinkActiveOptions]="{
+          exact: item.route === '/app/dashboard',
+        }"
+        [class]="
+          'relative flex items-center gap-3 px-4 py-3 rounded-hive text-hive-200 hover:bg-hive-800 hover:text-white transition-all duration-300 group ' +
+          (isCollapsed() ? 'justify-center' : '')
+        "
+        [title]="isCollapsed() ? item.label : ''"
+      >
+        <div class="relative">
+          <lucide-angular
+            [img]="item.icon"
+            class="w-5 h-5 shrink-0 transition-transform duration-300 group-hover:scale-110"
+            [strokeWidth]="2"
+          ></lucide-angular>
+          <div
+            class="absolute -inset-2 bg-honey-400/20 rounded-full blur opacity-0 group-[.nav-active]:opacity-100 transition-opacity duration-300"
+          ></div>
+        </div>
+        @if (!isCollapsed()) {
+          <span
+            class="font-medium font-sans group-[.nav-active]:text-honey-400 transition-colors duration-300"
+            >{{ item.label }}</span
+          >
+        }
+      </a>
+    }
+  </nav>
+
+  <!-- Theme Toggle -->
+  <div class="p-4 border-t border-hive-800">
+    <button
+      (click)="toggleTheme()"
+      [class]="
+        'w-full flex items-center gap-3 px-4 py-3 rounded-hive text-hive-200 hover:bg-hive-800 hover:text-white transition-all duration-300 ' +
+        (isCollapsed() ? 'justify-center' : '')
+      "
+      [title]="isDarkTheme() ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
+    >
+      <lucide-angular
+        [img]="isDarkTheme() ? Sun : Moon"
+        class="w-5 h-5 shrink-0"
+        [strokeWidth]="2"
+      ></lucide-angular>
+      @if (!isCollapsed()) {
+        <span class="font-medium font-sans">
+          {{ isDarkTheme() ? "Light Mode" : "Dark Mode" }}
+        </span>
+      }
+    </button>
+  </div>
+
+  <!-- User Profile -->
+  <div class="p-4">
+    @if (!isCollapsed()) {
+      @if (currentUser; as user) {
+        <div class="flex items-center gap-3">
+          <div
+            class="w-10 h-10 rounded-full bg-gradient-to-br from-honey-400 to-honey-600 flex items-center justify-center text-white font-bold shrink-0"
+          >
+            {{ user.name.charAt(0).toUpperCase() }}
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-semibold text-white truncate font-sans">
+              {{ user.name }}
+            </p>
+            <p class="text-xs text-hive-300 truncate font-sans">
+              {{ user.phoneNumber }}
+            </p>
+          </div>
+        </div>
+      }
+    } @else {
+      @if (currentUser; as user) {
+        <div class="flex justify-center">
+          <div
+            class="w-10 h-10 rounded-full bg-gradient-to-br from-honey-400 to-honey-600 flex items-center justify-center text-white font-bold cursor-pointer hover:scale-110 transition-transform"
+          >
+            {{ user.name.charAt(0).toUpperCase() }}
+          </div>
+        </div>
+      }
+    }
+  </div>
+</aside>
