@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PageHeaderComponent } from '../../components/page-header/page-header.component';
+import { CircleCard } from '../../components/circle-card/circle-card';
 import {
   LucideAngularModule,
   Plus,
@@ -49,7 +50,7 @@ interface CircleStats {
 
 @Component({
   selector: 'app-circles',
-  imports: [CommonModule, LucideAngularModule, PageHeaderComponent],
+  imports: [CommonModule, LucideAngularModule, PageHeaderComponent, CircleCard],
   templateUrl: './circles.page.html',
   styleUrl: './circles.page.css',
 })
@@ -73,6 +74,27 @@ export class CirclesPage {
     activeCount: 2,
     upcomingPayoutAmount: 160,
   };
+
+  get featuredCircle(): CircleSummary | null {
+    if (this.activeCircles.length === 0) return null;
+
+    // Find circle with closest payment date
+    const circlesWithPayment = this.activeCircles.filter(
+      (c) => c.nextPayment?.date,
+    );
+    if (circlesWithPayment.length === 0) return null;
+
+    return circlesWithPayment.reduce((closest, current) => {
+      const closestDate = new Date(closest.nextPayment!.date).getTime();
+      const currentDate = new Date(current.nextPayment!.date).getTime();
+      return currentDate < closestDate ? current : closest;
+    });
+  }
+
+  get regularCircles(): CircleSummary[] {
+    if (!this.featuredCircle) return this.activeCircles;
+    return this.activeCircles.filter((c) => c.id !== this.featuredCircle!.id);
+  }
 
   activeCircles: CircleSummary[] = [
     {
@@ -110,9 +132,57 @@ export class CirclesPage {
         totalRounds: 8,
         percentage: 75,
       },
+      nextPayment: {
+        date: '2024-12-15',
+        amount: 50,
+      },
       nextPayout: {
         date: '2024-12-25',
         amount: 400,
+      },
+    },
+    {
+      id: '4',
+      name: 'Holiday Fund',
+      status: 'active',
+      contributionAmount: 100,
+      frequency: 'monthly',
+      memberCount: 4,
+      maxMembers: 5,
+      userPosition: 1,
+      hasPaidOut: false,
+      progress: {
+        currentRound: 2,
+        totalRounds: 5,
+        percentage: 40,
+      },
+      nextPayment: {
+        date: '2024-12-20',
+        amount: 100,
+      },
+      nextPayout: {
+        date: '2025-01-15',
+        amount: 500,
+      },
+    },
+    {
+      id: '5',
+      name: 'Family Savings',
+      status: 'active',
+      contributionAmount: 200,
+      frequency: 'monthly',
+      memberCount: 10,
+      maxMembers: 12,
+      userPosition: 5,
+      hasPaidOut: false,
+      progress: {
+        currentRound: 3,
+        totalRounds: 12,
+        percentage: 25,
+      },
+      nextPayment: {
+        date: '2024-12-22',
+        amount: 200,
       },
     },
   ];
@@ -158,5 +228,10 @@ export class CirclesPage {
   onCreateCircle(): void {
     // TODO: Implement circle creation logic
     console.log('Create circle clicked');
+  }
+
+  onCircleClick(circleId: string): void {
+    // TODO: Navigate to circle details
+    console.log('Circle clicked:', circleId);
   }
 }
