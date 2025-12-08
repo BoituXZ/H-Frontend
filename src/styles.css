@@ -408,3 +408,51 @@
   outline: 2px solid #ffb800;
   outline-offset: 2px;
 }
+
+/* ===================== */
+/* GLOBAL THEME SYSTEM   */
+/* ===================== */
+
+/* Light Mode (Default) */
+:root,
+[data-theme="light"] {
+  --bg-primary: #f9fafb;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #fdfcfb;
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --text-tertiary: #9ca3af;
+  --border-color: rgba(235, 230, 221, 0.5);
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --card-border: rgba(235, 230, 221, 0.5);
+  --card-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --overlay-bg: rgba(0, 0, 0, 0.5);
+}
+
+/* Dark Mode */
+[data-theme="dark"] {
+  --bg-primary: linear-gradient(135deg, #0a1929 0%, #0f2937 50%, #1a3a4a 100%);
+  --bg-secondary: rgba(15, 41, 55, 0.4);
+  --bg-tertiary: rgba(255, 255, 255, 0.06);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.8);
+  --text-tertiary: rgba(255, 255, 255, 0.6);
+  --border-color: rgba(255, 255, 255, 0.15);
+  --card-bg: rgba(255, 255, 255, 0.08);
+  --card-border: rgba(255, 255, 255, 0.15);
+  --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  --overlay-bg: rgba(0, 0, 0, 0.7);
+}
+
+/* Global body styles */
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Dark mode gradient background */
+[data-theme="dark"] body {
+  background: linear-gradient(135deg, #0a1929 0%, #0f2937 50%, #1a3a4a 100%);
+  background-attachment: fixed;
+}

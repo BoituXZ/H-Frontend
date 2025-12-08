@@ -1,5 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { PageHeaderComponent } from '../../components/page-header/page-header.component';
 import {
   LucideAngularModule,
   Plus,
@@ -48,7 +49,7 @@ interface CircleStats {
 
 @Component({
   selector: 'app-circles',
-  imports: [CommonModule, LucideAngularModule],
+  imports: [CommonModule, LucideAngularModule, PageHeaderComponent],
   templateUrl: './circles.page.html',
   styleUrl: './circles.page.css',
 })
@@ -152,5 +153,10 @@ export class CirclesPage {
     if (!dateString) return '';
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  }
+
+  onCreateCircle(): void {
+    // TODO: Implement circle creation logic
+    console.log('Create circle clicked');
   }
 }

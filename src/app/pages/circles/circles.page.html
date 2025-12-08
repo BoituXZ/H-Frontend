@@ -1,21 +1,11 @@
 <div class="min-h-screen circles-container">
-  <!-- Header Section -->
-  <div class="page-header">
-    <div class="header-content">
-      <div class="header-text">
-        <h1 class="page-title">My Circles</h1>
-        <p class="page-subtitle">Manage your savings and cycles</p>
-      </div>
-      <button class="btn-create">
-        <lucide-angular
-          [img]="Plus"
-          class="w-5 h-5"
-          [strokeWidth]="2"
-        ></lucide-angular>
-        <span>Create Circle</span>
-      </button>
-    </div>
-  </div>
+  <!-- Page Header -->
+  <app-page-header
+    pageTitle="Circles"
+    actionLabel="Add Circle"
+    [actionIcon]="Plus"
+    (actionClick)="onCreateCircle()"
+  />
 
   <!-- Summary Stats -->
   <div class="summary-stats">

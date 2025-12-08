@@ -1,10 +1,10 @@
-<div class="min-h-screen" style="background-color: #f9fafb">
+<div class="app-layout">
   <!-- Desktop Sidebar -->
   <app-sidebar></app-sidebar>
 
   <!-- Main Content Area -->
   <div
-    class="min-h-screen pb-16 lg:pb-0 transition-all duration-300"
+    class="main-content"
     [class.lg:ml-64]="!layoutService.isCollapsed()"
     [class.lg:ml-20]="layoutService.isCollapsed()"
   >

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, computed } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import {
@@ -12,6 +12,8 @@ import {
   ChevronRight,
   User,
   HandCoins,
+  Sun,
+  Moon,
 } from 'lucide-angular';
 import { AuthService } from '../../services/auth.service';
 import { LayoutService } from '../../services/layout.service';
@@ -35,6 +37,8 @@ export class SidebarComponent {
   protected readonly ChevronLeft = ChevronLeft;
   protected readonly ChevronRight = ChevronRight;
   protected readonly User = User;
+  protected readonly Sun = Sun;
+  protected readonly Moon = Moon;
 
   get currentUser() {
     return this.authService.currentUser();
@@ -59,4 +63,10 @@ export class SidebarComponent {
   getSidebarWidth(): string {
     return this.layoutService.getSidebarWidth();
   }
+
+  toggleTheme(): void {
+    this.layoutService.toggleTheme();
+  }
+
+  isDarkTheme = computed(() => this.layoutService.isDarkTheme());
 }

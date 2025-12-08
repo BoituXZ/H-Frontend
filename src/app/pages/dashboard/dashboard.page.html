@@ -1,4 +1,12 @@
-<div class="min-h-screen bg-cream-50">
+<div class="page-wrapper">
+  <!-- Page Header -->
+  <app-page-header
+    pageTitle="Dashboard"
+    actionLabel="Settings"
+    [actionIcon]="Settings"
+    (actionClick)="navigateToSettings()"
+  />
+
   <!-- Loading State -->
   @if (loading()) {
     <div class="flex items-center justify-center min-h-screen">

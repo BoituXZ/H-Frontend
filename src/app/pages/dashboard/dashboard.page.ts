@@ -5,6 +5,7 @@ import { AuthService } from '../../services/auth.service';
 import { DashboardService } from '../../services/dashboard.service';
 import { DashboardData } from '../../models/dashboard.model';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
+import { PageHeaderComponent } from '../../components/page-header/page-header.component';
 import {
   LucideAngularModule,
   TrendingUp,
@@ -20,6 +21,7 @@ import {
   Repeat,
   Banknote,
   History,
+  Settings,
 } from 'lucide-angular';
 import {
   fadeInAnimation,
@@ -33,6 +35,7 @@ import {
     CommonModule,
     RouterModule,
     LoadingSpinnerComponent,
+    PageHeaderComponent,
     LucideAngularModule,
   ],
   templateUrl: './dashboard.page.html',
@@ -54,6 +57,7 @@ export class DashboardPage implements OnInit {
   readonly Repeat = Repeat;
   readonly Banknote = Banknote;
   readonly History = History;
+  readonly Settings = Settings;
 
   dashboardData = signal<DashboardData | null>(null);
   loading = signal(true);
@@ -176,5 +180,9 @@ export class DashboardPage implements OnInit {
 
   navigateToCircles(): void {
     this.router.navigate(['/app/circles']);
+  }
+
+  navigateToSettings(): void {
+    this.router.navigate(['/app/settings']);
   }
 }
