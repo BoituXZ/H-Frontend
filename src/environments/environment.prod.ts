@@ -5,5 +5,6 @@ export const environment = {
   tokenRefreshBuffer: 300000, // 5 minutes before expiry
   otpResendCooldown: 60000, // 60 seconds
   storagePrefix: 'hivefund_',
-  enableLogging: false
+  enableLogging: false,
+  useMockData: false,
 };

@@ -4,9 +4,12 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:local": "ng serve --configuration development",
+    "start:test": "ng serve --configuration test",
     "start:hmr": "ng serve --hmr",
     "start:poll": "ng serve --poll 2000",
     "build": "ng build",
+    "build:test": "ng build --configuration test",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
