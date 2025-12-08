@@ -575,3 +575,121 @@
     width: 100%;
   }
 }
+
+/* ================================================ */
+/* COMPREHENSIVE THEME SUPPORT FOR CIRCLES PAGE     */
+/* ================================================ */
+
+/* Override hardcoded backgrounds */
+[data-theme="light"] .circles-container {
+  background: var(--bg-primary) !important;
+}
+
+/* Text colors - use theme variables */
+.page-title,
+.circle-name,
+.info-value,
+.empty-title {
+  color: var(--text-primary) !important;
+}
+
+.page-subtitle,
+.section-title,
+.info-label,
+.member-count,
+.progress-text,
+.next-payment,
+.empty-description {
+  color: var(--text-secondary) !important;
+}
+
+/* Card backgrounds */
+.circle-card,
+.empty-state {
+  background: var(--card-bg) !important;
+  border-color: var(--card-border) !important;
+}
+
+[data-theme="dark"] .circle-card,
+[data-theme="dark"] .empty-state {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Info row backgrounds */
+.circle-info-row,
+.user-position {
+  background: var(--bg-tertiary) !important;
+}
+
+/* Progress bars */
+.progress-bar-container {
+  background: var(--border-color) !important;
+}
+
+.progress-bar-fill {
+  background: linear-gradient(90deg, var(--accent-hive), var(--accent-hive-light)) !important;
+}
+
+/* Status badges with theme colors */
+.status-active {
+  background: rgba(5, 150, 105, 0.1) !important;
+  color: var(--accent-success) !important;
+}
+
+.payout-badge {
+  background: rgba(5, 150, 105, 0.1) !important;
+  color: var(--accent-success) !important;
+}
+
+.waiting-badge {
+  background: rgba(217, 119, 6, 0.1) !important;
+  color: var(--accent-warning) !important;
+}
+
+/* Buttons */
+.btn-create,
+.fab-create,
+.btn-view-details {
+  background: linear-gradient(135deg, var(--accent-hive), var(--accent-hive-light)) !important;
+  color: white !important;
+}
+
+[data-theme="light"] .btn-create,
+[data-theme="light"] .fab-create,
+[data-theme="light"] .btn-view-details {
+  box-shadow: 0 2px 8px rgba(44, 122, 155, 0.15) !important;
+}
+
+[data-theme="dark"] .btn-create:hover,
+[data-theme="dark"] .fab-create:hover,
+[data-theme="dark"] .btn-view-details:hover {
+  box-shadow: 0 4px 20px rgba(96, 209, 246, 0.3) !important;
+}
+
+/* Dark theme specific overrides */
+[data-theme="dark"] .page-title,
+[data-theme="dark"] .circle-name,
+[data-theme="dark"] .info-value,
+[data-theme="dark"] .empty-title {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .page-subtitle,
+[data-theme="dark"] .section-title,
+[data-theme="dark"] .info-label,
+[data-theme="dark"] .member-count,
+[data-theme="dark"] .empty-description {
+  color: var(--text-secondary);
+}
+
+/* Avatar colors */
+.avatar-mini {
+  background: var(--accent-hive) !important;
+  color: white !important;
+}
+
+.avatar-mini.avatar-more {
+  background: var(--bg-tertiary) !important;
+  color: var(--text-secondary) !important;
+}

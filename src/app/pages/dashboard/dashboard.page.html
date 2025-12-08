@@ -38,7 +38,7 @@
           <div class="stats-grid">
             <!-- Credit Score -->
             <div
-              class="stat-card blue-theme group cursor-pointer"
+              class="stat-card-theme card-blue group cursor-pointer"
               (click)="navigateToScore()"
             >
               <div
@@ -68,7 +68,7 @@
 
             <!-- Wallet Balance -->
             <div
-              class="stat-card blue-theme group cursor-pointer"
+              class="stat-card-theme card-blue group cursor-pointer"
               (click)="navigateToWallet()"
             >
               <div
@@ -98,7 +98,7 @@
             <!-- Active Circle -->
             @if (data.activeCircle) {
               <div
-                class="stat-card blue-theme group cursor-pointer"
+                class="stat-card-theme card-blue group cursor-pointer"
                 (click)="navigateToCircles()"
               >
                 <div
@@ -130,7 +130,7 @@
           <div class="left-column">
             <!-- Active Circle Detailed Card -->
             @if (data.activeCircle) {
-              <div class="content-card circle-card blue-theme">
+              <div class="card-theme card-blue circle-card">
                 <div class="card-header">
                   <div>
                     <h3 class="card-title">{{ data.activeCircle.name }}</h3>
@@ -238,7 +238,7 @@
                 </div>
               </div>
             } @else {
-              <div class="content-card empty-state">
+              <div class="card-theme empty-state">
                 <div class="empty-icon">
                   <lucide-angular
                     [img]="RefreshCw"
@@ -255,7 +255,7 @@
             }
 
             <!-- Quick Actions -->
-            <div class="content-card actions-card">
+            <div class="card-theme actions-card">
               <h3 class="card-title mb-4">Quick Actions</h3>
               <div class="actions-grid">
                 <button class="action-button">
@@ -305,7 +305,7 @@
           <!-- Right Column -->
           <div class="right-column">
             <!-- Credit Score Progress -->
-            <div class="content-card score-card orange-theme">
+            <div class="card-theme card-orange score-card">
               <div class="card-header">
                 <h3 class="card-title">Credit Score Journey</h3>
                 <span
@@ -391,7 +391,7 @@
             </div>
 
             <!-- Recent Activity Placeholder -->
-            <div class="content-card activity-card blue-theme">
+            <div class="card-theme card-blue activity-card">
               <div class="card-header">
                 <h3 class="card-title">Recent Activity</h3>
                 <button class="btn-ghost text-sm">View All</button>

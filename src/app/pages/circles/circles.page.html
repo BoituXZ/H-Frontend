@@ -9,7 +9,7 @@
 
   <!-- Summary Stats -->
   <div class="summary-stats">
-    <div class="stat-card blue-theme">
+    <div class="stat-card-theme card-blue">
       <div class="stat-icon">
         <lucide-angular
           [img]="DollarSign"
@@ -25,7 +25,7 @@
       </div>
     </div>
 
-    <div class="stat-card gold-theme">
+    <div class="stat-card-theme card-orange">
       <div class="stat-icon">
         <lucide-angular
           [img]="Users"
@@ -39,7 +39,7 @@
       </div>
     </div>
 
-    <div class="stat-card blue-theme">
+    <div class="stat-card-theme card-blue">
       <div class="stat-icon">
         <lucide-angular
           [img]="Calendar"
@@ -63,7 +63,7 @@
 
     <div class="circles-grid">
       @for (circle of activeCircles; track circle.id) {
-        <div class="circle-card">
+        <div class="card-theme circle-card">
           <!-- Card Header -->
           <div class="circle-header">
             <div class="circle-title-row">
@@ -219,7 +219,7 @@
       @if (showCompleted()) {
         <div class="circles-grid">
           @for (circle of completedCircles; track circle.id) {
-            <div class="circle-card completed">
+            <div class="card-theme circle-card completed">
               <div class="circle-header">
                 <div class="circle-title-row">
                   <h3 class="circle-name">{{ circle.name }}</h3>
