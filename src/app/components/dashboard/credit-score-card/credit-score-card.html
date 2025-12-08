@@ -1,0 +1,109 @@
+<div
+  class="bg-white rounded-2xl p-6 md:p-8 col-span-2 row-span-2 relative shadow-lg hover:shadow-xl transition-shadow duration-300"
+  @scoreAnimation
+>
+  <div class="relative z-10">
+    <div class="flex items-start justify-between mb-6">
+      <div>
+        <h3 class="text-sm font-medium text-text-secondary mb-1">
+          Credit Score
+        </h3>
+        <p class="text-xs text-text-tertiary">{{ level }}</p>
+      </div>
+      <span
+        class="px-3 py-1 rounded-full text-xs font-semibold"
+        [style.background-color]="getTierColor() + '20'"
+        [style.color]="getTierColor()"
+      >
+        {{ tier }}
+      </span>
+    </div>
+
+    <div class="flex items-center justify-between gap-8">
+      <!-- Circular Progress -->
+      <div class="relative">
+        <svg class="transform -rotate-90" width="160" height="160">
+          <!-- Background circle -->
+          <circle
+            cx="80"
+            cy="80"
+            r="70"
+            stroke="#E5E7EB"
+            stroke-width="8"
+            fill="none"
+          />
+          <!-- Progress circle -->
+          <circle
+            cx="80"
+            cy="80"
+            r="70"
+            [attr.stroke]="getTierColor()"
+            stroke-width="8"
+            fill="none"
+            [attr.stroke-dasharray]="circumference"
+            [attr.stroke-dashoffset]="getStrokeDashoffset()"
+            stroke-linecap="round"
+            class="transition-all duration-1000 ease-out"
+            style="filter: drop-shadow(0 0 8px currentColor)"
+          />
+        </svg>
+
+        <!-- Score in center -->
+        <div class="absolute inset-0 flex items-center justify-center flex-col">
+          <span class="text-4xl font-display font-bold text-text-primary">
+            {{ animatedScore() }}
+          </span>
+          <span class="text-xs text-text-tertiary">/ 900</span>
+        </div>
+      </div>
+
+      <!-- Info Section -->
+      <div class="flex-1 space-y-4">
+        <div>
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-sm text-text-secondary"
+              >Progress to
+              {{
+                tier === "Bronze"
+                  ? "Silver"
+                  : tier === "Silver"
+                    ? "Gold"
+                    : "Max"
+              }}</span
+            >
+            <span class="text-sm font-semibold text-honey-600"
+              >{{ progress() | number: "1.0-0" }}%</span
+            >
+          </div>
+          <div class="h-2 bg-cream-300 rounded-full overflow-hidden">
+            <div
+              class="h-full bg-gradient-to-r from-honey-500 to-honey-600 rounded-full transition-all duration-1000 ease-out"
+              [style.width.%]="progress()"
+            ></div>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <div class="flex items-center justify-between text-sm">
+            <span class="text-text-tertiary">Next milestone</span>
+            <span class="font-semibold text-text-primary">{{
+              nextTierScore
+            }}</span>
+          </div>
+          <div class="flex items-center justify-between text-sm">
+            <span class="text-text-tertiary">Points needed</span>
+            <span class="font-semibold text-hive-600"
+              >+{{ nextTierScore - creditScore }}</span
+            >
+          </div>
+        </div>
+
+        <button
+          class="mt-4 w-full btn-secondary text-sm py-2 hover:shadow-md transition-all duration-300"
+        >
+          Improve Score
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

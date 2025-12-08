@@ -1,76 +1,402 @@
-<div class="container mx-auto px-4 py-8">
-  <div class="max-w-4xl mx-auto">
-    <!-- Welcome Header -->
-    @if (user(); as currentUser) {
-      <div class="mb-6">
-        <h1 class="text-3xl font-display font-bold text-text-primary mb-2">
-          Welcome back, {{ currentUser.name }}!
-        </h1>
-        <p class="text-text-secondary">Here's your financial overview</p>
-      </div>
-    }
+<div class="min-h-screen bg-cream-50">
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="flex items-center justify-center min-h-screen">
+      <app-loading-spinner [size]="60" message="Loading your dashboard..." />
+    </div>
+  }
 
-    <!-- User Info Card -->
-    @if (user(); as currentUser) {
-      <div class="card p-6 mb-6">
-        <h2 class="text-xl font-semibold text-text-primary mb-4">
-          Your Information
-        </h2>
-        <div class="space-y-3">
-          <div class="flex justify-between items-center">
-            <span class="text-text-secondary">Name:</span>
-            <span class="font-medium text-text-primary">{{
-              currentUser.name
-            }}</span>
-          </div>
-          <div class="flex justify-between items-center">
-            <span class="text-text-secondary">Phone:</span>
-            <span class="font-medium text-text-primary">{{
-              currentUser.phoneNumber
-            }}</span>
-          </div>
-          <div class="flex justify-between items-center">
-            <span class="text-text-secondary">EcoCash:</span>
-            <span class="font-medium text-text-primary">{{
-              currentUser.ecocashNumber
-            }}</span>
-          </div>
-          <div class="flex justify-between items-center">
-            <span class="text-text-secondary">Status:</span>
-            <span
-              [class]="currentUser.verified ? 'badge-success' : 'badge-warning'"
+  <!-- Error State -->
+  @if (error() && !loading()) {
+    <div class="flex items-center justify-center min-h-screen p-4">
+      <div class="card-error p-8 max-w-md w-full" @fadeIn>
+        <p class="text-sm mb-4">{{ error() }}</p>
+        <button
+          (click)="loadDashboardData()"
+          class="btn-primary text-sm px-6 py-3 w-full"
+        >
+          Retry
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- Dashboard Content -->
+  @if (dashboardData(); as data) {
+    @if (!loading()) {
+      <div class="dashboard-container" @fadeIn>
+        <!-- Top Bar with Stats -->
+        <div class="top-bar">
+          <div class="stats-grid">
+            <!-- Credit Score -->
+            <div
+              class="stat-card group cursor-pointer"
+              (click)="navigateToScore()"
             >
-              {{ currentUser.verified ? "Verified" : "Pending Verification" }}
-            </span>
+              <div
+                class="stat-icon bg-gradient-to-br from-honey-400 to-honey-600"
+              >
+                <lucide-angular
+                  [img]="TrendingUp"
+                  class="w-6 h-6 text-white"
+                  [strokeWidth]="2"
+                ></lucide-angular>
+              </div>
+              <div class="stat-content">
+                <p class="stat-label">Credit Score</p>
+                <p class="stat-value">{{ data.user.creditScore }}</p>
+                <p class="stat-change positive">
+                  +{{ data.user.creditScore - 650 }} this month
+                </p>
+              </div>
+              <div
+                class="stat-badge"
+                [style.background-color]="getTierColor(data.user.tier) + '20'"
+                [style.color]="getTierColor(data.user.tier)"
+              >
+                {{ data.user.tier }}
+              </div>
+            </div>
+
+            <!-- Wallet Balance -->
+            <div
+              class="stat-card group cursor-pointer"
+              (click)="navigateToWallet()"
+            >
+              <div
+                class="stat-icon bg-gradient-to-br from-hive-400 to-hive-600"
+              >
+                <lucide-angular
+                  [img]="Wallet"
+                  class="w-6 h-6 text-white"
+                  [strokeWidth]="2"
+                ></lucide-angular>
+              </div>
+              <div class="stat-content">
+                <p class="stat-label">Wallet Balance</p>
+                <p class="stat-value">
+                  ${{ data.wallet.balance | number: "1.2-2" }}
+                </p>
+                <p
+                  class="stat-change"
+                  [class.positive]="data.wallet.isConnected"
+                  [class.negative]="!data.wallet.isConnected"
+                >
+                  {{ data.wallet.isConnected ? "Connected" : "Disconnected" }}
+                </p>
+              </div>
+            </div>
+
+            <!-- Active Circle -->
+            @if (data.activeCircle) {
+              <div
+                class="stat-card group cursor-pointer"
+                (click)="navigateToCircles()"
+              >
+                <div
+                  class="stat-icon bg-gradient-to-br from-green-400 to-green-600"
+                >
+                  <lucide-angular
+                    [img]="Users"
+                    class="w-6 h-6 text-white"
+                    [strokeWidth]="2"
+                  ></lucide-angular>
+                </div>
+                <div class="stat-content">
+                  <p class="stat-label">{{ data.activeCircle.name }}</p>
+                  <p class="stat-value">
+                    ${{ data.activeCircle.potValue | number: "1.2-2" }}
+                  </p>
+                  <p class="stat-change neutral">
+                    {{ data.activeCircle.round }}
+                  </p>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="main-grid">
+          <!-- Left Column -->
+          <div class="left-column">
+            <!-- Active Circle Detailed Card -->
+            @if (data.activeCircle) {
+              <div class="content-card circle-card">
+                <div class="card-header">
+                  <div>
+                    <h3 class="card-title">{{ data.activeCircle.name }}</h3>
+                    <p class="card-subtitle">{{ data.activeCircle.round }}</p>
+                  </div>
+                  <button class="btn-ghost text-sm">View Details →</button>
+                </div>
+
+                <div class="circle-pot">
+                  <div class="pot-total">
+                    <span class="pot-label">Total Pot</span>
+                    <span class="pot-amount"
+                      >${{ data.activeCircle.potValue | number: "1.2-2" }}</span
+                    >
+                  </div>
+                  <div class="pot-contribution">
+                    <span class="contribution-label">Your Share</span>
+                    <span class="contribution-amount"
+                      >${{
+                        data.activeCircle.contributionAmount | number: "1.2-2"
+                      }}</span
+                    >
+                  </div>
+                </div>
+
+                <div class="payout-timer">
+                  <div class="timer-icon">
+                    <lucide-angular
+                      [img]="Clock"
+                      class="w-5 h-5"
+                      [strokeWidth]="2"
+                    ></lucide-angular>
+                  </div>
+                  <div class="timer-content">
+                    <span class="timer-label">Next Payout</span>
+                    <span class="timer-countdown">{{
+                      getCountdown(data.activeCircle.nextPayoutDate)
+                    }}</span>
+                  </div>
+                </div>
+
+                <div class="members-section">
+                  <div class="members-header">
+                    <span class="members-title"
+                      >Members ({{ data.activeCircle.members.length }})</span
+                    >
+                    <span class="members-status">
+                      <span class="status-paid"
+                        >{{
+                          getPaidCount(data.activeCircle.members)
+                        }}
+                        paid</span
+                      >
+                      <span class="status-separator">•</span>
+                      <span class="status-pending"
+                        >{{
+                          getPendingCount(data.activeCircle.members)
+                        }}
+                        pending</span
+                      >
+                    </span>
+                  </div>
+
+                  <div class="members-grid">
+                    @for (
+                      member of data.activeCircle.members;
+                      track member.id
+                    ) {
+                      <div
+                        class="member-avatar"
+                        [class.current-user]="member.isCurrentUser"
+                        [class.paid]="member.status === 'paid'"
+                        [class.pending]="member.status === 'pending'"
+                        [class.received]="member.status === 'received'"
+                        [attr.title]="
+                          member.isCurrentUser ? 'You' : member.initials
+                        "
+                      >
+                        <span>{{ member.initials }}</span>
+                        @if (member.status === "received") {
+                          <div class="received-badge">
+                            <lucide-angular
+                              [img]="Check"
+                              class="w-3 h-3"
+                              [strokeWidth]="3"
+                            ></lucide-angular>
+                          </div>
+                        }
+                      </div>
+                    }
+                  </div>
+
+                  <div class="payment-progress">
+                    <div class="progress-bar">
+                      <div
+                        class="progress-fill"
+                        [style.width.%]="
+                          (getPaidCount(data.activeCircle.members) /
+                            data.activeCircle.members.length) *
+                          100
+                        "
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            } @else {
+              <div class="content-card empty-state">
+                <div class="empty-icon">
+                  <lucide-angular
+                    [img]="RefreshCw"
+                    class="w-12 h-12 text-gray-400"
+                    [strokeWidth]="2"
+                  ></lucide-angular>
+                </div>
+                <h3 class="empty-title">No Active Circle</h3>
+                <p class="empty-description">
+                  Join a savings circle to start building wealth together
+                </p>
+                <button class="btn-primary mt-4">Browse Circles</button>
+              </div>
+            }
+
+            <!-- Quick Actions -->
+            <div class="content-card actions-card">
+              <h3 class="card-title mb-4">Quick Actions</h3>
+              <div class="actions-grid">
+                <button class="action-button">
+                  <div class="action-icon bg-honey-100 text-honey-600">
+                    <lucide-angular
+                      [img]="Plus"
+                      class="w-5 h-5"
+                      [strokeWidth]="2"
+                    ></lucide-angular>
+                  </div>
+                  <span>Add Funds</span>
+                </button>
+                <button class="action-button">
+                  <div class="action-icon bg-hive-100 text-hive-600">
+                    <lucide-angular
+                      [img]="Repeat"
+                      class="w-5 h-5"
+                      [strokeWidth]="2"
+                    ></lucide-angular>
+                  </div>
+                  <span>Transfer</span>
+                </button>
+                <button class="action-button">
+                  <div class="action-icon bg-green-100 text-green-600">
+                    <lucide-angular
+                      [img]="Banknote"
+                      class="w-5 h-5"
+                      [strokeWidth]="2"
+                    ></lucide-angular>
+                  </div>
+                  <span>Pay Bill</span>
+                </button>
+                <button class="action-button">
+                  <div class="action-icon bg-purple-100 text-purple-600">
+                    <lucide-angular
+                      [img]="History"
+                      class="w-5 h-5"
+                      [strokeWidth]="2"
+                    ></lucide-angular>
+                  </div>
+                  <span>History</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column -->
+          <div class="right-column">
+            <!-- Credit Score Progress -->
+            <div class="content-card score-card">
+              <div class="card-header">
+                <h3 class="card-title">Credit Score Journey</h3>
+                <span
+                  class="score-tier"
+                  [style.background-color]="getTierColor(data.user.tier) + '20'"
+                  [style.color]="getTierColor(data.user.tier)"
+                >
+                  {{ data.user.tier }} {{ data.user.level }}
+                </span>
+              </div>
+
+              <div class="score-visual">
+                <div class="score-circle">
+                  <svg viewBox="0 0 200 200" class="score-svg">
+                    <circle cx="100" cy="100" r="85" class="score-track" />
+                    <circle
+                      cx="100"
+                      cy="100"
+                      r="85"
+                      class="score-progress"
+                      [style.stroke]="getTierColor(data.user.tier)"
+                      [style.stroke-dasharray]="534"
+                      [style.stroke-dashoffset]="
+                        534 - (534 * data.user.creditScore) / 900
+                      "
+                    />
+                  </svg>
+                  <div class="score-center">
+                    <div class="score-number">{{ data.user.creditScore }}</div>
+                    <div class="score-max">/ 900</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="score-progress-bar">
+                <div class="progress-info">
+                  <span class="progress-label"
+                    >Progress to {{ getNextTier(data.user.tier) }}</span
+                  >
+                  <span class="progress-percentage"
+                    >{{
+                      getProgressPercentage(
+                        data.user.creditScore,
+                        data.user.tier
+                      )
+                    }}%</span
+                  >
+                </div>
+                <div class="progress-track">
+                  <div
+                    class="progress-bar-fill"
+                    [style.width.%]="
+                      getProgressPercentage(
+                        data.user.creditScore,
+                        data.user.tier
+                      )
+                    "
+                    [style.background]="
+                      'linear-gradient(90deg, ' +
+                      getTierColor(data.user.tier) +
+                      ', ' +
+                      getTierColor(data.user.tier) +
+                      '80)'
+                    "
+                  ></div>
+                </div>
+                <div class="progress-details">
+                  <span class="detail-item"
+                    >{{
+                      data.user.nextTierScore - data.user.creditScore
+                    }}
+                    points to go</span
+                  >
+                  <span class="detail-item"
+                    >Next: {{ data.user.nextTierScore }}</span
+                  >
+                </div>
+              </div>
+
+              <button class="btn-secondary w-full mt-4">
+                Improve Your Score
+              </button>
+            </div>
+
+            <!-- Recent Activity Placeholder -->
+            <div class="content-card activity-card">
+              <div class="card-header">
+                <h3 class="card-title">Recent Activity</h3>
+                <button class="btn-ghost text-sm">View All</button>
+              </div>
+              <div class="activity-placeholder">
+                <p class="placeholder-text">
+                  Your recent transactions will appear here
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     }
-
-    <!-- Placeholder Card -->
-    <div class="card p-8 text-center">
-      <div class="mb-4 text-honey-500">
-        <svg
-          class="w-16 h-16 mx-auto"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-          />
-        </svg>
-      </div>
-      <h2 class="text-xl font-semibold text-text-primary mb-2">
-        Full Dashboard Coming Soon
-      </h2>
-      <p class="text-text-secondary">
-        Circles, credit score, wallet overview, and more features will be
-        implemented here.
-      </p>
-    </div>
-  </div>
+  }
 </div>
