@@ -1,42 +1,156 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+  LucideAngularModule,
+  Plus,
+  DollarSign,
+  Users,
+  Calendar,
+  CheckCircle,
+  User,
+  Check,
+  Clock,
+  ChevronDown,
+  CheckCircle2,
+  Award,
+} from 'lucide-angular';
+
+interface CircleSummary {
+  id: string;
+  name: string;
+  status: 'active' | 'completed' | 'forming';
+  contributionAmount: number;
+  frequency: 'weekly' | 'monthly';
+  memberCount: number;
+  maxMembers: number;
+  userPosition: number;
+  hasPaidOut: boolean;
+  progress: {
+    currentRound: number;
+    totalRounds: number;
+    percentage: number;
+  };
+  nextPayment?: {
+    date: string;
+    amount: number;
+  };
+  nextPayout?: {
+    date: string;
+    amount: number;
+  };
+}
+
+interface CircleStats {
+  totalContributed: number;
+  activeCount: number;
+  upcomingPayoutAmount: number;
+}
 
 @Component({
   selector: 'app-circles',
-  imports: [],
-  template: `
-    <div class="container mx-auto px-4 py-8">
-      <div class="max-w-4xl mx-auto">
-        <h1 class="text-3xl font-display font-bold text-text-primary mb-6">
-          My Circles
-        </h1>
-
-        <div class="card p-8 text-center">
-          <div class="mb-4 text-honey-500">
-            <svg
-              class="w-16 h-16 mx-auto"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-              />
-            </svg>
-          </div>
-          <h2 class="text-xl font-semibold text-text-primary mb-2">
-            Circles Coming Soon
-          </h2>
-          <p class="text-text-secondary">
-            Join savings circles, contribute together, and build your credit
-            score.
-          </p>
-        </div>
-      </div>
-    </div>
-  `,
-  styles: [],
+  imports: [CommonModule, LucideAngularModule],
+  templateUrl: './circles.page.html',
+  styleUrl: './circles.page.css',
 })
-export class CirclesPage {}
+export class CirclesPage {
+  protected readonly Plus = Plus;
+  protected readonly DollarSign = DollarSign;
+  protected readonly Users = Users;
+  protected readonly Calendar = Calendar;
+  protected readonly CheckCircle = CheckCircle;
+  protected readonly User = User;
+  protected readonly Check = Check;
+  protected readonly Clock = Clock;
+  protected readonly ChevronDown = ChevronDown;
+  protected readonly CheckCircle2 = CheckCircle2;
+  protected readonly Award = Award;
+
+  showCompleted = signal(false);
+
+  stats: CircleStats = {
+    totalContributed: 320,
+    activeCount: 2,
+    upcomingPayoutAmount: 160,
+  };
+
+  activeCircles: CircleSummary[] = [
+    {
+      id: '1',
+      name: 'MSU Hustlers',
+      status: 'active',
+      contributionAmount: 20,
+      frequency: 'monthly',
+      memberCount: 8,
+      maxMembers: 10,
+      userPosition: 3,
+      hasPaidOut: false,
+      progress: {
+        currentRound: 4,
+        totalRounds: 10,
+        percentage: 40,
+      },
+      nextPayment: {
+        date: '2024-12-10',
+        amount: 20,
+      },
+    },
+    {
+      id: '2',
+      name: 'Tech Savers',
+      status: 'active',
+      contributionAmount: 50,
+      frequency: 'monthly',
+      memberCount: 6,
+      maxMembers: 8,
+      userPosition: 2,
+      hasPaidOut: true,
+      progress: {
+        currentRound: 6,
+        totalRounds: 8,
+        percentage: 75,
+      },
+      nextPayout: {
+        date: '2024-12-25',
+        amount: 400,
+      },
+    },
+  ];
+
+  completedCircles: CircleSummary[] = [
+    {
+      id: '3',
+      name: 'Study Group Fund',
+      status: 'completed',
+      contributionAmount: 30,
+      frequency: 'monthly',
+      memberCount: 5,
+      maxMembers: 5,
+      userPosition: 4,
+      hasPaidOut: true,
+      progress: {
+        currentRound: 5,
+        totalRounds: 5,
+        percentage: 100,
+      },
+      nextPayout: {
+        date: '2024-10-15',
+        amount: 150,
+      },
+    },
+  ];
+
+  toggleCompleted(): void {
+    this.showCompleted.update((v) => !v);
+  }
+
+  getInitials(index: number): string {
+    const initials = ['JD', 'SM', 'KL', 'AB', 'CD'];
+    return initials[index - 1] || 'U';
+  }
+
+  formatDate(dateString: string): string {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  }
+}

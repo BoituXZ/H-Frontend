@@ -30,7 +30,7 @@
           <div class="stats-grid">
             <!-- Credit Score -->
             <div
-              class="stat-card group cursor-pointer"
+              class="stat-card blue-theme group cursor-pointer"
               (click)="navigateToScore()"
             >
               <div
@@ -60,7 +60,7 @@
 
             <!-- Wallet Balance -->
             <div
-              class="stat-card group cursor-pointer"
+              class="stat-card blue-theme group cursor-pointer"
               (click)="navigateToWallet()"
             >
               <div
@@ -90,7 +90,7 @@
             <!-- Active Circle -->
             @if (data.activeCircle) {
               <div
-                class="stat-card group cursor-pointer"
+                class="stat-card blue-theme group cursor-pointer"
                 (click)="navigateToCircles()"
               >
                 <div
@@ -122,7 +122,7 @@
           <div class="left-column">
             <!-- Active Circle Detailed Card -->
             @if (data.activeCircle) {
-              <div class="content-card circle-card">
+              <div class="content-card circle-card blue-theme">
                 <div class="card-header">
                   <div>
                     <h3 class="card-title">{{ data.activeCircle.name }}</h3>
@@ -251,7 +251,7 @@
               <h3 class="card-title mb-4">Quick Actions</h3>
               <div class="actions-grid">
                 <button class="action-button">
-                  <div class="action-icon bg-honey-100 text-honey-600">
+                  <div class="action-icon text-white">
                     <lucide-angular
                       [img]="Plus"
                       class="w-5 h-5"
@@ -261,7 +261,7 @@
                   <span>Add Funds</span>
                 </button>
                 <button class="action-button">
-                  <div class="action-icon bg-hive-100 text-hive-600">
+                  <div class="action-icon text-white">
                     <lucide-angular
                       [img]="Repeat"
                       class="w-5 h-5"
@@ -271,7 +271,7 @@
                   <span>Transfer</span>
                 </button>
                 <button class="action-button">
-                  <div class="action-icon bg-green-100 text-green-600">
+                  <div class="action-icon text-white">
                     <lucide-angular
                       [img]="Banknote"
                       class="w-5 h-5"
@@ -281,7 +281,7 @@
                   <span>Pay Bill</span>
                 </button>
                 <button class="action-button">
-                  <div class="action-icon bg-purple-100 text-purple-600">
+                  <div class="action-icon text-white">
                     <lucide-angular
                       [img]="History"
                       class="w-5 h-5"
@@ -297,7 +297,7 @@
           <!-- Right Column -->
           <div class="right-column">
             <!-- Credit Score Progress -->
-            <div class="content-card score-card">
+            <div class="content-card score-card orange-theme">
               <div class="card-header">
                 <h3 class="card-title">Credit Score Journey</h3>
                 <span
@@ -383,7 +383,7 @@
             </div>
 
             <!-- Recent Activity Placeholder -->
-            <div class="content-card activity-card">
+            <div class="content-card activity-card blue-theme">
               <div class="card-header">
                 <h3 class="card-title">Recent Activity</h3>
                 <button class="btn-ghost text-sm">View All</button>

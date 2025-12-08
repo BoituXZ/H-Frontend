@@ -1,4 +1,4 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import {
@@ -14,6 +14,7 @@ import {
   HandCoins,
 } from 'lucide-angular';
 import { AuthService } from '../../services/auth.service';
+import { LayoutService } from '../../services/layout.service';
 
 interface NavItem {
   label: string;
@@ -29,14 +30,18 @@ interface NavItem {
 })
 export class SidebarComponent {
   private authService = inject(AuthService);
+  protected layoutService = inject(LayoutService);
 
-  readonly isCollapsed = signal(false);
   protected readonly ChevronLeft = ChevronLeft;
   protected readonly ChevronRight = ChevronRight;
   protected readonly User = User;
 
   get currentUser() {
     return this.authService.currentUser();
+  }
+
+  get isCollapsed() {
+    return this.layoutService.isCollapsed;
   }
 
   protected readonly navItems: NavItem[] = [
@@ -48,10 +53,10 @@ export class SidebarComponent {
   ];
 
   toggleSidebar(): void {
-    this.isCollapsed.update((value) => !value);
+    this.layoutService.toggleSidebar();
   }
 
   getSidebarWidth(): string {
-    return this.isCollapsed() ? 'w-20' : 'w-64';
+    return this.layoutService.getSidebarWidth();
   }
 }

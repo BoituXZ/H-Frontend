@@ -1,11 +1,12 @@
 /* Dashboard Container */
 .dashboard-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #faf8f5 0%, #fff8e7 100%);
+  background: #f9fafb;
 }
 
 /* Top Stats Bar */
 .top-bar {
+  background: #f9fafb;
   border-bottom: none;
   padding: 1.5rem;
   position: sticky;
@@ -28,15 +29,55 @@
   display: flex;
   align-items: center;
   gap: 1.25rem;
-  border: none;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
 }
 
 .stat-card:hover {
   transform: translateY(-2px);
+  border-color: #d1d5db;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* Blue themed stat card */
+.stat-card.blue-theme {
+  background: linear-gradient(135deg, #0f2937 0%, #163d50 100%);
+  border-color: #0f2937;
+}
+
+.stat-card.blue-theme:hover {
+  border-color: #1e4a5f;
+  box-shadow: 0 8px 20px rgba(15, 41, 55, 0.3);
+}
+
+.stat-card.blue-theme .stat-label {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.stat-card.blue-theme .stat-value {
+  color: white;
+}
+
+.stat-card.blue-theme .stat-change {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.stat-card.blue-theme .stat-change.positive {
+  color: #60d1f6;
+}
+
+.stat-card.blue-theme .stat-change.negative {
+  color: #60d1f6;
+}
+
+.stat-card.blue-theme .stat-change.neutral {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.stat-card.blue-theme .stat-icon {
+  background: rgba(255, 255, 255, 0.15) !important;
 }
 
 .stat-icon {
@@ -104,16 +145,16 @@
 .main-grid {
   max-width: 1600px;
   margin: 0 auto;
-  padding: 3rem 1.5rem;
+  padding: 2rem 1.5rem;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
 @media (min-width: 1024px) {
   .main-grid {
     grid-template-columns: 1.5fr 1fr;
-    gap: 3rem;
+    gap: 2rem;
   }
 }
 
@@ -121,21 +162,79 @@
 .right-column {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
 /* Content Cards */
 .content-card {
   background: white;
   border-radius: 20px;
-  padding: 2.5rem;
-  border: none;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 2rem;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: all 0.3s;
 }
 
 .content-card:hover {
+  border-color: #d1d5db;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* Blue themed card variant */
+.content-card.blue-theme {
+  background: linear-gradient(135deg, #0f2937 0%, #163d50 100%);
+  border-color: #0f2937;
+  color: white;
+}
+
+.content-card.blue-theme:hover {
+  border-color: #1e4a5f;
+  box-shadow: 0 8px 20px rgba(15, 41, 55, 0.3);
+}
+
+.content-card.blue-theme .card-title {
+  color: white;
+}
+
+.content-card.blue-theme .card-subtitle {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.content-card.blue-theme .pot-label,
+.content-card.blue-theme .contribution-label,
+.content-card.blue-theme .timer-label,
+.content-card.blue-theme .members-title {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.content-card.blue-theme .circle-pot,
+.content-card.blue-theme .payout-timer {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.content-card.blue-theme .pot-amount {
+  color: #60d1f6;
+}
+
+.content-card.blue-theme .contribution-amount {
+  color: #60d1f6;
+}
+
+.content-card.blue-theme .timer-countdown {
+  color: #60d1f6;
+}
+
+.content-card.blue-theme .members-status {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.content-card.blue-theme .btn-ghost {
+  color: white;
+}
+
+.content-card.blue-theme .btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .card-header {
@@ -378,19 +477,19 @@
   gap: 0.75rem;
   padding: 1.25rem;
   border-radius: 12px;
-  border: 1px solid #e5e7eb;
-  background: white;
+  border: none;
+  background: #0f2937;
   transition: all 0.3s;
   cursor: pointer;
   font-size: 0.875rem;
   font-weight: 500;
-  color: #1f2937;
+  color: white;
 }
 
 .action-button:hover {
-  border-color: #d1d5db;
+  background: #163d50;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgba(15, 41, 55, 0.3);
 }
 
 .action-icon {
@@ -403,6 +502,93 @@
 /* Score Card */
 .score-card {
   background: white;
+}
+
+.score-card.blue-theme {
+  background: linear-gradient(135deg, #0f2937 0%, #163d50 100%);
+}
+
+.score-card.blue-theme .score-number,
+.score-card.blue-theme .empty-title {
+  color: white;
+}
+
+.score-card.blue-theme .score-max,
+.score-card.blue-theme .progress-label,
+.score-card.blue-theme .progress-details {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.score-card.blue-theme .score-track {
+  stroke: rgba(255, 255, 255, 0.2);
+}
+
+.score-card.blue-theme .btn-secondary {
+  background: white;
+  color: #0f2937;
+}
+
+.score-card.blue-theme .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+/* Gold themed score card */
+.score-card.orange-theme {
+  background: linear-gradient(135deg, #b8941e 0%, #d4af37 100%);
+  border-color: #b8941e;
+  color: white;
+}
+
+.score-card.orange-theme:hover {
+  border-color: #a68420;
+  box-shadow: 0 8px 20px rgba(184, 148, 30, 0.4);
+}
+
+.score-card.orange-theme .card-title {
+  color: white;
+}
+
+.score-card.orange-theme .score-number {
+  color: white;
+}
+
+.score-card.orange-theme .score-max,
+.score-card.orange-theme .progress-label,
+.score-card.orange-theme .progress-details {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.score-card.orange-theme .score-track {
+  stroke: rgba(255, 255, 255, 0.2);
+}
+
+.score-card.orange-theme .score-progress {
+  stroke: #0f2937 !important;
+}
+
+.score-card.orange-theme .score-tier {
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+}
+
+.score-card.orange-theme .progress-percentage {
+  color: white;
+  font-weight: 700;
+}
+
+.score-card.orange-theme .progress-bar-fill {
+  background: linear-gradient(90deg, #0f2937, #163d50) !important;
+}
+
+.score-card.orange-theme .btn-secondary {
+  background: #0f2937;
+  color: white;
+  font-weight: 600;
+}
+
+.score-card.orange-theme .btn-secondary:hover {
+  background: #163d50;
+  transform: translateY(-1px);
 }
 
 .score-tier {
@@ -595,6 +781,11 @@
 .activity-placeholder {
   text-align: center;
   padding: 3rem 1rem;
+}
+
+.content-card.blue-theme .activity-placeholder .placeholder-text,
+.content-card.blue-theme .empty-description {
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .empty-icon {
