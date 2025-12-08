@@ -54,6 +54,14 @@ export const routes: Routes = [
         title: 'Circles - HiveFund',
       },
       {
+        path: 'circles/:id',
+        loadComponent: () =>
+          import('./pages/circles/circle-detail/circle-detail.page').then(
+            (m) => m.CircleDetailPage,
+          ),
+        title: 'Circle Details - HiveFund',
+      },
+      {
         path: 'wallet',
         loadComponent: () =>
           import('./pages/wallet/wallet.page').then((m) => m.WalletPage),

@@ -1,5 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { PageHeaderComponent } from '../../components/page-header/page-header.component';
 import { CircleCard } from '../../components/circle-card/circle-card';
 import {
@@ -55,6 +56,8 @@ interface CircleStats {
   styleUrl: './circles.page.css',
 })
 export class CirclesPage {
+  constructor(private router: Router) {}
+
   protected readonly Plus = Plus;
   protected readonly DollarSign = DollarSign;
   protected readonly Users = Users;
@@ -231,7 +234,6 @@ export class CirclesPage {
   }
 
   onCircleClick(circleId: string): void {
-    // TODO: Navigate to circle details
-    console.log('Circle clicked:', circleId);
+    this.router.navigate(['/app/circles', circleId]);
   }
 }
