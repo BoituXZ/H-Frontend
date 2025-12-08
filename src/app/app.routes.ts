@@ -54,13 +54,20 @@ export const routes: Routes = [
           import('./pages/circles/circles.page').then((m) => m.CirclesPage),
         title: 'Circles - HiveFund',
       },
-      // Wallet endpoint not supported by backend - commenting out
-      // {
-      //   path: 'wallet',
-      //   loadComponent: () =>
-      //     import('./pages/wallet/wallet.page').then((m) => m.WalletPage),
-      //   title: 'Wallet - HiveFund',
-      // },
+      {
+        path: 'circles/:id',
+        loadComponent: () =>
+          import('./pages/circles/circle-detail/circle-detail.page').then(
+            (m) => m.CircleDetailPage,
+          ),
+        title: 'Circle Details - HiveFund',
+      },
+      {
+        path: 'wallet',
+        loadComponent: () =>
+          import('./pages/wallet/wallet.page').then((m) => m.WalletPage),
+        title: 'Wallet - HiveFund',
+      },
       {
         path: 'marketplace',
         loadComponent: () =>
