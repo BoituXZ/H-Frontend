@@ -1,0 +1,33 @@
+<nav class="lg:hidden fixed bottom-0 left-0 right-0 z-50 pb-6 px-6">
+  <div
+    class="bg-hive-900/90 backdrop-blur-2xl rounded-[2rem] shadow-2xl border border-hive-700/40 mx-auto max-w-[380px] overflow-hidden"
+  >
+    <div class="flex justify-around items-center h-[72px] px-2">
+      @for (item of navItems; track item.route) {
+        <a
+          [routerLink]="item.route"
+          routerLinkActive="nav-active"
+          [routerLinkActiveOptions]="{
+            exact: item.route === '/app/dashboard',
+          }"
+          class="relative flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-2xl text-hive-300 transition-all duration-300 min-w-0 flex-1 group"
+        >
+          <div class="relative">
+            <lucide-angular
+              [img]="item.icon"
+              class="w-[22px] h-[22px] transition-transform duration-300 group-hover:scale-110"
+              [strokeWidth]="2.5"
+            ></lucide-angular>
+            <div
+              class="absolute -inset-2 bg-honey-400/20 rounded-full blur opacity-0 group-[.nav-active]:opacity-100 transition-opacity duration-300"
+            ></div>
+          </div>
+          <span
+            class="text-[10px] font-bold truncate max-w-full text-center font-sans leading-tight transition-colors duration-300 group-[.nav-active]:text-honey-400 group-hover:text-white"
+            >{{ item.label }}</span
+          >
+        </a>
+      }
+    </div>
+  </div>
+</nav>

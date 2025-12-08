@@ -1,0 +1,11 @@
+:host {
+  display: contents;
+}
+
+.nav-active {
+  color: white;
+}
+
+.nav-active lucide-angular {
+  transform: scale(1.1);
+}
