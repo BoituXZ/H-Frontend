@@ -1,0 +1,149 @@
+<div class="page-wrapper">
+  <app-page-header pageTitle="Credit Score" />
+
+  @if (loading()) {
+    <div class="flex items-center justify-center min-h-[60vh]">
+      <div class="text-center">
+        <div class="spinner w-12 h-12 mx-auto mb-4"></div>
+        <p class="text-[var(--text-secondary)]">Loading credit information...</p>
+      </div>
+    </div>
+  } @else {
+    <!-- Tabs -->
+    <div class="tabs-container">
+      <button
+        class="tab-button"
+        [class.active]="activeTab() === 'overview'"
+        (click)="setActiveTab('overview')"
+      >
+        Overview
+      </button>
+      <button
+        class="tab-button"
+        [class.active]="activeTab() === 'history'"
+        (click)="setActiveTab('history')"
+      >
+        History
+      </button>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="tab-content">
+      <!-- Overview Tab -->
+      @if (activeTab() === 'overview' && creditScore(); as score) {
+        <div class="overview-container">
+          <!-- Score Ring -->
+          <div class="card-theme rounded-card score-ring-container">
+            <div class="score-ring">
+              <div class="score-circle">
+                <div class="score-number font-display">{{ score.score }}</div>
+                <div class="score-status">{{ score.status }}</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Next Tier Progress -->
+          <div class="card-theme rounded-card p-6 mb-4">
+            <h3 class="font-display text-xl font-bold text-[var(--text-primary)] mb-4">
+              Progress to {{ score.nextTier.name }} ({{ score.nextTier.targetScore }})
+            </h3>
+            <div class="progress-container">
+              <div class="progress-bar-container bg-gray-200">
+                <div
+                  class="progress-bar-fill bg-honey-500"
+                  [style.width.%]="score.nextTier.progress"
+                ></div>
+              </div>
+              <div class="progress-text">{{ score.nextTier.progress }}%</div>
+            </div>
+          </div>
+
+          <!-- Breakdown Cards -->
+          <div class="breakdown-section">
+            <!-- Payment Consistency -->
+            <div class="breakdown-card bg-white shadow-soft rounded-hive p-4 mb-3">
+              <h4 class="font-display font-semibold text-[var(--text-primary)] mb-2">
+                Payment Consistency
+              </h4>
+              <div class="breakdown-value">
+                <span class="font-display text-2xl font-bold text-[var(--text-primary)]">
+                  {{ score.breakdown.paymentConsistency.current }}
+                </span>
+                <span class="text-[var(--text-secondary)]">
+                  / {{ score.breakdown.paymentConsistency.max }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Time Active -->
+            <div class="breakdown-card bg-white shadow-soft rounded-hive p-4 mb-3">
+              <h4 class="font-display font-semibold text-[var(--text-primary)] mb-2">
+                Time Active
+              </h4>
+              <div class="breakdown-value">
+                <span class="font-display text-2xl font-bold text-[var(--text-primary)]">
+                  {{ score.breakdown.timeActive.current }}
+                </span>
+                <span class="text-[var(--text-secondary)]">
+                  / {{ score.breakdown.timeActive.max }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Improvement Tips -->
+            <div class="breakdown-card bg-white shadow-soft rounded-hive p-4 mb-3">
+              <h4 class="font-display font-semibold text-[var(--text-primary)] mb-4">
+                Ways to Improve
+              </h4>
+              <ul class="improvement-tips">
+                @for (tip of score.improvementTips; track tip) {
+                  <li class="tip-item">
+                    <lucide-angular
+                      [img]="Check"
+                      class="tip-icon text-success"
+                      [strokeWidth]="2"
+                    ></lucide-angular>
+                    <span class="font-sans text-[var(--text-secondary)]">{{ tip }}</span>
+                  </li>
+                }
+              </ul>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- History Tab -->
+      @if (activeTab() === 'history') {
+        <div class="history-container">
+          <div class="card-theme rounded-card p-6">
+            <h3 class="font-display text-xl font-bold text-[var(--text-primary)] mb-6">
+              Credit History
+            </h3>
+            <div class="timeline">
+              @for (item of creditHistory(); track item.date + item.description; let last = $last) {
+                <div class="timeline-item" [class.last]="last">
+                  <div class="timeline-dot"></div>
+                  <div class="timeline-content">
+                    <div class="timeline-date font-sans text-sm text-[var(--text-secondary)]">
+                      {{ formatDate(item.date) }}
+                    </div>
+                    <div class="timeline-description font-sans text-[var(--text-primary)]">
+                      {{ item.description }}
+                    </div>
+                    <div
+                      class="timeline-points font-display font-bold"
+                      [class.text-success]="item.type === 'positive'"
+                      [class.text-danger]="item.type === 'negative'"
+                    >
+                      {{ item.points > 0 ? '+' : '' }}{{ item.points }} points
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

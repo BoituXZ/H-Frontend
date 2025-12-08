@@ -1,0 +1,192 @@
+<div class="page-wrapper">
+  <app-page-header pageTitle="Create Storefront" />
+
+  <div class="wizard-container">
+    <!-- Step Indicator -->
+    <div class="step-indicator">
+      <div class="step" [class.active]="currentStep() >= 1" [class.completed]="currentStep() > 1">
+        <div class="step-number">1</div>
+        <div class="step-label">Details</div>
+      </div>
+      <div class="step-line"></div>
+      <div class="step" [class.active]="currentStep() >= 2" [class.completed]="currentStep() > 2">
+        <div class="step-number">2</div>
+        <div class="step-label">Products</div>
+      </div>
+      <div class="step-line"></div>
+      <div class="step" [class.active]="currentStep() >= 3">
+        <div class="step-number">3</div>
+        <div class="step-label">Payment</div>
+      </div>
+    </div>
+
+    <!-- Step 1: Details -->
+    @if (currentStep() === 1) {
+      <div class="step-content">
+        <h2 class="step-title font-display text-2xl font-bold text-[var(--text-primary)] mb-6">
+          Store Details
+        </h2>
+        <div class="form-group">
+          <label class="form-label">Store Name</label>
+          <input
+            type="text"
+            class="input-field"
+            [ngModel]="storeName()"
+            (ngModelChange)="storeName.set($event)"
+            placeholder="Enter store name"
+          />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea
+            class="input-field"
+            rows="4"
+            [ngModel]="description()"
+            (ngModelChange)="description.set($event)"
+            placeholder="Describe your storefront"
+          ></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Store URL</label>
+          <input
+            type="text"
+            class="input-field"
+            [value]="'hivefund.zw/store/' + slug()"
+            readonly
+            [disabled]="true"
+          />
+          <p class="form-hint">This URL will be generated automatically from your store name</p>
+        </div>
+        <div class="wizard-actions">
+          <button class="btn-primary" [disabled]="!canProceedToStep2()" (click)="nextStep()">
+            Next
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- Step 2: Add Products -->
+    @if (currentStep() === 2) {
+      <div class="step-content">
+        <h2 class="step-title font-display text-2xl font-bold text-[var(--text-primary)] mb-6">
+          Add Products
+        </h2>
+
+        <!-- Products List -->
+        @if (products().length > 0) {
+          <div class="products-list mb-6">
+            @for (product of products(); track product.id) {
+              <div class="product-item">
+                <div class="product-info">
+                  <h3 class="product-name font-display font-semibold text-[var(--text-primary)]">
+                    {{ product.name }}
+                  </h3>
+                  <p class="product-price font-display font-bold text-honey-500">
+                    ${{ product.price | number: '1.2-2' }}
+                  </p>
+                  <p class="product-description text-[var(--text-secondary)]">
+                    {{ product.description }}
+                  </p>
+                </div>
+                <button
+                  class="btn-remove"
+                  (click)="removeProduct(product.id)"
+                  type="button"
+                >
+                  Remove
+                </button>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- Add Product Form -->
+        @if (showAddProductForm()) {
+          <div class="add-product-form card-theme rounded-card p-4 mb-6">
+            <h3 class="form-subtitle font-display font-semibold text-[var(--text-primary)] mb-4">
+              Add New Product
+            </h3>
+            <div class="form-group">
+              <label class="form-label">Product Name</label>
+              <input
+                type="text"
+                class="input-field"
+                [ngModel]="newProductName()"
+                (ngModelChange)="newProductName.set($event)"
+                placeholder="Enter product name"
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Price ($)</label>
+              <input
+                type="number"
+                class="input-field"
+                [ngModel]="newProductPrice()"
+                (ngModelChange)="newProductPrice.set($event || 0)"
+                placeholder="0.00"
+                min="0"
+                step="0.01"
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Description</label>
+              <textarea
+                class="input-field"
+                rows="3"
+                [ngModel]="newProductDescription()"
+                (ngModelChange)="newProductDescription.set($event)"
+                placeholder="Describe the product"
+              ></textarea>
+            </div>
+            <div class="form-actions">
+              <button class="btn-primary" (click)="addProduct()">Add Product</button>
+              <button
+                class="btn-outline"
+                (click)="toggleAddProductForm()"
+                type="button"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        } @else {
+          <button class="btn-outline mb-6" (click)="toggleAddProductForm()" type="button">
+            + Add Product
+          </button>
+        }
+
+        <div class="wizard-actions">
+          <button class="btn-outline" (click)="previousStep()" type="button">Previous</button>
+          <button class="btn-primary" [disabled]="!canCreate()" (click)="nextStep()">
+            Next
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- Step 3: Payment -->
+    @if (currentStep() === 3) {
+      <div class="step-content">
+        <h2 class="step-title font-display text-2xl font-bold text-[var(--text-primary)] mb-6">
+          Payment Setup
+        </h2>
+        <div class="payment-info card-theme rounded-card p-6">
+          <h3 class="payment-title font-display font-semibold text-[var(--text-primary)] mb-4">
+            Payments via EcoCash
+          </h3>
+          <p class="payment-account font-display text-xl font-bold text-honey-500">
+            Account: {{ ecocashAccount }}
+          </p>
+          <p class="payment-note text-[var(--text-secondary)] mt-4">
+            Customers will pay directly to this EcoCash account. You'll receive notifications when
+            payments are made.
+          </p>
+        </div>
+        <div class="wizard-actions">
+          <button class="btn-outline" (click)="previousStep()" type="button">Previous</button>
+          <button class="btn-primary" (click)="createStorefront()">Create Storefront</button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

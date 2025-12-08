@@ -23,12 +23,13 @@ export const routes: Routes = [
       import('./pages/login/login.page').then((m) => m.LoginPage),
     title: 'Login - HiveFund',
   },
-  {
-    path: 'verify-otp',
-    loadComponent: () =>
-      import('./pages/verify-otp/verify-otp.page').then((m) => m.VerifyOtpPage),
-    title: 'Verify OTP - HiveFund',
-  },
+  // OTP verification not supported by backend - commenting out
+  // {
+  //   path: 'verify-otp',
+  //   loadComponent: () =>
+  //     import('./pages/verify-otp/verify-otp.page').then((m) => m.VerifyOtpPage),
+  //   title: 'Verify OTP - HiveFund',
+  // },
 
   // Protected routes (require authentication)
   {
@@ -68,6 +69,18 @@ export const routes: Routes = [
         title: 'Wallet - HiveFund',
       },
       {
+        path: 'credit',
+        loadComponent: () =>
+          import('./pages/credit/credit.page').then((m) => m.CreditPage),
+        title: 'Credit Score - HiveFund',
+      },
+      {
+        path: 'loans',
+        loadComponent: () =>
+          import('./pages/loans/loans.component').then((m) => m.LoansComponent),
+        title: 'Loan Hub - HiveFund',
+      },
+      {
         path: 'marketplace',
         loadComponent: () =>
           import('./pages/marketplace/marketplace.page').then(
@@ -82,11 +95,42 @@ export const routes: Routes = [
         title: 'Settings - HiveFund',
       },
       {
+        path: 'earn/storefront',
+        redirectTo: 'earn/storefront/manage',
+        pathMatch: 'full',
+      },
+      {
+        path: 'earn/storefront/create',
+        loadComponent: () =>
+          import('./pages/storefront/create-storefront/create-storefront.component').then(
+            (m) => m.CreateStorefrontComponent,
+          ),
+        title: 'Create Storefront - HiveFund',
+      },
+      {
+        path: 'earn/storefront/manage',
+        loadComponent: () =>
+          import('./pages/storefront/manage-storefront/manage-storefront.component').then(
+            (m) => m.ManageStorefrontComponent,
+          ),
+        title: 'Manage Storefront - HiveFund',
+      },
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full',
       },
     ],
+  },
+
+  // Public routes (outside MainLayoutComponent)
+  {
+    path: 'store/:slug',
+    loadComponent: () =>
+      import('./pages/storefront/public-storefront/public-storefront.component').then(
+        (m) => m.PublicStorefrontComponent,
+      ),
+    title: 'Storefront - HiveFund',
   },
 
   // Wildcard route - redirect to landing
