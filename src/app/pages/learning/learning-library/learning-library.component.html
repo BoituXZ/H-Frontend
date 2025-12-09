@@ -1,0 +1,153 @@
+<div class="page-wrapper">
+  <!-- Header -->
+  <div class="header-section">
+    <h1 class="page-title">Learn & Grow</h1>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs-container">
+    <button
+      class="tab-button"
+      [ngClass]="{
+        'border-b-2 border-honey-500 text-hive-900 font-semibold': activeTab() === 'library',
+        'text-gray-500': activeTab() !== 'library'
+      }"
+      (click)="setActiveTab('library')"
+    >
+      Library
+    </button>
+    <button
+      class="tab-button"
+      [ngClass]="{
+        'border-b-2 border-honey-500 text-hive-900 font-semibold': activeTab() === 'budget',
+        'text-gray-500': activeTab() !== 'budget'
+      }"
+      (click)="setActiveTab('budget')"
+    >
+      Budget Assistant
+    </button>
+    <button
+      class="tab-button"
+      [ngClass]="{
+        'border-b-2 border-honey-500 text-hive-900 font-semibold': activeTab() === 'progress',
+        'text-gray-500': activeTab() !== 'progress'
+      }"
+      (click)="setActiveTab('progress')"
+    >
+      My Progress
+    </button>
+  </div>
+
+  <!-- Tab Content: Library -->
+  @if (activeTab() === 'library') {
+    @if (loading()) {
+    <div class="flex items-center justify-center min-h-[60vh]">
+      <div class="text-center">
+        <div class="spinner w-12 h-12 mx-auto mb-4"></div>
+        <p class="text-[var(--text-secondary)]">Loading content...</p>
+      </div>
+    </div>
+  } @else {
+    <!-- Progress Banner -->
+    <div class="progress-banner card-theme card-orange">
+      <div class="banner-content">
+        <p class="banner-text">
+          <span class="banner-stat">{{ completedCount() }} lessons completed</span>
+          <span class="banner-separator">|</span>
+          <span class="banner-stat">{{ totalPoints() }} credit points earned</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Recommended Section -->
+    @if (recommendedContent().length > 0) {
+      <div class="recommended-section">
+        <h2 class="section-title">
+          Recommended for You (Based on Credit Score {{ creditScore() }})
+        </h2>
+        <div class="recommended-grid">
+          @for (item of recommendedContent(); track item.id) {
+            <div class="content-card">
+              <div class="content-header">
+                <div class="content-type-icon">
+                  <lucide-icon [name]="getContentIcon(item.type)" class="w-5 h-5"></lucide-icon>
+                </div>
+                <span class="content-duration">{{ item.duration }}</span>
+              </div>
+              <h3 class="content-title">{{ item.title }}</h3>
+              <div class="content-meta">
+                <span class="content-tier">{{ item.tier }}</span>
+                <span class="content-points">+{{ item.points }} pts</span>
+              </div>
+              <a [routerLink]="['/app/learn', item.id]" class="content-link">
+                Start Lesson →
+              </a>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- All Content Section -->
+    <div class="all-content-section">
+      <h2 class="section-title">All Content</h2>
+
+      <!-- Tier Filters -->
+      <div class="tier-filters">
+        @for (tier of tiers; track tier) {
+          <button
+            class="tier-filter"
+            [ngClass]="{
+              'tier-filter-active': selectedTier() === tier,
+              'tier-filter-inactive': selectedTier() !== tier
+            }"
+            (click)="filterByTier(tier)"
+          >
+            {{ tier }}
+          </button>
+        }
+      </div>
+
+      <!-- Content List -->
+      <div class="content-list">
+        @for (item of filteredContent(); track item.id) {
+          <div class="content-list-item">
+            <div class="content-list-check">
+              @if (item.isCompleted) {
+                <lucide-icon [name]="Check" class="w-5 h-5 text-success"></lucide-icon>
+              } @else {
+                <div class="check-placeholder"></div>
+              }
+            </div>
+            <div class="content-list-info">
+              <div class="content-list-header">
+                <lucide-icon [name]="getContentIcon(item.type)" class="w-4 h-4 text-gray-500"></lucide-icon>
+                <h3 class="content-list-title">{{ item.title }}</h3>
+              </div>
+              <div class="content-list-meta">
+                <span class="content-list-tier">{{ item.tier }}</span>
+                <span class="content-list-duration">{{ item.duration }}</span>
+                <span class="content-list-points">+{{ item.points }} pts</span>
+              </div>
+            </div>
+            <a [routerLink]="['/app/learn', item.id]" class="content-list-link">
+              View →
+            </a>
+          </div>
+        }
+      </div>
+
+      @if (filteredContent().length === 0) {
+        <div class="empty-state">
+          <p class="text-gray-500">No content found in this tier.</p>
+        </div>
+      }
+    </div>
+    }
+  }
+
+  <!-- Tab Content: Budget Assistant -->
+  @if (activeTab() === 'budget') {
+    <app-budget-assistant></app-budget-assistant>
+  }
+</div>

@@ -1,0 +1,93 @@
+<div class="page-wrapper">
+  @if (loading()) {
+    <div class="flex items-center justify-center min-h-[60vh]">
+      <div class="text-center">
+        <div class="spinner w-12 h-12 mx-auto mb-4"></div>
+        <p class="text-[var(--text-secondary)]">Loading lesson...</p>
+      </div>
+    </div>
+  } @else if (content(); as lesson) {
+    <!-- Header -->
+    <div class="lesson-header">
+      <button (click)="goBack()" class="back-button">
+        <lucide-icon [name]="ArrowLeft" class="w-5 h-5"></lucide-icon>
+        Lesson
+      </button>
+      <h1 class="lesson-title">{{ lesson.title }}</h1>
+      <p class="lesson-metadata">{{ getMetadata() }}</p>
+    </div>
+
+    <!-- Content Area -->
+    <div class="lesson-content">
+      @switch (lesson.type) {
+        @case ('article') {
+          <div class="article-content">
+            <p class="article-paragraph">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            </p>
+            <p class="article-paragraph">
+              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </p>
+            <p class="article-paragraph">
+              Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
+            </p>
+            <p class="article-paragraph">
+              Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet.
+            </p>
+            <p class="article-paragraph">
+              At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.
+            </p>
+          </div>
+        }
+        @case ('video') {
+          <div class="video-player">
+            <div class="video-placeholder">
+              VIDEO PLAYER
+            </div>
+          </div>
+        }
+      }
+    </div>
+
+    <!-- Success Toast -->
+    @if (showSuccess()) {
+      <div class="success-toast">
+        <lucide-icon [name]="Check" class="w-5 h-5"></lucide-icon>
+        <span>Lesson completed! +{{ lesson.points }} points earned</span>
+      </div>
+    }
+
+    <!-- Action Footer (Sticky) -->
+    <div class="action-footer">
+      <div class="footer-content">
+        @if (!lesson.isCompleted) {
+          <button (click)="markAsComplete()" class="btn-primary complete-button">
+            <lucide-icon [name]="Check" class="w-5 h-5"></lucide-icon>
+            Mark as Complete
+          </button>
+          <p class="footer-subtext">(+{{ lesson.points }} credit points)</p>
+        } @else {
+          <div class="completed-state">
+            <lucide-icon [name]="Check" class="w-5 h-5 text-success"></lucide-icon>
+            <span class="completed-text">Lesson Completed</span>
+          </div>
+          <p class="footer-subtext">You earned +{{ lesson.points }} points</p>
+        }
+      </div>
+
+      <!-- Next Lesson -->
+      @if (nextContent(); as next) {
+        <div class="next-lesson">
+          <p class="next-lesson-label">Next Lesson:</p>
+          <a [routerLink]="['/app/learn', next.id]" class="next-lesson-link">
+            {{ next.title }} →
+          </a>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="error-state">
+      <p class="text-gray-500">Lesson not found.</p>
+    </div>
+  }
+</div>

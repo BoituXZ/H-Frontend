@@ -1,0 +1,119 @@
+<div class="page-wrapper">
+  @if (loading()) {
+    <div class="flex items-center justify-center min-h-[60vh]">
+      <div class="text-center">
+        <div class="spinner w-12 h-12 mx-auto mb-4"></div>
+        <p class="text-[var(--text-secondary)]">Loading gig details...</p>
+      </div>
+    </div>
+  } @else if (gig(); as gigData) {
+    <!-- Header -->
+    <div class="detail-header mb-6">
+      <button (click)="goBack()" class="back-button">
+        <lucide-icon [name]="ArrowLeft" class="w-5 h-5"></lucide-icon>
+        Back
+      </button>
+      <h1 class="text-2xl font-display font-bold text-hive-900">{{ gigData.title }}</h1>
+    </div>
+
+    <div class="detail-content">
+      <!-- Main Info Section -->
+      <div class="info-section">
+        <!-- Provider Info -->
+        <div class="provider-section mb-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-lg font-semibold text-hive-900">{{ gigData.providerName }}</h2>
+              <div class="flex items-center gap-2 mt-1">
+                <lucide-icon [name]="Star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></lucide-icon>
+                <span class="text-sm font-medium">{{ gigData.rating }}</span>
+                <span class="text-sm text-gray-500">({{ gigData.reviewCount }} reviews)</span>
+              </div>
+            </div>
+            <div class="rate-display">
+              <span class="text-2xl font-bold text-hive-900">{{ formatRate(gigData) }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="description-section mb-6">
+          <h3 class="section-title">Description</h3>
+          <p class="description-text">{{ gigData.description }}</p>
+        </div>
+
+        <!-- Availability -->
+        <div class="availability-section mb-6">
+          <h3 class="section-title">Availability</h3>
+          <p class="availability-text">{{ gigData.availability || 'Saturdays & Sundays' }}</p>
+        </div>
+
+        <!-- Reviews -->
+        <div class="reviews-section">
+          <h3 class="section-title">Reviews</h3>
+          <div class="reviews-list">
+            @for (review of reviews; track review.name) {
+              <div class="review-item">
+                <div class="review-header">
+                  <span class="reviewer-name">{{ review.name }}</span>
+                  <div class="flex items-center gap-1">
+                    @for (i of [1,2,3,4,5]; track i) {
+                      <lucide-icon
+                        [name]="Star"
+                        class="w-4 h-4"
+                        [ngClass]="i <= review.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'"
+                      ></lucide-icon>
+                    }
+                  </div>
+                </div>
+                <p class="review-comment">{{ review.comment }}</p>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Booking Section (Sticky) -->
+      @if (showBookingSection()) {
+        <div class="booking-section">
+          <div class="booking-card">
+            <h3 class="booking-title">Book This Gig</h3>
+
+            @if (gigData.rateType === 'hourly') {
+              <div class="hours-selector">
+                <label class="hours-label">How many hours?</label>
+                <div class="hours-input-group">
+                  <input
+                    type="range"
+                    min="1"
+                    max="5"
+                    [value]="hours()"
+                    (input)="updateHours(+$any($event.target).value)"
+                    class="hours-slider"
+                  />
+                  <div class="hours-display">
+                    <span class="hours-value">{{ hours() }}</span>
+                    <span class="hours-unit">hour{{ hours() !== 1 ? 's' : '' }}</span>
+                  </div>
+                </div>
+              </div>
+            }
+
+            <div class="total-section">
+              <span class="total-label">Total:</span>
+              <span class="total-amount">${{ totalCost().toFixed(2) }}</span>
+            </div>
+
+            <button (click)="bookGig()" class="btn-primary w-full">
+              Book This Gig
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="error-state">
+      <p class="text-gray-500">Gig not found.</p>
+    </div>
+  }
+</div>

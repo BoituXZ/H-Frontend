@@ -1,0 +1,85 @@
+<div class="page-wrapper">
+  <!-- Header -->
+  <div class="header-section mb-6">
+    <h1 class="text-2xl font-display font-bold text-hive-900">Marketplace</h1>
+    <div class="header-actions flex gap-3">
+      <a routerLink="/app/earn/marketplace/bookings" class="text-honey-600 hover:text-honey-700 font-semibold">
+        My Bookings
+      </a>
+      <a routerLink="/app/earn/marketplace/create" class="btn-primary">
+        <lucide-icon [name]="Plus" class="w-4 h-4 mr-2"></lucide-icon>
+        Post Gig
+      </a>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-container mb-6">
+    <div class="flex flex-wrap gap-2">
+      @for (category of categories; track category) {
+        <button
+          class="filter-chip"
+          [ngClass]="{
+            'filter-chip-active': selectedCategory() === category,
+            'filter-chip-inactive': selectedCategory() !== category
+          }"
+          (click)="filterByCategory(category)"
+        >
+          {{ category }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="flex items-center justify-center min-h-[60vh]">
+      <div class="text-center">
+        <div class="spinner w-12 h-12 mx-auto mb-4"></div>
+        <p class="text-[var(--text-secondary)]">Loading gigs...</p>
+      </div>
+    </div>
+  } @else {
+    <!-- Gig List -->
+    <div class="gigs-grid">
+      @for (gig of filteredGigs(); track gig.id) {
+        <div class="gig-card">
+          <!-- Top: Provider Name & Rating -->
+          <div class="gig-card-header">
+            <div class="provider-info">
+              <span class="provider-name">{{ gig.providerName }}</span>
+              <div class="rating">
+                <lucide-icon [name]="Star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></lucide-icon>
+                <span class="rating-value">{{ gig.rating }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Middle: Title & Description -->
+          <div class="gig-card-body">
+            <h3 class="gig-title">{{ gig.title }}</h3>
+            <p class="gig-description">{{ gig.description }}</p>
+          </div>
+
+          <!-- Bottom: Rate, Category Badge, Action -->
+          <div class="gig-card-footer">
+            <div class="gig-meta">
+              <span class="gig-rate">{{ formatRate(gig) }}</span>
+              <span class="category-badge">{{ gig.category }}</span>
+            </div>
+            <a [routerLink]="['/app/earn/marketplace', gig.id]" class="btn-outline">
+              Book Now
+            </a>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Empty State -->
+    @if (filteredGigs().length === 0) {
+      <div class="empty-state">
+        <p class="text-gray-500">No gigs found in this category.</p>
+      </div>
+    }
+  }
+</div>

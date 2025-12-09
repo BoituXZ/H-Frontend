@@ -1,0 +1,64 @@
+<div class="page-wrapper">
+  <!-- Header -->
+  <h1 class="page-title">My Progress</h1>
+
+  @if (loading()) {
+    <div class="flex items-center justify-center min-h-[60vh]">
+      <div class="text-center">
+        <div class="spinner w-12 h-12 mx-auto mb-4"></div>
+        <p class="text-[var(--text-secondary)]">Loading progress...</p>
+      </div>
+    </div>
+  } @else {
+    <!-- Stats Row -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value">{{ lessonsCompleted() }}</div>
+        <div class="stat-label">Lessons</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">{{ totalPoints() }}</div>
+        <div class="stat-label">Points</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">{{ badgesUnlocked() }}</div>
+        <div class="stat-label">Badges</div>
+      </div>
+    </div>
+
+    <!-- Badges Grid -->
+    <div class="badges-section">
+      <h2 class="section-title">Badges</h2>
+      <div class="badges-grid">
+        @for (badge of badges(); track badge.id) {
+          <div class="badge-card" [ngClass]="{ 'badge-locked': !badge.isUnlocked }">
+            @if (!badge.isUnlocked) {
+              <div class="badge-lock-overlay">
+                <lucide-icon [name]="Lock" class="w-6 h-6"></lucide-icon>
+              </div>
+            }
+            <div class="badge-icon" [ngClass]="{ 'badge-icon-locked': !badge.isUnlocked }">
+              {{ badge.icon }}
+            </div>
+            <div class="badge-name">{{ badge.name }}</div>
+            <div class="badge-description">{{ badge.description }}</div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Leaderboard -->
+    <div class="leaderboard-section">
+      <h2 class="section-title">Leaderboard</h2>
+      <div class="leaderboard-list">
+        @for (entry of leaderboard(); track entry.userId) {
+          <div class="leaderboard-item" [ngClass]="{ 'leaderboard-item-you': isCurrentUser(entry) }">
+            <div class="leaderboard-rank">#{{ entry.rank }}</div>
+            <div class="leaderboard-name">{{ entry.name }}</div>
+            <div class="leaderboard-points">{{ entry.points }} pts</div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>
