@@ -87,8 +87,12 @@ export class ErrorInterceptor implements HttpInterceptor {
         };
 
       case 409:
+        // More specific message for registration conflicts
+        const isRegistration = url.includes('/auth/register');
         return {
-          message: error.error?.message || 'This resource already exists.',
+          message: error.error?.message || (isRegistration 
+            ? 'This phone number is already registered. Please login instead.' 
+            : 'This resource already exists.'),
           type: 'validation',
           statusCode: 409
         };

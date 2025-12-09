@@ -8,9 +8,9 @@ export interface RegisterRequest {
 }
 
 export interface RegisterResponse {
-  success: boolean;
   message: string;
   userId: string;
+  // success field is not returned by backend, but we can derive it from userId presence
 }
 
 export interface LoginRequest {

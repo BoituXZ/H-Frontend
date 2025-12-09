@@ -14,6 +14,9 @@ import {
   HandCoins,
   Sun,
   Moon,
+  Trophy,
+  Banknote,
+  Tag,
 } from 'lucide-angular';
 import { AuthService } from '../../services/auth.service';
 import { LayoutService } from '../../services/layout.service';
@@ -39,6 +42,9 @@ export class SidebarComponent {
   protected readonly User = User;
   protected readonly Sun = Sun;
   protected readonly Moon = Moon;
+  protected readonly Trophy = Trophy;
+  protected readonly Banknote = Banknote;
+  protected readonly Tag = Tag;
 
   get currentUser() {
     return this.authService.currentUser();
@@ -51,8 +57,12 @@ export class SidebarComponent {
   protected readonly navItems: NavItem[] = [
     { label: 'Home', route: '/app/dashboard', icon: Home },
     { label: 'Circles', route: '/app/circles', icon: HandCoins },
-    { label: 'Wallet', route: '/app/wallet', icon: Wallet },
+    // Wallet endpoint not supported by backend - commenting out
+    // { label: 'Wallet', route: '/app/wallet', icon: Wallet },
+    { label: 'Credit Score', route: '/app/credit', icon: Trophy },
+    { label: 'Loans', route: '/app/loans', icon: Banknote },
     { label: 'Marketplace', route: '/app/marketplace', icon: Store },
+    { label: 'Storefront', route: '/app/earn/storefront/manage', icon: Tag },
     { label: 'Settings', route: '/app/settings', icon: Settings },
   ];
 

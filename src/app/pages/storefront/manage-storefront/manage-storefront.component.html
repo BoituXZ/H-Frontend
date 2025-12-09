@@ -1,0 +1,238 @@
+<div class="page-wrapper">
+  <div class="header-section">
+    <app-page-header pageTitle="Manage Storefront" />
+    @if (storefront(); as store) {
+      <div class="header-actions">
+        <a
+          [href]="'/store/' + store.slug"
+          target="_blank"
+          class="btn-outline text-sm"
+          rel="noopener noreferrer"
+        >
+          View Live Store
+        </a>
+      </div>
+    }
+  </div>
+
+  @if (loading()) {
+    <div class="flex items-center justify-center min-h-[60vh]">
+      <div class="text-center">
+        <div class="spinner w-12 h-12 mx-auto mb-4"></div>
+        <p class="text-[var(--text-secondary)]">Loading storefront data...</p>
+      </div>
+    </div>
+  } @else {
+    <!-- Tabs -->
+    <div class="tabs-container">
+      <button
+        class="tab-button"
+        [ngClass]="{
+          'border-b-2 border-honey-500 text-hive-900 font-semibold': activeTab() === 'products',
+          'text-gray-500': activeTab() !== 'products'
+        }"
+        (click)="setActiveTab('products')"
+      >
+        Products
+      </button>
+      <button
+        class="tab-button"
+        [ngClass]="{
+          'border-b-2 border-honey-500 text-hive-900 font-semibold': activeTab() === 'orders',
+          'text-gray-500': activeTab() !== 'orders'
+        }"
+        (click)="setActiveTab('orders')"
+      >
+        Orders
+      </button>
+      <button
+        class="tab-button"
+        [ngClass]="{
+          'border-b-2 border-honey-500 text-hive-900 font-semibold': activeTab() === 'analytics',
+          'text-gray-500': activeTab() !== 'analytics'
+        }"
+        (click)="setActiveTab('analytics')"
+      >
+        Analytics
+      </button>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="tab-content">
+      <!-- Products Tab -->
+      @if (activeTab() === 'products' && storefront(); as store) {
+        <div class="products-tab">
+          <div class="products-grid">
+            @for (product of store.products; track product.id) {
+              <div class="product-card bg-white rounded-card shadow-sm p-4">
+                <div class="product-card-content">
+                  <!-- Image Placeholder -->
+                  <div class="product-image-placeholder">
+                    <div class="placeholder-icon">📦</div>
+                  </div>
+                  <!-- Title/Price -->
+                  <div class="product-details">
+                    <h3 class="product-title font-display font-semibold text-[var(--text-primary)]">
+                      {{ product.name }}
+                    </h3>
+                    <p class="product-price font-display font-bold text-honey-500">
+                      ${{ product.price | number: '1.2-2' }}
+                    </p>
+                  </div>
+                  <!-- Status Badge -->
+                  <div class="product-status">
+                    @if (product.isAvailable) {
+                      <span class="status-badge badge-success">Available</span>
+                    } @else {
+                      <span class="status-badge badge-complete">Unavailable</span>
+                    }
+                  </div>
+                </div>
+                <!-- Actions -->
+                <div class="product-actions">
+                  <button class="action-btn">Edit</button>
+                  <button
+                    class="action-btn"
+                    (click)="toggleProductAvailability(product.id)"
+                  >
+                    Toggle Availability
+                  </button>
+                  <button
+                    class="action-btn text-danger"
+                    (click)="deleteProduct(product.id)"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Orders Tab -->
+      @if (activeTab() === 'orders' && storefront(); as store) {
+        <div class="orders-tab">
+          <!-- Filter -->
+          <div class="filter-section mb-6">
+            <select
+              class="filter-dropdown"
+              [ngModel]="orderFilter()"
+              (ngModelChange)="orderFilter.set($event)"
+            >
+              <option value="this-month">This Month</option>
+              <option value="all">All Time</option>
+            </select>
+          </div>
+
+          <!-- Orders List -->
+          <div class="orders-list">
+            @for (order of getFilteredOrders(); track order.id) {
+              <div class="order-item">
+                <div class="order-header">
+                  <div class="order-info">
+                    <h3 class="order-id font-display font-semibold text-[var(--text-primary)]">
+                      #{{ order.id }}
+                    </h3>
+                    <p class="order-customer text-[var(--text-secondary)]">
+                      {{ order.customerName }} • {{ order.customerPhone }}
+                    </p>
+                    <p class="order-date text-[var(--text-secondary)]">
+                      {{ formatDate(order.date) }}
+                    </p>
+                  </div>
+                  <div class="order-status">
+                    @if (order.status === 'pending') {
+                      <span class="status-badge badge-warning">Pending</span>
+                    } @else {
+                      <span class="status-badge badge-success">Completed</span>
+                    }
+                  </div>
+                </div>
+                <div class="order-items">
+                  @for (item of order.items; track item.productName) {
+                    <div class="order-item-detail">
+                      <span>{{ item.productName }}</span>
+                      <span class="quantity">x{{ item.quantity }}</span>
+                      <span class="item-price">${{ item.price * item.quantity | number: '1.2-2' }}</span>
+                    </div>
+                  }
+                </div>
+                <div class="order-footer">
+                  <div class="order-total font-display font-bold text-[var(--text-primary)]">
+                    Total: ${{ order.total | number: '1.2-2' }}
+                  </div>
+                  <div class="order-actions">
+                    @if (order.status === 'pending') {
+                      <button
+                        class="btn-primary"
+                        (click)="markOrderComplete(order.id)"
+                      >
+                        Mark Complete
+                      </button>
+                    } @else {
+                      <button class="btn-outline">View Details</button>
+                    }
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Analytics Tab -->
+      @if (activeTab() === 'analytics' && analytics(); as analyticsData) {
+        <div class="analytics-tab">
+          <!-- Revenue Card (Blue Theme - matching Wallet Balance card) -->
+          <div class="stat-card-theme card-blue revenue-card">
+            <div class="stat-content">
+              <p class="stat-label">Revenue</p>
+              <p class="stat-value">
+                ${{ analyticsData.revenue | number: '1.2-2' }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Stats Grid -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <h4 class="stat-label font-sans text-sm text-[var(--text-secondary)]">Total Orders</h4>
+              <p class="stat-value font-display text-2xl font-bold text-[var(--text-primary)]">
+                {{ analyticsData.totalOrders }}
+              </p>
+            </div>
+            <div class="stat-card">
+              <h4 class="stat-label font-sans text-sm text-[var(--text-secondary)]">Avg Sale</h4>
+              <p class="stat-value font-display text-2xl font-bold text-[var(--text-primary)]">
+                ${{ analyticsData.avgSale | number: '1.2-2' }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Top Products -->
+          <div class="top-products-section">
+            <h3 class="section-title font-display text-xl font-bold text-[var(--text-primary)] mb-4">
+              Top Products
+            </h3>
+            <ol class="top-products-list">
+              @for (product of analyticsData.topProducts; track product.name; let i = $index) {
+                <li class="top-product-item">
+                  <span class="product-rank font-display font-bold text-[var(--text-primary)]">
+                    {{ i + 1 }}.
+                  </span>
+                  <span class="product-name font-sans text-[var(--text-primary)]">
+                    {{ product.name }}
+                  </span>
+                  <span class="product-revenue font-display font-bold text-honey-500">
+                    - ${{ product.revenue | number: '1.2-2' }}
+                  </span>
+                </li>
+              }
+            </ol>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

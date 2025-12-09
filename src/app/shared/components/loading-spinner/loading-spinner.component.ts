@@ -17,20 +17,22 @@ import { CommonModule } from '@angular/common';
       }
     </div>
   `,
-  styles: [`
-    .spinner {
-      border: 3px solid rgba(255, 184, 0, 0.1);
-      border-top-color: #FFB800;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
+  styles: [
+    `
+      .spinner {
+        border: 3px solid rgba(255, 184, 0, 0.1);
+        border-top-color: var(--color-gold-500);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
       }
-    }
-  `]
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    `,
+  ],
 })
 export class LoadingSpinnerComponent {
   @Input() size: number = 40;

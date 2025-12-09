@@ -1,0 +1,45 @@
+<div
+  class="card-container"
+  [class.featured]="isFeatured"
+  role="button"
+  tabindex="0"
+  [attr.aria-label]="'Circle: ' + circle.name + ', ' + getStatusBadge().label"
+  (click)="onCardClick()"
+  (keydown)="onKeydown($event)"
+  @fadeSlide
+>
+  <!-- Card Header -->
+  <div class="card-header">
+    <h3 class="card-title">{{ circle.name }}</h3>
+    <span class="status-badge" [ngClass]="getStatusBadge().class">
+      {{ getStatusBadge().label }}
+    </span>
+  </div>
+
+  <!-- Main Content -->
+  <div class="card-content">
+    <!-- Member Avatars -->
+    <div class="members-section">
+      <div class="avatar-group">
+        @for (avatar of getDisplayMembers(); track $index) {
+        <div class="avatar">{{ avatar }}</div>
+        } @if (getRemainingCount() > 0) {
+        <div class="avatar-more">+{{ getRemainingCount() }}</div>
+        }
+      </div>
+      <p class="members-text">
+        {{ circle.memberCount }} / {{ circle.maxMembers }} members
+      </p>
+    </div>
+  </div>
+
+  <!-- Footer Info -->
+  <div class="card-footer">
+    <div class="action-buttons">
+      <button class="btn-share" (click)="$event.stopPropagation()">
+        Share
+      </button>
+      <button class="btn-view">View</button>
+    </div>
+  </div>
+</div>
