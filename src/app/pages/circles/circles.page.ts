@@ -1,7 +1,6 @@
 import { Component, signal, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { PageHeaderComponent } from '../../components/page-header/page-header.component';
 import { CircleCard } from '../../components/circle-card/circle-card';
 import { CreateCircleModalComponent } from '../../shared/components/create-circle-modal/create-circle-modal';
 import { CirclesService } from '../../services/circles.service';
@@ -24,7 +23,6 @@ import { finalize } from 'rxjs';
   imports: [
     CommonModule,
     LucideAngularModule,
-    PageHeaderComponent,
     CircleCard,
     CreateCircleModalComponent,
   ],
