@@ -1,12 +1,20 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import {
   LucideAngularModule,
-  AlertCircle,
   ArrowLeft,
   MoreVertical,
+  Users,
+  Banknote,
+  Vote,
+  CheckCircle,
+  Clock,
+  Calendar,
+  TrendingUp,
+  Hash,
   Copy,
+  AlertCircle
 } from 'lucide-angular';
 
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
@@ -18,10 +26,26 @@ import {
 } from '../../../models/circle.model';
 import { fadeIn, slideUp } from '../../../shared/utils/animations';
 
+interface MockTransaction {
+  id: string;
+  type: 'in' | 'out';
+  amount: number;
+  date: string;
+  description: string;
+}
+
+interface MockVote {
+  id: string;
+  title: string;
+  description: string;
+  type: 'emergency_exit' | 'rule_change';
+  endDate: string;
+}
+
 @Component({
   selector: 'app-circle-detail',
   standalone: true,
-  imports: [CommonModule, LucideAngularModule, LoadingSpinnerComponent],
+  imports: [CommonModule, LucideAngularModule, LoadingSpinnerComponent, RouterModule],
   templateUrl: './circle-detail.page.html',
   styleUrls: ['./circle-detail.page.css'],
   animations: [fadeIn, slideUp],
@@ -32,10 +56,18 @@ export class CircleDetailPage {
   private circlesService = inject(CirclesService);
 
   // Icons
-  AlertCircle = AlertCircle;
-  ArrowLeft = ArrowLeft;
-  MoreVertical = MoreVertical;
-  Copy = Copy;
+  protected readonly ArrowLeft = ArrowLeft;
+  protected readonly MoreVertical = MoreVertical;
+  protected readonly Users = Users;
+  protected readonly Banknote = Banknote;
+  protected readonly Vote = Vote;
+  protected readonly CheckCircle = CheckCircle;
+  protected readonly Clock = Clock;
+  protected readonly Calendar = Calendar;
+  protected readonly TrendingUp = TrendingUp;
+  protected readonly Hash = Hash;
+  protected readonly Copy = Copy;
+  protected readonly AlertCircle = AlertCircle;
 
   // State Signals
   private circleId = signal<string | null>(null);
@@ -44,6 +76,22 @@ export class CircleDetailPage {
   private circleData = signal<CircleDetail | null>(null);
   private membersData = signal<CircleMember[]>([]);
   private timelineData = signal<PayoutEntry[]>([]);
+
+  // Mock Data Signals
+  public transactions = signal<MockTransaction[]>([
+    { id: '1', type: 'in', amount: 160, date: '2023-11-01', description: 'Payout Received' },
+    { id: '2', type: 'out', amount: 20, date: '2023-10-25', description: 'Weekly Contribution' },
+    { id: '3', type: 'out', amount: 20, date: '2023-10-18', description: 'Weekly Contribution' },
+    { id: '4', type: 'out', amount: 20, date: '2023-10-11', description: 'Weekly Contribution' },
+  ]);
+
+  public activeVote = signal<MockVote | null>({
+    id: 'v1',
+    title: 'Emergency Exit Request',
+    description: 'Member "John Doe" has requested an emergency exit due to medical reasons.',
+    type: 'emergency_exit',
+    endDate: '2023-12-10'
+  });
 
   // Granular loading states
   public circleLoading = signal<boolean>(true);
@@ -56,7 +104,7 @@ export class CircleDetailPage {
   public timelineError = signal<string | null>(null);
 
   public showDropdown = signal<boolean>(false);
-  public activeTab = signal<'overview' | 'members' | 'timeline'>('overview');
+  public activeTab = signal<'overview' | 'members' | 'transactions' | 'governance'>('overview');
 
   // Computed Signals
   public circleDetail = computed(() => this.circleData());
@@ -169,7 +217,7 @@ export class CircleDetailPage {
     this.showDropdown.update((v) => !v);
   }
 
-  switchTab(tab: 'overview' | 'members' | 'timeline'): void {
+  switchTab(tab: 'overview' | 'members' | 'transactions' | 'governance'): void {
     this.activeTab.set(tab);
   }
 
@@ -178,13 +226,13 @@ export class CircleDetailPage {
 
     switch (status.toLowerCase()) {
       case 'active':
-        return 'status-badge-success';
+        return 'badge-success';
       case 'pending':
-        return 'status-badge-warning';
+        return 'badge-warning';
       case 'closed':
-        return 'status-badge-neutral';
+        return 'badge-neutral';
       default:
-        return 'status-badge-neutral';
+        return 'badge-neutral';
     }
   }
 
@@ -193,7 +241,7 @@ export class CircleDetailPage {
     try {
       return new Date(dateString).toLocaleDateString('en-US', {
         year: 'numeric',
-        month: 'long',
+        month: 'short',
         day: 'numeric',
       });
     } catch {
@@ -204,7 +252,6 @@ export class CircleDetailPage {
   async copyInviteCode(code: string): Promise<void> {
     try {
       await navigator.clipboard.writeText(code);
-      // Optional: Add a toast notification for better UX
       alert('Invite code copied to clipboard!');
     } catch (err) {
       console.error('Failed to copy text: ', err);

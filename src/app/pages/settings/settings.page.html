@@ -1,59 +1,86 @@
-<div class="page-wrapper">
+<div class="page-wrapper p-4 md:p-6">
   <!-- Page Header -->
   <app-page-header pageTitle="Settings" />
 
-  <div class="container mx-auto px-4 py-8">
-    <div class="max-w-4xl mx-auto">
-      <div class="space-y-4">
-        <!-- Account Section -->
-        <div class="card-theme p-6">
-          <h2 class="text-xl font-semibold text-text-primary mb-4">Account</h2>
-          <div class="space-y-3">
-            <button
-              class="w-full text-left px-4 py-3 rounded-hive hover:bg-cream-100 transition-colors text-text-secondary"
-            >
-              Profile Information
-            </button>
-            <button
-              class="w-full text-left px-4 py-3 rounded-hive hover:bg-cream-100 transition-colors text-text-secondary"
-            >
-              Change Password
-            </button>
-            <button
-              class="w-full text-left px-4 py-3 rounded-hive hover:bg-cream-100 transition-colors text-text-secondary"
-            >
-              Notifications
-            </button>
-          </div>
-        </div>
-
-        <!-- Security Section -->
-        <div class="card-theme p-6">
-          <h2 class="text-xl font-semibold text-text-primary mb-4">Security</h2>
-          <div class="space-y-3">
-            <button
-              class="w-full text-left px-4 py-3 rounded-hive hover:bg-cream-100 transition-colors text-text-secondary"
-            >
-              Two-Factor Authentication
-            </button>
-            <button
-              class="w-full text-left px-4 py-3 rounded-hive hover:bg-cream-100 transition-colors text-text-secondary"
-            >
-              Connected Devices
-            </button>
-          </div>
-        </div>
-
-        <!-- Logout -->
-        <div class="card-theme p-6">
+  <div class="container mx-auto py-6">
+    <div class="max-w-2xl mx-auto space-y-6">
+      <!-- Account Section -->
+      <div class="dashboard-card p-0 overflow-hidden">
+        <h2 class="text-sm font-bold text-text-tertiary uppercase tracking-wider px-6 pt-6 pb-2">Account</h2>
+        <div class="divide-y divide-cream-200">
           <button
-            (click)="logout()"
-            class="w-full btn-outline text-danger-dark border-danger hover:bg-danger-light"
+            class="w-full flex items-center justify-between px-6 py-4 hover:bg-cream-50 transition-colors text-text-primary group"
           >
-            Logout
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-cream-100 flex items-center justify-center text-text-secondary group-hover:bg-white group-hover:text-honey-600 transition-colors">
+                 <lucide-angular [img]="User" class="w-4 h-4"></lucide-angular>
+              </div>
+              <span class="font-medium">Profile Information</span>
+            </div>
+            <lucide-angular [img]="ChevronRight" class="w-4 h-4 text-text-tertiary group-hover:text-text-secondary"></lucide-angular>
+          </button>
+          <button
+            class="w-full flex items-center justify-between px-6 py-4 hover:bg-cream-50 transition-colors text-text-primary group"
+          >
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-cream-100 flex items-center justify-center text-text-secondary group-hover:bg-white group-hover:text-honey-600 transition-colors">
+                 <lucide-angular [img]="Lock" class="w-4 h-4"></lucide-angular>
+              </div>
+              <span class="font-medium">Change Password</span>
+            </div>
+            <lucide-angular [img]="ChevronRight" class="w-4 h-4 text-text-tertiary group-hover:text-text-secondary"></lucide-angular>
+          </button>
+          <button
+            class="w-full flex items-center justify-between px-6 py-4 hover:bg-cream-50 transition-colors text-text-primary group"
+          >
+             <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-cream-100 flex items-center justify-center text-text-secondary group-hover:bg-white group-hover:text-honey-600 transition-colors">
+                 <lucide-angular [img]="Bell" class="w-4 h-4"></lucide-angular>
+              </div>
+              <span class="font-medium">Notifications</span>
+            </div>
+            <lucide-angular [img]="ChevronRight" class="w-4 h-4 text-text-tertiary group-hover:text-text-secondary"></lucide-angular>
           </button>
         </div>
       </div>
+
+      <!-- Security Section -->
+      <div class="dashboard-card p-0 overflow-hidden">
+        <h2 class="text-sm font-bold text-text-tertiary uppercase tracking-wider px-6 pt-6 pb-2">Security</h2>
+        <div class="divide-y divide-cream-200">
+          <button
+            class="w-full flex items-center justify-between px-6 py-4 hover:bg-cream-50 transition-colors text-text-primary group"
+          >
+             <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-cream-100 flex items-center justify-center text-text-secondary group-hover:bg-white group-hover:text-honey-600 transition-colors">
+                 <lucide-angular [img]="ShieldCheck" class="w-4 h-4"></lucide-angular>
+              </div>
+              <span class="font-medium">Two-Factor Authentication</span>
+            </div>
+            <lucide-angular [img]="ChevronRight" class="w-4 h-4 text-text-tertiary group-hover:text-text-secondary"></lucide-angular>
+          </button>
+          <button
+            class="w-full flex items-center justify-between px-6 py-4 hover:bg-cream-50 transition-colors text-text-primary group"
+          >
+             <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-cream-100 flex items-center justify-center text-text-secondary group-hover:bg-white group-hover:text-honey-600 transition-colors">
+                 <lucide-angular [img]="Smartphone" class="w-4 h-4"></lucide-angular>
+              </div>
+              <span class="font-medium">Connected Devices</span>
+            </div>
+            <lucide-angular [img]="ChevronRight" class="w-4 h-4 text-text-tertiary group-hover:text-text-secondary"></lucide-angular>
+          </button>
+        </div>
+      </div>
+
+      <!-- Logout -->
+      <button
+        (click)="logout()"
+        class="w-full btn-outline text-danger border-danger hover:bg-danger-light hover:border-danger hover:text-danger-dark flex items-center justify-center gap-2"
+      >
+        <lucide-angular [img]="LogOut" class="w-4 h-4"></lucide-angular>
+        Logout
+      </button>
     </div>
   </div>
 </div>

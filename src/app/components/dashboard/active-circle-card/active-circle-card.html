@@ -1,34 +1,34 @@
 @if (circle) {
   <div
-    class="bg-white rounded-2xl p-6 col-span-2 relative shadow-lg hover:shadow-xl transition-shadow duration-300"
+    class="bg-hive-500 rounded-card p-6 col-span-2 relative shadow-hive hover:shadow-xl transition-shadow duration-300 text-text-inverse"
     @staggerMembers
   >
     <div class="relative z-10">
       <div class="flex items-start justify-between mb-6">
         <div>
-          <h3 class="text-lg font-display font-semibold text-text-primary mb-1">
+          <h3 class="text-lg font-display font-bold text-text-inverse mb-1">
             {{ circle.name }}
           </h3>
-          <p class="text-sm text-text-secondary">{{ circle.round }}</p>
+          <p class="text-sm text-hive-100">{{ circle.round }}</p>
         </div>
         <div class="text-right">
-          <p class="text-xs text-text-tertiary mb-1">Next Payout</p>
-          <p class="text-sm font-semibold text-honey-600">{{ countdown() }}</p>
+          <p class="text-xs text-hive-200 uppercase tracking-wide">Next Payout</p>
+          <p class="text-sm font-bold text-white">{{ countdown() }}</p>
         </div>
       </div>
 
       <!-- Pot Value - Prominent -->
-      <div class="mb-6 p-4 rounded-xl bg-gray-50 border border-gray-200">
+      <div class="mb-6 p-4 rounded-hive bg-black/20 backdrop-blur-sm border border-white/10">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-xs text-text-tertiary mb-1">Total Pot</p>
-            <p class="text-2xl font-display font-bold text-text-primary">
+            <p class="text-xs text-hive-200 uppercase tracking-wide">Total Pot</p>
+            <p class="text-3xl font-display font-bold text-text-inverse">
               ${{ circle.potValue | number: "1.2-2" }}
             </p>
           </div>
           <div class="text-right">
-            <p class="text-xs text-text-tertiary mb-1">Your Contribution</p>
-            <p class="text-lg font-semibold text-hive-600">
+            <p class="text-xs text-hive-200 mb-1 uppercase tracking-wide">Your Share</p>
+            <p class="text-lg font-bold text-hive-50">
               ${{ circle.contributionAmount | number: "1.2-2" }}
             </p>
           </div>
@@ -38,19 +38,19 @@
       <!-- Members Grid -->
       <div>
         <div class="flex items-center justify-between mb-3">
-          <p class="text-sm font-medium text-text-secondary">Members</p>
-          <p class="text-xs text-text-tertiary">
-            <span class="text-honey-600 font-semibold">{{
+          <p class="text-sm font-medium text-hive-100">Members</p>
+          <p class="text-xs text-hive-200">
+            <span class="text-white font-bold">{{
               getPaidCount()
             }}</span>
             / {{ getTotalMembers() }} paid
           </p>
         </div>
 
-        <div class="grid grid-cols-6 gap-2">
+        <div class="flex flex-wrap gap-2">
           @for (member of circle.members; track member.id) {
             <div
-              class="member-avatar flex items-center justify-center w-10 h-10 rounded-full text-xs font-semibold transition-all duration-300 hover:scale-110 cursor-pointer"
+              class="flex items-center justify-center w-10 h-10 rounded-full text-xs font-bold transition-all duration-300 hover:scale-110 cursor-pointer border-2"
               [ngClass]="getStatusClass(member.status, member.isCurrentUser)"
               [class]="getStatusBg(member.status)"
               [attr.title]="member.isCurrentUser ? 'You' : member.initials"
@@ -62,10 +62,10 @@
       </div>
 
       <!-- Progress Bar -->
-      <div class="mt-4">
-        <div class="h-1.5 bg-gray-200 rounded-full overflow-hidden">
+      <div class="mt-5">
+        <div class="h-2 bg-hive-800/50 rounded-full overflow-hidden backdrop-blur-sm">
           <div
-            class="h-full bg-honey-500 rounded-full transition-all duration-700"
+            class="h-full bg-success rounded-full transition-all duration-700 shadow-[0_0_10px_rgba(34,197,94,0.5)]"
             [style.width.%]="(getPaidCount() / getTotalMembers()) * 100"
           ></div>
         </div>
@@ -73,22 +73,22 @@
     </div>
   </div>
 } @else {
-  <div class="bg-white rounded-2xl p-6 col-span-2 text-center shadow-lg">
-    <div class="py-8">
-      <div class="mx-auto mb-4 flex items-center justify-center">
-        <lucide-angular
-          [img]="RefreshCw"
-          class="w-12 h-12 text-text-tertiary"
-          [strokeWidth]="2"
-        ></lucide-angular>
-      </div>
-      <h3 class="text-lg font-semibold text-text-primary mb-2">
-        No Active Circle
-      </h3>
-      <p class="text-sm text-text-secondary mb-4">
-        Join a circle to start saving together
-      </p>
-      <button class="btn-primary text-sm px-6 py-2">Browse Circles</button>
+  <div class="bg-hive-500 rounded-card p-8 col-span-2 text-center shadow-hive text-text-inverse">
+    <div class="mx-auto mb-6 flex items-center justify-center w-16 h-16 rounded-full bg-white/10 backdrop-blur-sm">
+      <lucide-angular
+        [img]="RefreshCw"
+        class="w-8 h-8 text-hive-100"
+        [strokeWidth]="2"
+      ></lucide-angular>
     </div>
+    <h3 class="text-xl font-display font-bold text-text-inverse mb-2">
+      No Active Circle
+    </h3>
+    <p class="text-hive-100 mb-6 max-w-sm mx-auto">
+      Join a savings circle to start building wealth together with your community.
+    </p>
+    <button class="bg-white text-hive-600 font-bold py-3 px-6 rounded-hive hover:bg-hive-50 transition-colors shadow-lg">
+      Browse Circles
+    </button>
   </div>
 }

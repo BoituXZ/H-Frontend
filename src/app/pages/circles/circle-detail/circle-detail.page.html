@@ -1,23 +1,23 @@
-<div class="page-wrapper">
-  <!-- Loading State (only show if circle detail is loading) -->
+<div class="p-4 md:p-6 space-y-6">
+  <!-- Loading State (Critical) -->
   @if (circleLoading() && !circleDetail()) {
-    <div class="flex items-center justify-center min-h-screen">
+    <div class="flex items-center justify-center min-h-[50vh]">
       <app-loading-spinner [size]="60" message="Loading circle details..." />
     </div>
   }
 
-  <!-- Error State (only for critical circle detail failure) -->
+  <!-- Error State (Critical) -->
   @if (circleError() && !circleLoading() && !circleDetail()) {
-    <div class="flex items-center justify-center min-h-screen p-4">
-      <div class="card-error p-8 max-w-md w-full" @fadeIn>
+    <div class="flex items-center justify-center min-h-[50vh]">
+      <div class="dashboard-card max-w-md w-full text-center" @fadeIn>
         <lucide-angular
           [img]="AlertCircle"
           class="w-12 h-12 text-danger mx-auto mb-4"
         ></lucide-angular>
-        <p class="text-sm mb-4 text-center">{{ circleError() }}</p>
+        <p class="text-text-secondary mb-6">{{ circleError() }}</p>
         <button
           (click)="retryCircle()"
-          class="btn-primary text-sm px-6 py-3 w-full"
+          class="btn-primary w-full"
         >
           Retry
         </button>
@@ -27,129 +27,163 @@
 
   <!-- Main Content -->
   @if (circleDetail(); as circle) {
-    <div class="circle-detail-container" @fadeIn>
+    <div class="space-y-6" @fadeIn>
       <!-- Header Section -->
-      <div class="header-section">
-        <!-- Breadcrumb -->
-        <button class="breadcrumb-link" (click)="navigateBack()">
-          <lucide-angular [img]="ArrowLeft" class="w-4 h-4"></lucide-angular>
-          <span>Back to Circles</span>
-        </button>
-
-        <!-- Hero Row -->
-        <div class="hero-row">
-          <div class="hero-left">
-            <h1 class="circle-name">{{ circle.name }}</h1>
-            <span
-              class="status-badge"
-              [ngClass]="getStatusBadgeClass(circle.status)"
-            >
-              {{ circle.status }}
-            </span>
-          </div>
-          <div class="hero-right">
-            <button class="dropdown-trigger" (click)="toggleDropdown()">
-              <lucide-angular
-                [img]="MoreVertical"
-                class="w-5 h-5"
-              ></lucide-angular>
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <button (click)="navigateBack()" class="flex items-center gap-2 text-text-secondary hover:text-honey-600 transition-colors group">
+            <lucide-angular [img]="ArrowLeft" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></lucide-angular>
+            <span class="font-medium">Back to Circles</span>
+          </button>
+          
+          <div class="relative">
+            <button (click)="toggleDropdown()" class="p-2 hover:bg-cream-100 rounded-full transition-colors text-text-secondary">
+              <lucide-angular [img]="MoreVertical" class="w-5 h-5"></lucide-angular>
             </button>
             @if (showDropdown()) {
-              <div class="dropdown-menu">
-                <button class="dropdown-item">Invite Member</button>
-                <button class="dropdown-item text-danger">Leave Circle</button>
+              <div class="absolute right-0 top-full mt-2 w-48 bg-white rounded-hive shadow-lg border border-cream-200 py-1 z-50 animate-fade-in origin-top-right">
+                <button class="w-full text-left px-4 py-2 text-sm text-text-secondary hover:bg-cream-50 hover:text-text-primary transition-colors">Invite Member</button>
+                <button class="w-full text-left px-4 py-2 text-sm text-danger hover:bg-danger-light transition-colors">Leave Circle</button>
               </div>
             }
           </div>
         </div>
+
+        <div class="flex flex-col md:flex-row md:items-center gap-4">
+          <h1 class="font-display font-bold text-3xl text-text-primary">{{ circle.name }}</h1>
+          <div class="flex items-center gap-2">
+            <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide bg-success-light text-success-dark">
+              {{ circle.status }}
+            </span>
+            <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide bg-hive-100 text-hive-700">
+              Member
+            </span>
+          </div>
+        </div>
       </div>
 
-      <!-- Navigation Tabs -->
-      <div class="tabs-container">
+      <!-- Tab Navigation -->
+      <div class="bg-white rounded-xl p-1.5 border border-cream-300 inline-flex w-full md:w-auto overflow-x-auto">
         <button
-          class="tab-button"
-          [class.active]="activeTab() === 'overview'"
+          class="flex-1 md:flex-none px-6 py-2 rounded-lg text-sm font-medium transition-all duration-200 whitespace-nowrap"
+          [class.bg-hive-50]="activeTab() === 'overview'"
+          [class.text-hive-600]="activeTab() === 'overview'"
+          [class.font-bold]="activeTab() === 'overview'"
+          [class.shadow-sm]="activeTab() === 'overview'"
+          [class.text-text-secondary]="activeTab() !== 'overview'"
+          [class.hover:text-text-primary]="activeTab() !== 'overview'"
           (click)="switchTab('overview')"
         >
           Overview
         </button>
         <button
-          class="tab-button"
-          [class.active]="activeTab() === 'members'"
+          class="flex-1 md:flex-none px-6 py-2 rounded-lg text-sm font-medium transition-all duration-200 whitespace-nowrap"
+          [class.bg-hive-50]="activeTab() === 'members'"
+          [class.text-hive-600]="activeTab() === 'members'"
+          [class.font-bold]="activeTab() === 'members'"
+          [class.shadow-sm]="activeTab() === 'members'"
+          [class.text-text-secondary]="activeTab() !== 'members'"
+          [class.hover:text-text-primary]="activeTab() !== 'members'"
           (click)="switchTab('members')"
         >
           Members
         </button>
         <button
-          class="tab-button"
-          [class.active]="activeTab() === 'timeline'"
-          (click)="switchTab('timeline')"
+          class="flex-1 md:flex-none px-6 py-2 rounded-lg text-sm font-medium transition-all duration-200 whitespace-nowrap"
+          [class.bg-hive-50]="activeTab() === 'transactions'"
+          [class.text-hive-600]="activeTab() === 'transactions'"
+          [class.font-bold]="activeTab() === 'transactions'"
+          [class.shadow-sm]="activeTab() === 'transactions'"
+          [class.text-text-secondary]="activeTab() !== 'transactions'"
+          [class.hover:text-text-primary]="activeTab() !== 'transactions'"
+          (click)="switchTab('transactions')"
         >
-          Timeline
+          Transactions
+        </button>
+        <button
+          class="flex-1 md:flex-none px-6 py-2 rounded-lg text-sm font-medium transition-all duration-200 whitespace-nowrap"
+          [class.bg-hive-50]="activeTab() === 'governance'"
+          [class.text-hive-600]="activeTab() === 'governance'"
+          [class.font-bold]="activeTab() === 'governance'"
+          [class.shadow-sm]="activeTab() === 'governance'"
+          [class.text-text-secondary]="activeTab() !== 'governance'"
+          [class.hover:text-text-primary]="activeTab() !== 'governance'"
+          (click)="switchTab('governance')"
+        >
+          Governance
         </button>
       </div>
 
       <!-- Tab Content -->
-      <div class="tab-content">
+      <div class="min-h-[400px]">
         <!-- Overview Tab -->
         @if (activeTab() === "overview") {
-          <div class="overview-grid" @slideUp>
-            <!-- Key Info Card -->
-            <div class="dashboard-card">
-              <div class="card-header">
-                <h3 class="card-title">Key Information</h3>
+          <div class="space-y-6 animate-slide-up">
+            <!-- Hero Card -->
+            <div class="dashboard-card bg-gradient-to-br from-white to-cream-50 border-hive-100">
+              <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+                <div>
+                  <p class="text-sm font-medium text-text-secondary mb-1">Total Pot Value</p>
+                  <h2 class="text-4xl font-display font-bold text-text-primary">
+                    ${{ circle.contributionAmount * circle.maxMembers | number:'1.2-2' }}
+                  </h2>
+                </div>
+                <div class="flex-1 max-w-md">
+                  <div class="flex justify-between text-sm font-medium mb-2">
+                    <span class="text-hive-700">Cycle Progress</span>
+                    <span class="text-hive-600">Month 3 of 10</span>
+                  </div>
+                  <div class="h-3 bg-cream-200 rounded-full overflow-hidden">
+                    <div class="h-full bg-hive-500 rounded-full w-[30%] shadow-[0_0_10px_rgba(7,92,168,0.3)]"></div>
+                  </div>
+                </div>
               </div>
-              <div class="info-grid">
-                <div class="info-item">
-                  <span class="info-label">Contribution</span>
-                  <span class="info-value"
-                    >\${{ circle.contributionAmount }} /
-                    {{ circle.frequency }}</span
-                  >
-                </div>
-                <div class="info-item">
-                  <span class="info-label">Members</span>
-                  <span class="info-value">
-                    @if (membersLoading()) {
-                      <span class="text-text-tertiary">Loading...</span>
-                    } @else {
-                      {{ members().length }} / {{ circle.maxMembers }}
-                    }
-                  </span>
-                </div>
-                <div class="info-item">
-                  <span class="info-label">Created On</span>
-                  <span class="info-value">{{
-                    formatDate(circle.createdAt)
-                  }}</span>
-                </div>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                 <!-- Next Payment -->
+                 <div class="p-4 bg-honey-50 rounded-xl border border-honey-100 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center text-honey-600 shadow-sm">
+                       <lucide-angular [img]="Clock" class="w-6 h-6"></lucide-angular>
+                    </div>
+                    <div>
+                       <p class="text-xs font-bold text-honey-700 uppercase tracking-wide">Next Payment</p>
+                       <p class="text-lg font-bold text-text-primary">Oct 24 • ${{ circle.contributionAmount }}</p>
+                    </div>
+                 </div>
+
+                 <!-- Your Position -->
+                 <div class="p-4 bg-hive-50 rounded-xl border border-hive-100 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center text-hive-600 shadow-sm">
+                       <lucide-angular [img]="Hash" class="w-6 h-6"></lucide-angular>
+                    </div>
+                    <div>
+                       <p class="text-xs font-bold text-hive-700 uppercase tracking-wide">Your Position</p>
+                       <p class="text-lg font-bold text-text-primary">#5 • Waiting</p>
+                    </div>
+                 </div>
               </div>
             </div>
 
-            <!-- Invite Code Card -->
-            <div class="dashboard-card">
-              <div class="card-header">
-                <h3 class="card-title">Invite Code</h3>
+            <!-- Invite Code -->
+            <div class="dashboard-card flex items-center justify-between p-4">
+              <div>
+                <p class="text-xs font-bold text-text-tertiary uppercase tracking-wide mb-1">Invite Code</p>
+                <p class="text-xl font-mono font-bold text-text-primary tracking-wider">{{ circle.inviteCode }}</p>
               </div>
-              <div class="invite-code-wrapper">
-                <span class="invite-code">{{ circle.inviteCode }}</span>
-                <button
-                  class="copy-btn"
-                  (click)="copyInviteCode(circle.inviteCode)"
-                >
-                  <lucide-angular [img]="Copy" class="w-4 h-4"></lucide-angular>
-                  <span>Copy</span>
-                </button>
-              </div>
+              <button 
+                class="btn-secondary py-2 px-4 flex items-center gap-2"
+                (click)="copyInviteCode(circle.inviteCode)"
+              >
+                <lucide-angular [img]="Copy" class="w-4 h-4"></lucide-angular>
+                <span>Copy</span>
+              </button>
             </div>
-
-            <!-- Description Card -->
+            
+            <!-- Description -->
             @if (circle.description) {
-              <div class="dashboard-card description-card">
-                <div class="card-header">
-                  <h3 class="card-title">Description</h3>
-                </div>
-                <p class="description-text">{{ circle.description }}</p>
+              <div class="dashboard-card">
+                 <h3 class="font-bold text-text-primary mb-2">About this Circle</h3>
+                 <p class="text-text-secondary leading-relaxed">{{ circle.description }}</p>
               </div>
             }
           </div>
@@ -157,148 +191,137 @@
 
         <!-- Members Tab -->
         @if (activeTab() === "members") {
-          <div class="members-content" @slideUp>
-            <!-- Loading State -->
+          <div class="space-y-4 animate-slide-up">
             @if (membersLoading()) {
-              <div class="dashboard-card">
-                <div class="flex items-center justify-center py-12">
-                  <app-loading-spinner
-                    [size]="40"
-                    message="Loading members..."
-                  />
-                </div>
+              <div class="flex justify-center p-12">
+                 <app-loading-spinner [size]="40" message="Loading members..." />
               </div>
-            }
-
-            <!-- Error State -->
-            @if (membersError() && !membersLoading()) {
-              <div class="dashboard-card">
-                <div class="card-error p-6">
-                  <lucide-angular
-                    [img]="AlertCircle"
-                    class="w-8 h-8 text-danger mx-auto mb-3"
-                  ></lucide-angular>
-                  <p class="text-sm mb-3 text-center">{{ membersError() }}</p>
-                  <button
-                    (click)="retryMembers()"
-                    class="btn-primary text-sm px-4 py-2 mx-auto block"
-                  >
-                    Retry
-                  </button>
+            } @else {
+              <div class="dashboard-card p-0 overflow-hidden">
+                <div class="bg-cream-50 px-6 py-4 border-b border-cream-200">
+                   <h3 class="font-bold text-text-primary">Circle Members ({{ members().length }})</h3>
                 </div>
-              </div>
-            }
-
-            <!-- Members List -->
-            @if (!membersLoading() && !membersError()) {
-              <div class="dashboard-card">
-                <div class="card-header">
-                  <h3 class="card-title">
-                    Circle Members ({{ members().length }})
-                  </h3>
-                </div>
-                @if (members().length > 0) {
-                  <div class="members-list">
-                    @for (member of members(); track member.id) {
-                      <div class="member-item">
-                        <img
-                          [src]="
-                            member.avatarUrl || 'assets/default-avatar.png'
-                          "
-                          alt="member avatar"
-                          class="member-avatar"
-                        />
-                        <span class="member-name">{{
-                          member.name || "Unknown Member"
-                        }}</span>
+                <div class="divide-y divide-cream-100">
+                  @for (member of members(); track member.id) {
+                    <div class="px-6 py-4 flex items-center justify-between hover:bg-cream-50/50 transition-colors">
+                      <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-full bg-hive-100 flex items-center justify-center text-hive-700 font-bold border-2 border-white shadow-sm">
+                          {{ member.name.charAt(0) }}
+                        </div>
+                        <div>
+                          <p class="font-medium text-text-primary">{{ member.name }}</p>
+                          <p class="text-xs text-text-secondary">Member since {{ formatDate('2023-01-01') }}</p>
+                        </div>
                       </div>
-                    }
-                  </div>
-                } @else {
-                  <div class="empty-state py-8">
-                    <p class="text-center text-text-secondary">
-                      No members have joined this circle yet.
-                    </p>
-                  </div>
-                }
-              </div>
-            }
-          </div>
-        }
-
-        <!-- Timeline Tab -->
-        @if (activeTab() === "timeline") {
-          <div class="timeline-content" @slideUp>
-            <!-- Loading State -->
-            @if (timelineLoading()) {
-              <div class="dashboard-card">
-                <div class="flex items-center justify-center py-12">
-                  <app-loading-spinner
-                    [size]="40"
-                    message="Loading timeline..."
-                  />
-                </div>
-              </div>
-            }
-
-            <!-- Error State -->
-            @if (timelineError() && !timelineLoading()) {
-              <div class="dashboard-card">
-                <div class="card-error p-6">
-                  <lucide-angular
-                    [img]="AlertCircle"
-                    class="w-8 h-8 text-danger mx-auto mb-3"
-                  ></lucide-angular>
-                  <p class="text-sm mb-3 text-center">{{ timelineError() }}</p>
-                  <button
-                    (click)="retryTimeline()"
-                    class="btn-primary text-sm px-4 py-2 mx-auto block"
-                  >
-                    Retry
-                  </button>
-                </div>
-              </div>
-            }
-
-            <!-- Timeline List -->
-            @if (!timelineLoading() && !timelineError()) {
-              <div class="dashboard-card">
-                <div class="card-header">
-                  <h3 class="card-title">Payout Timeline</h3>
-                </div>
-                <div class="timeline-list-condensed">
-                  @for (entry of timeline(); track entry.turn) {
-                    <div
-                      class="timeline-entry"
-                      [class.completed]="entry.status === 'completed'"
-                    >
-                      <div class="turn-indicator">
-                        <span class="turn-number">{{ entry.turn }}</span>
+                      
+                      <!-- Mock Status -->
+                      <div class="flex items-center gap-2">
+                         <!-- Randomly assigning status for demo -->
+                         @if ($index % 2 === 0) {
+                            <div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-success-light text-success-dark text-xs font-bold">
+                               <lucide-angular [img]="CheckCircle" class="w-3.5 h-3.5"></lucide-angular>
+                               Paid
+                            </div>
+                         } @else {
+                            <div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-warning-light text-warning-dark text-xs font-bold">
+                               <lucide-angular [img]="Clock" class="w-3.5 h-3.5"></lucide-angular>
+                               Pending
+                            </div>
+                         }
                       </div>
-                      <div class="entry-details">
-                        <span class="entry-member">{{
-                          entry.memberName || "Unknown"
-                        }}</span>
-                        <span class="entry-date">{{
-                          formatDate(entry.payoutDate)
-                        }}</span>
-                      </div>
-                      <span
-                        class="entry-status"
-                        [class.completed]="entry.status === 'completed'"
-                        >{{ entry.status || "pending" }}</span
-                      >
-                    </div>
-                  } @empty {
-                    <div class="empty-state py-8">
-                      <p class="text-center text-text-secondary">
-                        Payout timeline is not available yet.
-                      </p>
                     </div>
                   }
                 </div>
               </div>
             }
+          </div>
+        }
+
+        <!-- Transactions Tab -->
+        @if (activeTab() === "transactions") {
+          <div class="space-y-4 animate-slide-up">
+             <div class="flex gap-2">
+                <button class="px-4 py-1.5 rounded-full bg-text-primary text-white text-sm font-medium shadow-md">All</button>
+                <button class="px-4 py-1.5 rounded-full bg-white border border-cream-300 text-text-secondary text-sm font-medium hover:bg-cream-50">Incoming</button>
+                <button class="px-4 py-1.5 rounded-full bg-white border border-cream-300 text-text-secondary text-sm font-medium hover:bg-cream-50">Outgoing</button>
+             </div>
+
+             <div class="dashboard-card p-0 overflow-hidden">
+                <div class="divide-y divide-cream-100">
+                   @for (tx of transactions(); track tx.id) {
+                      <div class="px-6 py-4 flex items-center justify-between hover:bg-cream-50 transition-colors">
+                         <div class="flex items-center gap-4">
+                            <div 
+                               class="w-10 h-10 rounded-full flex items-center justify-center border-2 border-white shadow-sm"
+                               [class.bg-success-light]="tx.type === 'in'"
+                               [class.text-success-dark]="tx.type === 'in'"
+                               [class.bg-cream-100]="tx.type === 'out'"
+                               [class.text-text-secondary]="tx.type === 'out'"
+                            >
+                               <lucide-angular 
+                                  [img]="tx.type === 'in' ? TrendingUp : Banknote" 
+                                  class="w-5 h-5"
+                               ></lucide-angular>
+                            </div>
+                            <div>
+                               <p class="font-medium text-text-primary">{{ tx.description }}</p>
+                               <p class="text-xs text-text-secondary">{{ formatDate(tx.date) }}</p>
+                            </div>
+                         </div>
+                         <p 
+                            class="font-bold font-mono"
+                            [class.text-success]="tx.type === 'in'"
+                            [class.text-text-primary]="tx.type === 'out'"
+                         >
+                            {{ tx.type === 'in' ? '+' : '-' }}${{ tx.amount }}
+                         </p>
+                      </div>
+                   }
+                </div>
+             </div>
+          </div>
+        }
+
+        <!-- Governance Tab -->
+        @if (activeTab() === "governance") {
+          <div class="space-y-6 animate-slide-up">
+             <!-- Active Vote Alert -->
+             @if (activeVote(); as vote) {
+                <div class="dashboard-card border-l-4 border-l-honey-500 bg-honey-50/10">
+                   <div class="flex items-start gap-4 mb-6">
+                      <div class="w-10 h-10 rounded-full bg-honey-100 flex items-center justify-center text-honey-600 shrink-0">
+                         <lucide-angular [img]="Vote" class="w-5 h-5"></lucide-angular>
+                      </div>
+                      <div>
+                         <div class="flex items-center gap-2 mb-1">
+                            <span class="text-xs font-bold text-honey-600 uppercase tracking-wide">Action Required</span>
+                            <span class="text-xs text-text-tertiary">• Ends {{ formatDate(vote.endDate) }}</span>
+                         </div>
+                         <h3 class="font-display font-bold text-xl text-text-primary mb-2">{{ vote.title }}</h3>
+                         <p class="text-text-secondary">{{ vote.description }}</p>
+                      </div>
+                   </div>
+
+                   <div class="flex gap-4">
+                      <button class="flex-1 btn-primary bg-success hover:bg-success-dark border-transparent flex items-center justify-center gap-2">
+                         <lucide-angular [img]="CheckCircle" class="w-4 h-4"></lucide-angular>
+                         Approve
+                      </button>
+                      <button class="flex-1 btn-outline border-honey-200 text-honey-600 hover:bg-honey-50 flex items-center justify-center gap-2">
+                         <lucide-angular [img]="AlertCircle" class="w-4 h-4"></lucide-angular>
+                         Reject
+                      </button>
+                   </div>
+                </div>
+             }
+
+             <div class="dashboard-card flex flex-col items-center justify-center py-12 text-center">
+                <div class="w-16 h-16 rounded-full bg-cream-100 flex items-center justify-center mb-4 text-cream-400">
+                   <lucide-angular [img]="Vote" class="w-8 h-8"></lucide-angular>
+                </div>
+                <h3 class="font-bold text-text-primary mb-1">No Other Active Votes</h3>
+                <p class="text-text-secondary text-sm">Past proposals will appear here.</p>
+             </div>
           </div>
         }
       </div>

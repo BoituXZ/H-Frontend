@@ -1,32 +1,43 @@
-<div class="page-wrapper">
-  <app-page-header pageTitle="Loan Hub" />
+<div class="p-4 md:p-6 space-y-6">
+  <!-- Page Header -->
+  <div class="flex items-center justify-between">
+    <h1 class="font-display font-bold text-2xl text-text-primary">My Loans</h1>
+    <button class="btn-primary flex items-center gap-2" (click)="setActiveTab('opportunities')">
+      <lucide-angular [img]="PlusCircle" class="w-5 h-5"></lucide-angular>
+      <span class="hidden md:inline">Apply for Loan</span>
+    </button>
+  </div>
 
   @if (loading()) {
-    <div class="flex items-center justify-center min-h-[60vh]">
-      <div class="text-center">
-        <div class="spinner w-12 h-12 mx-auto mb-4"></div>
-        <p class="text-[var(--text-secondary)]">Loading loan information...</p>
+    <div class="flex items-center justify-center min-h-[50vh]">
+      <div class="flex flex-col items-center gap-3">
+        <div class="w-8 h-8 border-4 border-honey-200 border-t-honey-500 rounded-full animate-spin"></div>
+        <p class="text-text-secondary font-medium">Loading loan information...</p>
       </div>
     </div>
   } @else {
     <!-- Tabs -->
-    <div class="tabs-container">
+    <div class="bg-white rounded-xl p-1.5 border border-cream-300 inline-flex w-full md:w-auto">
       <button
-        class="tab-button"
-        [ngClass]="{
-          'border-b-2 border-honey-500 text-hive-900 font-semibold': activeTab() === 'my-loans',
-          'text-gray-500': activeTab() !== 'my-loans'
-        }"
+        class="flex-1 md:flex-none px-6 py-2 rounded-lg text-sm font-medium transition-all duration-200"
+        [class.bg-hive-50]="activeTab() === 'my-loans'"
+        [class.text-hive-600]="activeTab() === 'my-loans'"
+        [class.font-bold]="activeTab() === 'my-loans'"
+        [class.shadow-sm]="activeTab() === 'my-loans'"
+        [class.text-text-secondary]="activeTab() !== 'my-loans'"
+        [class.hover:text-text-primary]="activeTab() !== 'my-loans'"
         (click)="setActiveTab('my-loans')"
       >
         My Loans
       </button>
       <button
-        class="tab-button"
-        [ngClass]="{
-          'border-b-2 border-honey-500 text-hive-900 font-semibold': activeTab() === 'opportunities',
-          'text-gray-500': activeTab() !== 'opportunities'
-        }"
+        class="flex-1 md:flex-none px-6 py-2 rounded-lg text-sm font-medium transition-all duration-200"
+        [class.bg-hive-50]="activeTab() === 'opportunities'"
+        [class.text-hive-600]="activeTab() === 'opportunities'"
+        [class.font-bold]="activeTab() === 'opportunities'"
+        [class.shadow-sm]="activeTab() === 'opportunities'"
+        [class.text-text-secondary]="activeTab() !== 'opportunities'"
+        [class.hover:text-text-primary]="activeTab() !== 'opportunities'"
         (click)="setActiveTab('opportunities')"
       >
         Opportunities
@@ -34,57 +45,107 @@
     </div>
 
     <!-- Tab Content -->
-    <div class="tab-content">
+    <div>
       <!-- My Loans Tab -->
       @if (activeTab() === 'my-loans') {
-        <div class="my-loans-container">
+        <div class="space-y-6 animate-slide-up">
+          <!-- Financial Summary (Top Row) -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Card 1: Outstanding Balance -->
+            <div class="dashboard-card p-4 flex items-center gap-4">
+              <div class="w-12 h-12 rounded-full bg-honey-50 flex items-center justify-center text-honey-600 shrink-0">
+                <lucide-angular [img]="Banknote" class="w-6 h-6"></lucide-angular>
+              </div>
+              <div>
+                <p class="text-xs font-bold text-text-secondary uppercase tracking-wide">Outstanding Balance</p>
+                <p class="text-xl font-display font-bold text-text-primary">
+                  ${{ loanStats().outstandingBalance | number: '1.2-2' }}
+                </p>
+              </div>
+            </div>
+
+            <!-- Card 2: Next Payment -->
+            <div class="dashboard-card p-4 flex items-center gap-4">
+              <div class="w-12 h-12 rounded-full bg-hive-50 flex items-center justify-center text-hive-600 shrink-0">
+                <lucide-angular [img]="Calendar" class="w-6 h-6"></lucide-angular>
+              </div>
+              <div>
+                <p class="text-xs font-bold text-text-secondary uppercase tracking-wide">Next Payment</p>
+                <p class="text-xl font-display font-bold text-text-primary">
+                  {{ loanStats().nextPaymentDate }}
+                </p>
+              </div>
+            </div>
+
+            <!-- Card 3: Repayment Rate -->
+            <div class="dashboard-card p-4 flex items-center gap-4">
+              <div class="w-12 h-12 rounded-full bg-success-light flex items-center justify-center text-success-dark shrink-0">
+                <lucide-angular [img]="TrendingUp" class="w-6 h-6"></lucide-angular>
+              </div>
+              <div>
+                <p class="text-xs font-bold text-text-secondary uppercase tracking-wide">Repayment Rate</p>
+                <p class="text-xl font-display font-bold text-text-primary">
+                  {{ loanStats().repaymentRate }}%
+                </p>
+              </div>
+            </div>
+          </div>
+
           <!-- Active Loans Section -->
           @if (activeLoans().length > 0) {
-            <div class="section">
-              <h2 class="section-title font-display text-xl font-bold text-[var(--text-primary)] mb-4">
-                Active Loans
-              </h2>
-              <div class="loans-grid">
+            <div class="space-y-4">
+              <h2 class="font-display font-bold text-lg text-text-primary">Active Loans</h2>
+              <div class="grid grid-cols-1 gap-6">
                 @for (loan of activeLoans(); track loan.id) {
-                  <div class="card-theme card-blue active-loan-card">
-                    <div class="loan-header">
-                      <h3 class="loan-name font-display text-lg font-bold text-white">
-                        {{ loan.name }}
-                      </h3>
-                    </div>
-                    <div class="loan-details">
-                      <div class="loan-amount-row">
-                        <span class="loan-label text-white/80">Amount</span>
-                        <span class="loan-value font-display text-2xl font-bold text-white">
-                          ${{ loan.amount | number: '1.2-2' }}
-                        </span>
+                  <div class="dashboard-card border-l-4 border-l-hive-500">
+                    <div class="flex justify-between items-start mb-6">
+                      <div>
+                        <h3 class="font-display font-bold text-lg text-text-primary mb-1">{{ loan.name }}</h3>
+                        <p class="text-sm text-text-secondary">Issued on {{ formatDate('2024-11-10') }}</p>
                       </div>
-                      <div class="loan-outstanding-row">
-                        <span class="loan-label text-white/80">Outstanding</span>
-                        <span class="loan-value font-display text-xl font-bold text-white">
+                      <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide bg-success-light text-success-dark">
+                        Current
+                      </span>
+                    </div>
+
+                    <div class="mb-6">
+                       <p class="text-sm font-medium text-text-secondary mb-1">Outstanding Amount</p>
+                       <p class="text-3xl font-display font-bold text-text-primary mb-4">
                           ${{ loan.outstanding | number: '1.2-2' }}
-                        </span>
-                      </div>
+                       </p>
+                       
+                       <!-- Progress Bar -->
+                       <div class="flex justify-between text-xs font-medium mb-2">
+                          <span class="text-text-secondary">Repaid: ${{ getRepaidAmount(loan) | number: '1.2-2' }}</span>
+                          <span class="text-text-primary">Total: ${{ loan.amount | number: '1.2-2' }}</span>
+                       </div>
+                       <div class="h-3 bg-cream-200 rounded-full overflow-hidden">
+                          <div 
+                            class="h-full bg-hive-500 rounded-full transition-all duration-500"
+                            [style.width.%]="loan.progress"
+                          ></div>
+                       </div>
                     </div>
-                    <!-- Progress Bar -->
-                    <div class="progress-section">
-                      <div class="progress-bar-container-white">
-                        <div
-                          class="progress-bar-fill bg-honey-500"
-                          [style.width.%]="loan.progress"
-                        ></div>
-                      </div>
-                      <div class="progress-text text-white/80">
-                        {{ loan.progress }}% paid
-                      </div>
+
+                    <div class="grid grid-cols-2 gap-4 mb-6 p-4 bg-cream-50 rounded-xl">
+                       <div>
+                          <p class="text-xs text-text-tertiary uppercase tracking-wide mb-1">Interest Rate</p>
+                          <p class="font-bold text-text-primary">10%</p>
+                       </div>
+                       <div>
+                          <p class="text-xs text-text-tertiary uppercase tracking-wide mb-1">Next Auto-deduct</p>
+                          <p class="font-bold text-text-primary">Jan 10, 2025</p>
+                       </div>
                     </div>
-                    <!-- Action Button -->
-                    <button
-                      class="btn-outline w-full mt-4"
-                      (click)="onPayEarly(loan.id)"
-                    >
-                      Pay Early
-                    </button>
+
+                    <div class="flex gap-4">
+                      <button class="flex-1 btn-secondary text-sm" (click)="onPayEarly(loan.id)">
+                        View Details
+                      </button>
+                      <button class="flex-1 btn-outline border-honey-500 text-honey-600 hover:bg-honey-50 text-sm" (click)="onPayEarly(loan.id)">
+                        Pay Early
+                      </button>
+                    </div>
                   </div>
                 }
               </div>
@@ -93,34 +154,49 @@
 
           <!-- Completed Loans Section -->
           @if (completedLoans().length > 0) {
-            <div class="section">
-              <h2 class="section-title font-display text-xl font-bold text-[var(--text-primary)] mb-4">
-                Completed
-              </h2>
-              <div class="loans-grid">
-                @for (loan of completedLoans(); track loan.id) {
-                  <div class="card-theme rounded-card completed-loan-card">
-                    <div class="loan-header">
-                      <h3 class="loan-name font-display text-lg font-bold text-[var(--text-primary)]">
-                        {{ loan.name }}
-                      </h3>
-                      <span class="status-badge badge-success">Paid in full</span>
+            <div class="space-y-4 pt-4">
+              <h2 class="font-display font-bold text-lg text-text-secondary">Loan History</h2>
+              <div class="dashboard-card p-0 overflow-hidden">
+                <div class="divide-y divide-cream-100">
+                  @for (loan of completedLoans(); track loan.id) {
+                    <div class="p-4 flex items-center justify-between hover:bg-cream-50 transition-colors">
+                       <div class="flex items-center gap-4">
+                          <div class="w-10 h-10 rounded-full bg-success-light flex items-center justify-center text-success-dark">
+                             <lucide-angular [img]="CheckCircle" class="w-5 h-5"></lucide-angular>
+                          </div>
+                          <div>
+                             <p class="font-medium text-text-primary">{{ loan.name }}</p>
+                             <p class="text-xs text-text-secondary">Completed {{ formatDate(loan.completedDate) }}</p>
+                          </div>
+                       </div>
+                       <div class="text-right">
+                          <p class="text-sm font-bold text-text-primary">Paid in Full</p>
+                          <span class="inline-flex items-center gap-1 text-xs font-bold text-success-dark bg-success-light px-2 py-0.5 rounded-full mt-1">
+                             +{{ loan.creditPoints }} pts
+                          </span>
+                       </div>
                     </div>
-                    <div class="loan-credit-points text-success font-display font-semibold">
-                      +{{ loan.creditPoints }} credit points
-                    </div>
-                  </div>
-                }
+                  }
+                </div>
               </div>
             </div>
           }
 
           <!-- Empty State -->
           @if (activeLoans().length === 0 && completedLoans().length === 0) {
-            <div class="empty-state">
-              <p class="text-[var(--text-secondary)] font-sans">
-                No loans found. Check out loan opportunities to get started.
+            <div class="dashboard-card flex flex-col items-center justify-center py-16 text-center">
+              <div class="w-20 h-20 bg-cream-100 rounded-full flex items-center justify-center mb-6 text-cream-400">
+                 <lucide-angular [img]="ShieldCheck" class="w-10 h-10"></lucide-angular>
+              </div>
+              <h3 class="font-display font-bold text-xl text-text-primary mb-2">
+                You have no active loans
+              </h3>
+              <p class="text-text-secondary mb-8 max-w-xs mx-auto">
+                Need extra funds? Check your eligibility for a micro-loan today.
               </p>
+              <button class="btn-primary" (click)="setActiveTab('opportunities')">
+                Check Eligibility
+              </button>
             </div>
           }
         </div>
@@ -128,57 +204,55 @@
 
       <!-- Opportunities Tab -->
       @if (activeTab() === 'opportunities') {
-        <div class="opportunities-container">
-          <h2 class="section-title font-display text-xl font-bold text-[var(--text-primary)] mb-4">
-            Available Loans
-          </h2>
-          <div class="opportunities-grid">
+        <div class="space-y-6 animate-slide-up">
+          <h2 class="font-display font-bold text-lg text-text-primary">Available Loans</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @for (opportunity of loanOpportunities(); track opportunity.id) {
-              <div
-                class="card-theme rounded-card opportunity-card"
-                [class.locked]="opportunity.locked"
+              <div 
+                class="dashboard-card flex flex-col h-full transition-all duration-300 hover:shadow-honey"
+                [class.opacity-75]="opportunity.locked"
+                [class.bg-cream-50]="opportunity.locked"
               >
-                <div class="opportunity-header">
-                  <h3 class="opportunity-name font-display text-lg font-bold text-[var(--text-primary)]">
-                    {{ opportunity.name }}
-                  </h3>
+                <div class="flex justify-between items-start mb-4">
+                  <h3 class="font-display font-bold text-lg text-text-primary">{{ opportunity.name }}</h3>
                   @if (opportunity.eligible && !opportunity.locked) {
-                    <span class="status-badge badge-success">
-                      <lucide-angular
-                        [img]="Check"
-                        class="w-3 h-3 inline-block mr-1"
-                        [strokeWidth]="2"
-                      ></lucide-angular>
+                    <span class="flex items-center gap-1 px-2 py-1 rounded bg-success-light text-success-dark text-xs font-bold">
+                      <lucide-angular [img]="Check" class="w-3 h-3"></lucide-angular>
                       Eligible
                     </span>
                   }
                   @if (opportunity.locked) {
-                    <div class="lock-indicator">
-                      <lucide-angular
-                        [img]="Lock"
-                        class="w-4 h-4 text-[var(--text-secondary)]"
-                        [strokeWidth]="2"
-                      ></lucide-angular>
-                    </div>
+                    <lucide-angular [img]="Lock" class="w-5 h-5 text-text-tertiary"></lucide-angular>
                   }
                 </div>
-                <div class="opportunity-amount font-display text-xl font-bold text-[var(--text-primary)] mb-4">
-                  ${{ opportunity.minAmount }}-${{ opportunity.maxAmount }}
+                
+                <div class="mb-6">
+                   <p class="text-xs font-bold text-text-secondary uppercase tracking-wide mb-1">Loan Amount</p>
+                   <p class="text-2xl font-display font-bold text-text-primary">
+                      ${{ opportunity.minAmount }} - ${{ opportunity.maxAmount }}
+                   </p>
                 </div>
+
                 @if (opportunity.locked && opportunity.lockReason) {
-                  <p class="lock-reason text-[var(--text-secondary)] font-sans text-sm mb-4">
-                    {{ opportunity.lockReason }}
-                  </p>
+                  <div class="mt-auto mb-4 p-3 bg-cream-100 rounded-lg flex items-start gap-2 text-xs text-text-secondary">
+                     <lucide-angular [img]="Lock" class="w-3 h-3 mt-0.5 shrink-0"></lucide-angular>
+                     {{ opportunity.lockReason }}
+                  </div>
                 }
-                <button
-                  class="btn-primary w-full"
-                  [disabled]="opportunity.locked"
-                  [class.opacity-60]="opportunity.locked"
-                  [class.cursor-not-allowed]="opportunity.locked"
-                  (click)="onApplyNow(opportunity.id)"
-                >
-                  Apply Now
-                </button>
+
+                <div class="mt-auto">
+                   <button
+                    class="w-full py-3 px-4 rounded-hive font-bold transition-all duration-200"
+                    [class.btn-primary]="!opportunity.locked"
+                    [class.bg-cream-200]="opportunity.locked"
+                    [class.text-text-tertiary]="opportunity.locked"
+                    [class.cursor-not-allowed]="opportunity.locked"
+                    [disabled]="opportunity.locked"
+                    (click)="onApplyNow(opportunity.id)"
+                  >
+                    {{ opportunity.locked ? 'Locked' : 'Apply Now' }}
+                  </button>
+                </div>
               </div>
             }
           </div>
