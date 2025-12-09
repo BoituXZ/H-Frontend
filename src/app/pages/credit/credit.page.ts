@@ -1,21 +1,47 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PageHeaderComponent } from '../../components/page-header/page-header.component';
 import { CreditService, CreditScoreData, CreditHistoryItem } from '../../services/credit.service';
-import { LucideAngularModule, Check } from 'lucide-angular';
+import {
+  LucideAngularModule,
+  ShieldCheck,
+  History,
+  TrendingUp,
+  BarChart2,
+  Info,
+  CheckCircle,
+  Circle,
+  ChevronRight,
+} from 'lucide-angular';
+
+export interface ExtendedCreditScoreData extends CreditScoreData {
+  breakdown: {
+    paymentConsistency: { current: number; max: number };
+    timeActive: { current: number; max: number };
+    participation: { current: number; max: number };
+    contributionRatio: { current: number; max: number };
+  };
+}
 
 @Component({
   selector: 'app-credit',
   standalone: true,
-  imports: [CommonModule, PageHeaderComponent, LucideAngularModule],
+  imports: [CommonModule, LucideAngularModule],
   templateUrl: './credit.page.html',
   styleUrl: './credit.page.css',
 })
 export class CreditPage implements OnInit {
-  protected readonly Check = Check;
+  // Icons
+  protected readonly ShieldCheck = ShieldCheck;
+  protected readonly History = History;
+  protected readonly TrendingUp = TrendingUp;
+  protected readonly BarChart2 = BarChart2;
+  protected readonly Info = Info;
+  protected readonly CheckCircle = CheckCircle;
+  protected readonly Circle = Circle;
+  protected readonly ChevronRight = ChevronRight;
 
   activeTab = signal<'overview' | 'history'>('overview');
-  creditScore = signal<CreditScoreData | null>(null);
+  creditScore = signal<ExtendedCreditScoreData | null>(null);
   creditHistory = signal<CreditHistoryItem[]>([]);
   loading = signal(true);
 
@@ -30,7 +56,16 @@ export class CreditPage implements OnInit {
     
     this.creditService.getCreditScore().subscribe({
       next: (data) => {
-        this.creditScore.set(data);
+        // Map to extended structure with mock data for missing fields
+        const extendedData: ExtendedCreditScoreData = {
+          ...data,
+          breakdown: {
+            ...data.breakdown,
+            participation: { current: 85, max: 100 }, // Mock
+            contributionRatio: { current: 90, max: 100 } // Mock
+          }
+        };
+        this.creditScore.set(extendedData);
         this.loading.set(false);
       },
       error: (err) => {

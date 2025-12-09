@@ -1,30 +1,73 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PageHeaderComponent } from '../../components/page-header/page-header.component';
 import {
   LoansService,
   ActiveLoan,
   CompletedLoan,
   LoanOpportunity,
 } from '../../services/loans.service';
-import { LucideAngularModule, Lock, Check } from 'lucide-angular';
+import {
+  LucideAngularModule,
+  Lock,
+  Check,
+  PlusCircle,
+  Banknote,
+  Calendar,
+  TrendingUp,
+  CheckCircle,
+  ShieldCheck,
+  AlertCircle,
+  Clock,
+  ChevronRight,
+} from 'lucide-angular';
+
+export interface LoanStats {
+  outstandingBalance: number;
+  nextPaymentDate: string;
+  repaymentRate: number;
+}
 
 @Component({
   selector: 'app-loans',
   standalone: true,
-  imports: [CommonModule, PageHeaderComponent, LucideAngularModule],
+  imports: [CommonModule, LucideAngularModule],
   templateUrl: './loans.component.html',
   styleUrl: './loans.component.css',
 })
 export class LoansComponent implements OnInit {
+  // Icons
   protected readonly Lock = Lock;
   protected readonly Check = Check;
+  protected readonly PlusCircle = PlusCircle;
+  protected readonly Banknote = Banknote;
+  protected readonly Calendar = Calendar;
+  protected readonly TrendingUp = TrendingUp;
+  protected readonly CheckCircle = CheckCircle;
+  protected readonly ShieldCheck = ShieldCheck;
+  protected readonly AlertCircle = AlertCircle;
+  protected readonly Clock = Clock;
+  protected readonly ChevronRight = ChevronRight;
 
   activeTab = signal<'my-loans' | 'opportunities'>('my-loans');
   activeLoans = signal<ActiveLoan[]>([]);
   completedLoans = signal<CompletedLoan[]>([]);
   loanOpportunities = signal<LoanOpportunity[]>([]);
   loading = signal(true);
+
+  // Computed Stats (Mocked based on active loans or static for demo)
+  loanStats = computed<LoanStats>(() => {
+    const loans = this.activeLoans();
+    const totalOutstanding = loans.reduce((acc, loan) => acc + loan.outstanding, 0);
+    
+    // Find earliest next payment date (mock logic)
+    const nextPayment = loans.length > 0 ? 'Jan 10, 2025' : 'N/A';
+
+    return {
+      outstandingBalance: totalOutstanding,
+      nextPaymentDate: nextPayment,
+      repaymentRate: 100 // Mock value
+    };
+  });
 
   constructor(private loansService: LoansService) {}
 
@@ -82,5 +125,9 @@ export class LoansComponent implements OnInit {
   formatDate(dateString: string): string {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  }
+
+  getRepaidAmount(loan: ActiveLoan): number {
+    return loan.amount - loan.outstanding;
   }
 }
