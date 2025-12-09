@@ -57,18 +57,18 @@ export class LearningLibraryComponent implements OnInit {
 
     // Load learning content
     this.mockDataService.getLearningContent().subscribe({
-      next: (data) => {
+      next: (data: LearningContent[]) => {
         this.allContent.set(data);
         // Recommended content: Established tier items that are not completed
         this.recommendedContent.set(
           data.filter(
-            (item) => item.tier === 'Established' && !item.isCompleted,
+            (item: LearningContent) => item.tier === 'Established' && !item.isCompleted,
           ),
         );
         this.filteredContent.set(data);
         this.loading.set(false);
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error loading learning content:', err);
         this.loading.set(false);
       },
@@ -93,7 +93,7 @@ export class LearningLibraryComponent implements OnInit {
   setActiveTab(tab: 'library' | 'budget' | 'progress'): void {
     if (tab === 'progress') {
       // Navigate to progress page
-      this.router.navigate(['/app/learn/progress']);
+      this.router.navigate(['/app/learning/progress']);
     } else {
       this.activeTab.set(tab);
     }

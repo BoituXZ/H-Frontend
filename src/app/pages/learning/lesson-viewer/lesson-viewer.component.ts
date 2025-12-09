@@ -37,12 +37,12 @@ export class LessonViewerComponent implements OnInit {
   loadContent(id: string): void {
     this.loading.set(true);
     this.mockDataService.getLearningContentById(id).subscribe({
-      next: (data) => {
+      next: (data: LearningContent | null) => {
         this.content.set(data);
         this.loadNextContent(data);
         this.loading.set(false);
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error loading content:', err);
         this.loading.set(false);
       },
@@ -53,8 +53,8 @@ export class LessonViewerComponent implements OnInit {
     if (!currentContent) return;
 
     this.mockDataService.getLearningContent().subscribe({
-      next: (allContent) => {
-        const currentIndex = allContent.findIndex((c) => c.id === currentContent.id);
+      next: (allContent: LearningContent[]) => {
+        const currentIndex = allContent.findIndex((c: LearningContent) => c.id === currentContent.id);
         if (currentIndex >= 0 && currentIndex < allContent.length - 1) {
           this.nextContent.set(allContent[currentIndex + 1]);
         }
@@ -67,7 +67,7 @@ export class LessonViewerComponent implements OnInit {
     if (!contentData || contentData.isCompleted) return;
 
     this.mockDataService.markContentAsComplete(contentData.id).subscribe({
-      next: (success) => {
+      next: (success: boolean) => {
         if (success) {
           this.showSuccess.set(true);
           // Update local content
@@ -78,14 +78,14 @@ export class LessonViewerComponent implements OnInit {
           }, 3000);
         }
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error marking content as complete:', err);
       },
     });
   }
 
   goBack(): void {
-    this.router.navigate(['/app/learn']);
+    this.router.navigate(['/app/learning']);
   }
 
   getMetadata(): string {

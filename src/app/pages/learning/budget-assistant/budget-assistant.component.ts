@@ -47,12 +47,12 @@ export class BudgetAssistantComponent {
     this.hasAnalyzed.set(false);
 
     this.mockDataService.analyzeBudget(profile).subscribe({
-      next: (result) => {
+      next: (result: BudgetAnalysis) => {
         this.analysis.set(result);
         this.loading.set(false);
         this.hasAnalyzed.set(true);
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error analyzing budget:', err);
         this.loading.set(false);
       },

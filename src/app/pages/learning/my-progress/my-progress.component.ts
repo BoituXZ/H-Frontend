@@ -35,21 +35,21 @@ export class MyProgressComponent implements OnInit {
     this.loading.set(true);
 
     this.mockDataService.getBadges().subscribe({
-      next: (data) => {
+      next: (data: Badge[]) => {
         this.badges.set(data);
         this.loading.set(false);
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error loading badges:', err);
         this.loading.set(false);
       },
     });
 
     this.mockDataService.getLeaderboard().subscribe({
-      next: (data) => {
+      next: (data: LeaderboardEntry[]) => {
         this.leaderboard.set(data);
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error loading leaderboard:', err);
       },
     });

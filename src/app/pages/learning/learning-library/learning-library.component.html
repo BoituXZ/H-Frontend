@@ -79,7 +79,7 @@
                 <span class="content-tier">{{ item.tier }}</span>
                 <span class="content-points">+{{ item.points }} pts</span>
               </div>
-              <a [routerLink]="['/app/learn', item.id]" class="content-link">
+              <a [routerLink]="['/app/learning/lesson', item.id]" class="content-link">
                 Start Lesson →
               </a>
             </div>
@@ -130,7 +130,7 @@
                 <span class="content-list-points">+{{ item.points }} pts</span>
               </div>
             </div>
-            <a [routerLink]="['/app/learn', item.id]" class="content-list-link">
+            <a [routerLink]="['/app/learning/lesson', item.id]" class="content-list-link">
               View →
             </a>
           </div>

@@ -54,14 +54,14 @@ export class GigDetailComponent implements OnInit {
   loadGig(id: string): void {
     this.loading.set(true);
     this.mockDataService.getGigById(id).subscribe({
-      next: (data) => {
+      next: (data: Gig | null) => {
         this.gig.set(data);
         if (data?.rateType === 'fixed') {
           this.hours.set(1);
         }
         this.loading.set(false);
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error loading gig:', err);
         this.loading.set(false);
       },

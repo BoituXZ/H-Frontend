@@ -79,7 +79,7 @@
       @if (nextContent(); as next) {
         <div class="next-lesson">
           <p class="next-lesson-label">Next Lesson:</p>
-          <a [routerLink]="['/app/learn', next.id]" class="next-lesson-link">
+          <a [routerLink]="['/app/learning/lesson', next.id]" class="next-lesson-link">
             {{ next.title }} →
           </a>
         </div>

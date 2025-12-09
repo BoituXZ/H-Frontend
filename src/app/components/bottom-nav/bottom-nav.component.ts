@@ -10,6 +10,7 @@ import {
   Trophy,
   Banknote,
   Tag,
+  BookOpen,
 } from 'lucide-angular';
 
 interface NavItem {
@@ -25,6 +26,8 @@ interface NavItem {
   styleUrl: './bottom-nav.component.css',
 })
 export class BottomNavComponent {
+  protected readonly BookOpen = BookOpen;
+
   protected readonly navItems: NavItem[] = [
     { label: 'Home', route: '/app/dashboard', icon: Home },
     { label: 'Circles', route: '/app/circles', icon: Users },
@@ -32,6 +35,7 @@ export class BottomNavComponent {
     // { label: 'Wallet', route: '/app/wallet', icon: Wallet },
     { label: 'Credit', route: '/app/credit', icon: Trophy },
     { label: 'Loans', route: '/app/loans', icon: Banknote },
+    { label: 'Learning', route: '/app/learning', icon: BookOpen },
     { label: 'Market', route: '/app/marketplace', icon: Store },
     { label: 'Store', route: '/app/earn/storefront/manage', icon: Tag },
     { label: 'Settings', route: '/app/settings', icon: Settings },

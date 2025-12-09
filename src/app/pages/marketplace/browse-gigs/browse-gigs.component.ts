@@ -32,12 +32,12 @@ export class BrowseGigsComponent implements OnInit {
   loadGigs(): void {
     this.loading.set(true);
     this.mockDataService.getGigs().subscribe({
-      next: (data) => {
+      next: (data: Gig[]) => {
         this.gigs.set(data);
         this.filteredGigs.set(data);
         this.loading.set(false);
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error loading gigs:', err);
         this.loading.set(false);
       },

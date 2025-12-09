@@ -30,21 +30,21 @@ export class MyBookingsComponent implements OnInit {
     this.loading.set(true);
 
     this.mockDataService.getMyBookings('customer').subscribe({
-      next: (data) => {
+      next: (data: Booking[]) => {
         this.customerBookings.set(data);
         this.loading.set(false);
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error loading customer bookings:', err);
         this.loading.set(false);
       },
     });
 
     this.mockDataService.getMyBookings('provider').subscribe({
-      next: (data) => {
+      next: (data: Booking[]) => {
         this.providerBookings.set(data);
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error loading provider bookings:', err);
       },
     });

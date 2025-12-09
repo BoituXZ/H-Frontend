@@ -1,12 +1,19 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, of, delay } from 'rxjs';
+import { BehaviorSubject, Observable, of, delay, map } from 'rxjs';
 import { environment } from '../../environments/environment';
 import {
   Storefront,
   Product,
   Order,
   StorefrontAnalytics,
+  Gig,
+  Booking,
+  LearningContent,
+  Badge,
+  LeaderboardEntry,
+  BudgetProfile,
+  BudgetAnalysis,
 } from '../models/hive-data.models';
 
 @Injectable({
@@ -130,5 +137,159 @@ export class MockDataService {
         },
       ],
     };
+  }
+
+  // Learning methods
+  getLearningContent(): Observable<LearningContent[]> {
+    const mockContent: LearningContent[] = [
+      {
+        id: '1',
+        title: 'Introduction to Budgeting',
+        type: 'article',
+        duration: '5 min',
+        points: 10,
+        tier: 'Beginner',
+        isCompleted: false,
+        category: 'Finance',
+      },
+      {
+        id: '2',
+        title: 'Understanding Credit Scores',
+        type: 'video',
+        duration: '10 min',
+        points: 15,
+        tier: 'Growing',
+        isCompleted: true,
+        category: 'Finance',
+      },
+    ];
+    return of(mockContent).pipe(delay(500));
+  }
+
+  getLearningContentById(id: string): Observable<LearningContent | null> {
+    return this.getLearningContent().pipe(
+      map((content) => content.find((c) => c.id === id) || null),
+      delay(300),
+    );
+  }
+
+  markContentAsComplete(id: string): Observable<boolean> {
+    return of(true).pipe(delay(300));
+  }
+
+  getBadges(): Observable<Badge[]> {
+    const mockBadges: Badge[] = [
+      {
+        id: '1',
+        name: 'First Steps',
+        icon: '🎯',
+        description: 'Complete your first lesson',
+        isUnlocked: true,
+      },
+      {
+        id: '2',
+        name: 'Budget Master',
+        icon: '💰',
+        description: 'Complete all budget lessons',
+        isUnlocked: false,
+      },
+    ];
+    return of(mockBadges).pipe(delay(500));
+  }
+
+  getLeaderboard(): Observable<LeaderboardEntry[]> {
+    const mockLeaderboard: LeaderboardEntry[] = [
+      { userId: 'user-1', name: 'John Doe', points: 150, rank: 1 },
+      { userId: 'current-user', name: 'You', points: 60, rank: 5 },
+      { userId: 'user-2', name: 'Jane Smith', points: 120, rank: 2 },
+    ];
+    return of(mockLeaderboard).pipe(delay(500));
+  }
+
+  // Marketplace methods
+  getGigs(): Observable<Gig[]> {
+    const mockGigs: Gig[] = [
+      {
+        id: '1',
+        title: 'Math Tutoring',
+        description: 'Expert math tutoring for high school students',
+        category: 'Academic',
+        rate: 25,
+        rateType: 'hourly',
+        rating: 4.8,
+        reviewCount: 12,
+        providerName: 'Sarah Johnson',
+        providerId: 'provider-1',
+        availability: 'Weekdays 3-6 PM',
+      },
+      {
+        id: '2',
+        title: 'Logo Design',
+        description: 'Professional logo design services',
+        category: 'Creative',
+        rate: 50,
+        rateType: 'fixed',
+        rating: 5.0,
+        reviewCount: 8,
+        providerName: 'Mike Chen',
+        providerId: 'provider-2',
+        availability: 'Flexible',
+      },
+    ];
+    return of(mockGigs).pipe(delay(500));
+  }
+
+  getGigById(id: string): Observable<Gig | null> {
+    return this.getGigs().pipe(
+      map((gigs) => gigs.find((g) => g.id === id) || null),
+      delay(300),
+    );
+  }
+
+  getMyBookings(type: 'customer' | 'provider'): Observable<Booking[]> {
+    const mockBookings: Booking[] = [
+      {
+        id: 'booking-1',
+        gigTitle: 'Math Tutoring',
+        otherPartyName: type === 'customer' ? 'Sarah Johnson' : 'John Doe',
+        date: '2024-12-15T14:00:00Z',
+        duration: 2,
+        totalCost: 50,
+        status: 'confirmed',
+        type,
+      },
+    ];
+    return of(mockBookings).pipe(delay(500));
+  }
+
+  // Budget methods
+  analyzeBudget(profile: BudgetProfile): Observable<BudgetAnalysis> {
+    const totalExpenses =
+      profile.rent +
+      profile.groceries +
+      profile.transport +
+      profile.utilities +
+      profile.entertainment;
+    const remainingBudget = profile.totalIncome - totalExpenses;
+    const savingsRate = (remainingBudget / profile.totalIncome) * 100;
+    const healthScore = Math.min(100, Math.max(0, savingsRate * 1.2));
+
+    const analysis: BudgetAnalysis = {
+      totalExpenses,
+      remainingBudget,
+      savingsRate: Math.round(savingsRate * 100) / 100,
+      healthScore: Math.round(healthScore),
+      recommendations: [
+        'Consider reducing entertainment expenses',
+        'Try to save at least 20% of your income',
+      ],
+      breakdown: {
+        needs: profile.rent + profile.groceries + profile.utilities,
+        wants: profile.entertainment + profile.transport,
+        savings: Math.max(0, remainingBudget),
+      },
+    };
+
+    return of(analysis).pipe(delay(800));
   }
 }
