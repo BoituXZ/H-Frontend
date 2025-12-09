@@ -36,7 +36,7 @@ export class BottomNavComponent {
     { label: 'Credit', route: '/app/credit', icon: Trophy },
     { label: 'Loans', route: '/app/loans', icon: Banknote },
     { label: 'Learning', route: '/app/learning', icon: BookOpen },
-    { label: 'Market', route: '/app/marketplace', icon: Store },
+    { label: 'Marketplace', route: '/app/marketplace', icon: Store },
     { label: 'Store', route: '/app/earn/storefront/manage', icon: Tag },
     { label: 'Settings', route: '/app/settings', icon: Settings },
   ];

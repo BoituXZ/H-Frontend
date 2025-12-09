@@ -105,7 +105,6 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
     this.tourDriver = driver({
       showProgress: true,
       allowClose: true, // Allow closing via X button
-      overlayClickNext: false, // Clicking overlay doesn't advance
       steps: [
         {
           element: '#credit-score-card',

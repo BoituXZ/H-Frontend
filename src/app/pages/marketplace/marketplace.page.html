@@ -1,38 +1,154 @@
-<div class="page-wrapper">
-  <!-- Page Header -->
+<div class="p-4 md:p-4">
+  <!-- Page Header with Post Gig Button -->
   <app-page-header
     pageTitle="Marketplace"
-    actionLabel="Post Gig"
+    actionLabel="Post a Gig"
     [actionIcon]="Plus"
     (actionClick)="onPostGig()"
-  />
+  ></app-page-header>
 
-  <div class="container mx-auto px-4 py-8">
-    <div class="max-w-4xl mx-auto">
-      <div class="card-theme p-8 text-center">
-        <div class="mb-4 text-honey-500">
-          <svg
-            class="w-16 h-16 mx-auto"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-            />
-          </svg>
+  <!-- Banner -->
+  <div class="banner">
+    <p class="banner-text">
+      Need funds for mukando? Here are gigs you can complete.
+    </p>
+  </div>
+
+  <!-- Category Filter -->
+  <div class="filter-section">
+    <div class="filter-buttons">
+      <button
+        class="filter-btn"
+        [class.active]="selectedCategory() === 'all'"
+        (click)="onCategoryChange('all')"
+      >
+        All
+      </button>
+      <button
+        class="filter-btn"
+        [class.active]="selectedCategory() === GigCategory.ACADEMIC"
+        (click)="onCategoryChange(GigCategory.ACADEMIC)"
+      >
+        {{ GigCategory.ACADEMIC }}
+      </button>
+      <button
+        class="filter-btn"
+        [class.active]="selectedCategory() === GigCategory.CREATIVE"
+        (click)="onCategoryChange(GigCategory.CREATIVE)"
+      >
+        {{ GigCategory.CREATIVE }}
+      </button>
+      <button
+        class="filter-btn"
+        [class.active]="selectedCategory() === GigCategory.TECH"
+        (click)="onCategoryChange(GigCategory.TECH)"
+      >
+        {{ GigCategory.TECH }}
+      </button>
+      <button
+        class="filter-btn"
+        [class.active]="selectedCategory() === GigCategory.PHYSICAL"
+        (click)="onCategoryChange(GigCategory.PHYSICAL)"
+      >
+        {{ GigCategory.PHYSICAL }}
+      </button>
+      <button
+        class="filter-btn"
+        [class.active]="selectedCategory() === GigCategory.EVENTS"
+        (click)="onCategoryChange(GigCategory.EVENTS)"
+      >
+        {{ GigCategory.EVENTS }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Featured Gig Section -->
+  @if (featuredGig(); as featured) {
+  <div class="featured-section mb-8">
+    <h2 class="section-title">Featured</h2>
+    <div class="grid grid-cols-1">
+      <app-gig-card
+        [gig]="featured"
+        [isFeatured]="true"
+        (gigClick)="onGigClick($event)"
+      />
+    </div>
+  </div>
+  }
+
+  <!-- Regular Gigs Grid -->
+  @if (regularGigs().length > 0) {
+  <div class="regular-gigs-section">
+    <h2 class="section-title">Available Gigs</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      @for (gig of regularGigs(); track gig.id) {
+      <app-gig-card
+        [gig]="gig"
+        [isFeatured]="false"
+        (gigClick)="onGigClick($event)"
+      />
+      }
+    </div>
+  </div>
+  } @else if (filteredGigs().length === 0) {
+  <div class="empty-state">
+    <p class="empty-text">No gigs found in this category.</p>
+  </div>
+  }
+</div>
+
+<!-- Post Gig Modal -->
+@if (showPostGigModal()) {
+<app-post-gig-modal
+  (closeModal)="onClosePostGigModal()"
+  (gigPosted)="onGigPosted($event)"
+/>
+}
+
+<!-- Booking Modal -->
+@if (showBookingModal() && selectedGig(); as gig) {
+<app-booking-modal
+  [gig]="gig"
+  [bookingStatus]="bookingStatus()"
+  (closeModal)="onCloseBookingModal()"
+  (payDeposit)="onPayDeposit()"
+  (releaseRemaining)="onReleaseRemaining()"
+/>
+}
+
+<!-- Completion Modal -->
+@if (showCompletionModal() && selectedGig(); as gig) {
+<div class="modal-overlay" (click)="onCloseCompletionModal()" @fadeIn>
+  <div class="modal-container" @scale (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div class="header-content">
+        <h2 class="modal-title">Gig Completed!</h2>
+      </div>
+      <button
+        type="button"
+        class="close-button"
+        (click)="onCloseCompletionModal()"
+      >
+        ✕
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="completion-content">
+        <div class="success-icon">
+          <lucide-angular [img]="CheckCircle2" [size]="48"></lucide-angular>
         </div>
-        <h2 class="text-xl font-semibold text-text-primary mb-2">
-          Marketplace Coming Soon
-        </h2>
-        <p class="text-text-secondary">
-          Browse gigs, offer services, and earn money to support your
-          contributions.
+        <h3 class="completion-title">Earnings received!</h3>
+        <p class="completion-amount">${{ gig.price | number: '1.2-2' }}</p>
+        <p class="completion-suggestion">
+          Suggestion: Add this to your mukando contribution.
         </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="onCloseCompletionModal()">
+          Done
+        </button>
       </div>
     </div>
   </div>
 </div>
+}
