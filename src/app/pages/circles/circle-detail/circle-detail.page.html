@@ -1,207 +1,307 @@
 <div class="page-wrapper">
-  <!-- Loading State -->
-  @if (loading()) {
-  <div class="flex items-center justify-center min-h-screen">
-    <app-loading-spinner [size]="60" message="Loading circle details..." />
-  </div>
+  <!-- Loading State (only show if circle detail is loading) -->
+  @if (circleLoading() && !circleDetail()) {
+    <div class="flex items-center justify-center min-h-screen">
+      <app-loading-spinner [size]="60" message="Loading circle details..." />
+    </div>
   }
 
-  <!-- Error State -->
-  @if (error() && !loading()) {
-  <div class="flex items-center justify-center min-h-screen p-4">
-    <div class="card-error p-8 max-w-md w-full" @fadeIn>
-      <lucide-angular
-        [img]="AlertCircle"
-        class="w-12 h-12 text-danger mx-auto mb-4"
-      ></lucide-angular>
-      <p class="text-sm mb-4 text-center">{{ error() }}</p>
-      <button (click)="retry()" class="btn-primary text-sm px-6 py-3 w-full">
-        Retry
-      </button>
+  <!-- Error State (only for critical circle detail failure) -->
+  @if (circleError() && !circleLoading() && !circleDetail()) {
+    <div class="flex items-center justify-center min-h-screen p-4">
+      <div class="card-error p-8 max-w-md w-full" @fadeIn>
+        <lucide-angular
+          [img]="AlertCircle"
+          class="w-12 h-12 text-danger mx-auto mb-4"
+        ></lucide-angular>
+        <p class="text-sm mb-4 text-center">{{ circleError() }}</p>
+        <button
+          (click)="retryCircle()"
+          class="btn-primary text-sm px-6 py-3 w-full"
+        >
+          Retry
+        </button>
+      </div>
     </div>
-  </div>
   }
 
   <!-- Main Content -->
-  @if (circleDetail(); as circle) { @if (!loading()) {
-  <div class="circle-detail-container" @fadeIn>
-    <!-- Header Section -->
-    <div class="header-section">
-      <!-- Breadcrumb -->
-      <button class="breadcrumb-link" (click)="navigateBack()">
-        <lucide-angular [img]="ArrowLeft" class="w-4 h-4"></lucide-angular>
-        <span>Back to Circles</span>
-      </button>
+  @if (circleDetail(); as circle) {
+    <div class="circle-detail-container" @fadeIn>
+      <!-- Header Section -->
+      <div class="header-section">
+        <!-- Breadcrumb -->
+        <button class="breadcrumb-link" (click)="navigateBack()">
+          <lucide-angular [img]="ArrowLeft" class="w-4 h-4"></lucide-angular>
+          <span>Back to Circles</span>
+        </button>
 
-      <!-- Hero Row -->
-      <div class="hero-row">
-        <div class="hero-left">
-          <h1 class="circle-name">{{ circle.name }}</h1>
-          <span
-            class="status-badge"
-            [ngClass]="getStatusBadgeClass(circle.status)"
-          >
-            {{ circle.status }}
-          </span>
-        </div>
-        <div class="hero-right">
-          <button class="dropdown-trigger" (click)="toggleDropdown()">
-            <lucide-angular
-              [img]="MoreVertical"
-              class="w-5 h-5"
-            ></lucide-angular>
-          </button>
-          @if (showDropdown()) {
-          <div class="dropdown-menu">
-            <button class="dropdown-item">Invite Member</button>
-            <button class="dropdown-item text-danger">Leave Circle</button>
+        <!-- Hero Row -->
+        <div class="hero-row">
+          <div class="hero-left">
+            <h1 class="circle-name">{{ circle.name }}</h1>
+            <span
+              class="status-badge"
+              [ngClass]="getStatusBadgeClass(circle.status)"
+            >
+              {{ circle.status }}
+            </span>
           </div>
-          }
+          <div class="hero-right">
+            <button class="dropdown-trigger" (click)="toggleDropdown()">
+              <lucide-angular
+                [img]="MoreVertical"
+                class="w-5 h-5"
+              ></lucide-angular>
+            </button>
+            @if (showDropdown()) {
+              <div class="dropdown-menu">
+                <button class="dropdown-item">Invite Member</button>
+                <button class="dropdown-item text-danger">Leave Circle</button>
+              </div>
+            }
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Navigation Tabs -->
-    <div class="tabs-container">
-      <button
-        class="tab-button"
-        [class.active]="activeTab() === 'overview'"
-        (click)="switchTab('overview')"
-      >
-        Overview
-      </button>
-      <button
-        class="tab-button"
-        [class.active]="activeTab() === 'members'"
-        (click)="switchTab('members')"
-      >
-        Members
-      </button>
-      <button
-        class="tab-button"
-        [class.active]="activeTab() === 'timeline'"
-        (click)="switchTab('timeline')"
-      >
-        Timeline
-      </button>
-    </div>
+      <!-- Navigation Tabs -->
+      <div class="tabs-container">
+        <button
+          class="tab-button"
+          [class.active]="activeTab() === 'overview'"
+          (click)="switchTab('overview')"
+        >
+          Overview
+        </button>
+        <button
+          class="tab-button"
+          [class.active]="activeTab() === 'members'"
+          (click)="switchTab('members')"
+        >
+          Members
+        </button>
+        <button
+          class="tab-button"
+          [class.active]="activeTab() === 'timeline'"
+          (click)="switchTab('timeline')"
+        >
+          Timeline
+        </button>
+      </div>
 
-    <!-- Tab Content -->
-    <div class="tab-content">
-      <!-- Overview Tab -->
-      @if (activeTab() === "overview") {
-      <div class="overview-grid" @slideUp>
-        <!-- Key Info Card -->
-        <div class="dashboard-card">
-          <div class="card-header">
-            <h3 class="card-title">Key Information</h3>
-          </div>
-          <div class="info-grid">
-            <div class="info-item">
-              <span class="info-label">Contribution</span>
-              <span class="info-value"
-                >\${{ circle.contributionAmount }} / {{ circle.frequency }}</span
-              >
+      <!-- Tab Content -->
+      <div class="tab-content">
+        <!-- Overview Tab -->
+        @if (activeTab() === "overview") {
+          <div class="overview-grid" @slideUp>
+            <!-- Key Info Card -->
+            <div class="dashboard-card">
+              <div class="card-header">
+                <h3 class="card-title">Key Information</h3>
+              </div>
+              <div class="info-grid">
+                <div class="info-item">
+                  <span class="info-label">Contribution</span>
+                  <span class="info-value"
+                    >\${{ circle.contributionAmount }} /
+                    {{ circle.frequency }}</span
+                  >
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Members</span>
+                  <span class="info-value">
+                    @if (membersLoading()) {
+                      <span class="text-text-tertiary">Loading...</span>
+                    } @else {
+                      {{ members().length }} / {{ circle.maxMembers }}
+                    }
+                  </span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Created On</span>
+                  <span class="info-value">{{
+                    formatDate(circle.createdAt)
+                  }}</span>
+                </div>
+              </div>
             </div>
-            <div class="info-item">
-              <span class="info-label">Members</span>
-              <span class="info-value"
-                >{{ members().length }} / {{ circle.maxMembers }}</span
-              >
-            </div>
-            <div class="info-item">
-              <span class="info-label">Created On</span>
-              <span class="info-value">{{ formatDate(circle.createdAt) }}</span>
-            </div>
-          </div>
-        </div>
 
-        <!-- Invite Code Card -->
-        <div class="dashboard-card">
-          <div class="card-header">
-            <h3 class="card-title">Invite Code</h3>
-          </div>
-          <div class="invite-code-wrapper">
-            <span class="invite-code">{{ circle.inviteCode }}</span>
-            <button
-              class="copy-btn"
-              (click)="copyInviteCode(circle.inviteCode)"
-            >
-              <lucide-angular [img]="Copy" class="w-4 h-4"></lucide-angular>
-              <span>Copy</span>
-            </button>
-          </div>
-        </div>
+            <!-- Invite Code Card -->
+            <div class="dashboard-card">
+              <div class="card-header">
+                <h3 class="card-title">Invite Code</h3>
+              </div>
+              <div class="invite-code-wrapper">
+                <span class="invite-code">{{ circle.inviteCode }}</span>
+                <button
+                  class="copy-btn"
+                  (click)="copyInviteCode(circle.inviteCode)"
+                >
+                  <lucide-angular [img]="Copy" class="w-4 h-4"></lucide-angular>
+                  <span>Copy</span>
+                </button>
+              </div>
+            </div>
 
-        <!-- Description Card -->
-        @if(circle.description) {
-        <div class="dashboard-card description-card">
-          <div class="card-header">
-            <h3 class="card-title">Description</h3>
+            <!-- Description Card -->
+            @if (circle.description) {
+              <div class="dashboard-card description-card">
+                <div class="card-header">
+                  <h3 class="card-title">Description</h3>
+                </div>
+                <p class="description-text">{{ circle.description }}</p>
+              </div>
+            }
           </div>
-          <p class="description-text">{{ circle.description }}</p>
-        </div>
+        }
+
+        <!-- Members Tab -->
+        @if (activeTab() === "members") {
+          <div class="members-content" @slideUp>
+            <!-- Loading State -->
+            @if (membersLoading()) {
+              <div class="dashboard-card">
+                <div class="flex items-center justify-center py-12">
+                  <app-loading-spinner
+                    [size]="40"
+                    message="Loading members..."
+                  />
+                </div>
+              </div>
+            }
+
+            <!-- Error State -->
+            @if (membersError() && !membersLoading()) {
+              <div class="dashboard-card">
+                <div class="card-error p-6">
+                  <lucide-angular
+                    [img]="AlertCircle"
+                    class="w-8 h-8 text-danger mx-auto mb-3"
+                  ></lucide-angular>
+                  <p class="text-sm mb-3 text-center">{{ membersError() }}</p>
+                  <button
+                    (click)="retryMembers()"
+                    class="btn-primary text-sm px-4 py-2 mx-auto block"
+                  >
+                    Retry
+                  </button>
+                </div>
+              </div>
+            }
+
+            <!-- Members List -->
+            @if (!membersLoading() && !membersError()) {
+              <div class="dashboard-card">
+                <div class="card-header">
+                  <h3 class="card-title">
+                    Circle Members ({{ members().length }})
+                  </h3>
+                </div>
+                @if (members().length > 0) {
+                  <div class="members-list">
+                    @for (member of members(); track member.id) {
+                      <div class="member-item">
+                        <img
+                          [src]="
+                            member.avatarUrl || 'assets/default-avatar.png'
+                          "
+                          alt="member avatar"
+                          class="member-avatar"
+                        />
+                        <span class="member-name">{{
+                          member.name || "Unknown Member"
+                        }}</span>
+                      </div>
+                    }
+                  </div>
+                } @else {
+                  <div class="empty-state py-8">
+                    <p class="text-center text-text-secondary">
+                      No members have joined this circle yet.
+                    </p>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+
+        <!-- Timeline Tab -->
+        @if (activeTab() === "timeline") {
+          <div class="timeline-content" @slideUp>
+            <!-- Loading State -->
+            @if (timelineLoading()) {
+              <div class="dashboard-card">
+                <div class="flex items-center justify-center py-12">
+                  <app-loading-spinner
+                    [size]="40"
+                    message="Loading timeline..."
+                  />
+                </div>
+              </div>
+            }
+
+            <!-- Error State -->
+            @if (timelineError() && !timelineLoading()) {
+              <div class="dashboard-card">
+                <div class="card-error p-6">
+                  <lucide-angular
+                    [img]="AlertCircle"
+                    class="w-8 h-8 text-danger mx-auto mb-3"
+                  ></lucide-angular>
+                  <p class="text-sm mb-3 text-center">{{ timelineError() }}</p>
+                  <button
+                    (click)="retryTimeline()"
+                    class="btn-primary text-sm px-4 py-2 mx-auto block"
+                  >
+                    Retry
+                  </button>
+                </div>
+              </div>
+            }
+
+            <!-- Timeline List -->
+            @if (!timelineLoading() && !timelineError()) {
+              <div class="dashboard-card">
+                <div class="card-header">
+                  <h3 class="card-title">Payout Timeline</h3>
+                </div>
+                <div class="timeline-list-condensed">
+                  @for (entry of timeline(); track entry.turn) {
+                    <div
+                      class="timeline-entry"
+                      [class.completed]="entry.status === 'completed'"
+                    >
+                      <div class="turn-indicator">
+                        <span class="turn-number">{{ entry.turn }}</span>
+                      </div>
+                      <div class="entry-details">
+                        <span class="entry-member">{{
+                          entry.memberName || "Unknown"
+                        }}</span>
+                        <span class="entry-date">{{
+                          formatDate(entry.payoutDate)
+                        }}</span>
+                      </div>
+                      <span
+                        class="entry-status"
+                        [class.completed]="entry.status === 'completed'"
+                        >{{ entry.status || "pending" }}</span
+                      >
+                    </div>
+                  } @empty {
+                    <div class="empty-state py-8">
+                      <p class="text-center text-text-secondary">
+                        Payout timeline is not available yet.
+                      </p>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
         }
       </div>
-      }
-
-      <!-- Members Tab -->
-      @if (activeTab() === "members") {
-      <div class="members-content" @slideUp>
-        <div class="dashboard-card">
-          <div class="card-header">
-            <h3 class="card-title">Circle Members ({{ members().length }})</h3>
-          </div>
-          <div class="members-list">
-            @for (member of members(); track member.id) {
-            <div class="member-item">
-              <img
-                [src]="member.avatarUrl"
-                alt="member avatar"
-                class="member-avatar"
-              />
-              <span class="member-name">{{ member.name }}</span>
-            </div>
-            }
-          </div>
-        </div>
-      </div>
-      }
-
-      <!-- Timeline Tab -->
-      @if (activeTab() === "timeline") {
-      <div class="timeline-content" @slideUp>
-        <div class="dashboard-card">
-          <div class="card-header">
-            <h3 class="card-title">Payout Timeline</h3>
-          </div>
-          <div class="timeline-list-condensed">
-            @for(entry of timeline(); track entry.turn) {
-            <div
-              class="timeline-entry"
-              [class.completed]="entry.status === 'completed'"
-            >
-              <div class="turn-indicator">
-                <span class="turn-number">{{ entry.turn }}</span>
-              </div>
-              <div class="entry-details">
-                <span class="entry-member">{{ entry.memberName }}</span>
-                <span class="entry-date">{{
-                  formatDate(entry.payoutDate)
-                }}</span>
-              </div>
-              <span class="entry-status" [class.completed]="entry.status === 'completed'">{{ entry.status }}</span>
-            </div>
-            } @empty {
-            <div class="empty-state">
-              <p>Payout timeline is not available yet.</p>
-            </div>
-            }
-          </div>
-        </div>
-      </div>
-      }
     </div>
-  </div>
-  } }
+  }
 </div>

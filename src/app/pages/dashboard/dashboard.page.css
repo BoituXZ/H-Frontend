@@ -108,11 +108,11 @@
 }
 
 .stat-card.blue-theme .stat-change.positive {
-  color: #60d1f6;
+  color: var(--color-cyan-400);
 }
 
 .stat-card.blue-theme .stat-change.negative {
-  color: #60d1f6;
+  color: var(--color-cyan-400);
 }
 
 .stat-card.blue-theme .stat-change.neutral {
@@ -283,7 +283,12 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #ffb800, #60d1f6, #ffb800);
+  background: linear-gradient(
+    90deg,
+    var(--color-gold-500),
+    var(--color-cyan-400),
+    var(--color-gold-500)
+  );
   background-size: 200% 100%;
   opacity: 0;
   transition: opacity 0.4s;
@@ -349,15 +354,15 @@
 }
 
 .content-card.blue-theme .pot-amount {
-  color: #60d1f6;
+  color: var(--color-cyan-400);
 }
 
 .content-card.blue-theme .contribution-amount {
-  color: #60d1f6;
+  color: var(--color-cyan-400);
 }
 
 .content-card.blue-theme .timer-countdown {
-  color: #60d1f6;
+  color: var(--color-cyan-400);
 }
 
 .content-card.blue-theme .members-status {
@@ -436,7 +441,7 @@
 .pot-amount {
   font-size: 2.25rem;
   font-weight: 800;
-  color: #ffb800;
+  color: var(--color-gold-500);
   font-family: "Poppins", sans-serif;
   text-shadow: 0 2px 16px rgba(255, 184, 0, 0.6);
   letter-spacing: -0.02em;
@@ -445,7 +450,7 @@
 .contribution-amount {
   font-size: 1.65rem;
   font-weight: 700;
-  color: #60d1f6;
+  color: var(--color-cyan-400);
   font-family: "Poppins", sans-serif;
   text-shadow: 0 2px 12px rgba(96, 209, 246, 0.5);
   letter-spacing: -0.02em;
@@ -477,7 +482,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  color: #ffb800;
+  color: var(--color-gold-500);
   filter: drop-shadow(0 0 8px rgba(255, 184, 0, 0.4));
 }
 
@@ -498,7 +503,7 @@
 .timer-countdown {
   font-size: 1.25rem;
   font-weight: 800;
-  color: #ffb800;
+  color: var(--color-gold-500);
   font-family: "Poppins", sans-serif;
   text-shadow: 0 2px 12px rgba(255, 184, 0, 0.5);
 }
@@ -530,7 +535,7 @@
 }
 
 .status-paid {
-  color: #ffb800;
+  color: var(--color-gold-500);
   font-weight: 700;
   text-shadow: 0 0 8px rgba(255, 184, 0, 0.3);
 }
@@ -594,9 +599,13 @@
 }
 
 .member-avatar.current-user {
-  background: linear-gradient(135deg, #ffb800, #ff9500);
+  background: linear-gradient(
+    135deg,
+    var(--color-gold-500),
+    var(--color-gold-600)
+  );
   color: white;
-  border-color: #ffb800;
+  border-color: var(--color-gold-500);
   box-shadow:
     0 4px 16px rgba(255, 184, 0, 0.5),
     0 0 0 3px rgba(255, 184, 0, 0.2);
@@ -604,7 +613,7 @@
 
 .member-avatar.paid {
   background: rgba(255, 184, 0, 0.2);
-  color: #ffb800;
+  color: var(--color-gold-500);
   border-color: rgba(255, 184, 0, 0.5);
   box-shadow: 0 4px 12px rgba(255, 184, 0, 0.25);
 }
@@ -618,7 +627,7 @@
 
 .member-avatar.received {
   background: rgba(96, 209, 246, 0.2);
-  color: #60d1f6;
+  color: var(--color-cyan-400);
   border-color: rgba(96, 209, 246, 0.5);
   box-shadow: 0 4px 12px rgba(96, 209, 246, 0.25);
 }
@@ -629,7 +638,7 @@
   right: -4px;
   width: 18px;
   height: 18px;
-  background: #ffb800;
+  background: var(--color-gold-500);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -653,7 +662,11 @@
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #ffb800, #ff9500);
+  background: linear-gradient(
+    90deg,
+    var(--color-gold-500),
+    var(--color-gold-600)
+  );
   border-radius: 999px;
   transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 0 12px rgba(255, 184, 0, 0.5);
@@ -741,7 +754,11 @@
 }
 
 .score-card.blue-theme {
-  background: linear-gradient(135deg, #0f2937 0%, #163d50 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-navy-700) 0%,
+    var(--color-navy-600) 100%
+  );
 }
 
 .score-card.blue-theme .score-number,
@@ -760,7 +777,7 @@
 }
 
 .score-card.blue-theme .btn-secondary {
-  color: #0f2937;
+  color: var(--color-navy-700);
 }
 
 .score-card.blue-theme .btn-secondary:hover {
@@ -807,7 +824,7 @@
 }
 
 .score-card.orange-theme .score-progress {
-  stroke: #0f2937 !important;
+  stroke: var(--color-navy-700) !important;
 }
 
 .score-card.orange-theme .score-tier {
@@ -821,17 +838,21 @@
 }
 
 .score-card.orange-theme .progress-bar-fill {
-  background: linear-gradient(90deg, #0f2937, #163d50) !important;
+  background: linear-gradient(
+    90deg,
+    var(--color-navy-700),
+    var(--color-navy-600)
+  ) !important;
 }
 
 .score-card.orange-theme .btn-secondary {
-  background: #0f2937;
+  background: var(--color-navy-700);
   color: white;
   font-weight: 600;
 }
 
 .score-card.orange-theme .btn-secondary:hover {
-  background: #163d50;
+  background: var(--color-navy-600);
   transform: translateY(-1px);
 }
 
@@ -890,7 +911,7 @@
 
 .score-track {
   fill: none;
-  stroke: #e5e7eb;
+  stroke: var(--color-cream-300);
   stroke-width: 12;
 }
 
@@ -993,7 +1014,7 @@
 .total-rewards {
   font-size: 1.125rem;
   font-weight: 700;
-  color: #10b981;
+  color: var(--color-success);
   font-family: "Poppins", sans-serif;
 }
 
@@ -1015,7 +1036,7 @@
 }
 
 .recommendation-item:hover {
-  border-color: #ffb800;
+  border-color: var(--color-gold-500);
   transform: translateX(4px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
@@ -1033,7 +1054,7 @@
 .rec-title {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #1f2937;
+  color: var(--color-text-primary);
   margin-bottom: 0.25rem;
 }
 
@@ -1046,13 +1067,13 @@
 }
 
 .rec-type.gig {
-  background: #fef3c7;
-  color: #d97706;
+  background: var(--color-warning-light);
+  color: var(--color-warning-dark);
 }
 
 .rec-type.sale {
-  background: #dbeafe;
-  color: #2563eb;
+  background: var(--color-hive-50);
+  color: var(--color-hive-600);
 }
 
 .rec-reward {
@@ -1065,7 +1086,7 @@
 .reward-amount {
   font-size: 0.875rem;
   font-weight: 700;
-  color: #10b981;
+  color: var(--color-success);
 }
 
 /* Empty States */
@@ -1180,7 +1201,11 @@
 
 /* Stat Card Blue Theme */
 .stat-card.blue-theme {
-  background: linear-gradient(135deg, #0f2937 0%, #163d50 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-navy-700) 0%,
+    var(--color-navy-600) 100%
+  );
   border-color: rgba(15, 41, 55, 0.5);
 }
 
@@ -1191,7 +1216,7 @@
 
 /* Stat Labels and Values */
 .stat-label {
-  color: #6b7280;
+  color: var(--color-text-tertiary);
 }
 
 [data-theme="dark"] .stat-label {
@@ -1199,7 +1224,7 @@
 }
 
 .stat-value {
-  color: #1f2937;
+  color: var(--color-text-primary);
 }
 
 [data-theme="dark"] .stat-value,
@@ -1239,7 +1264,7 @@
 /* Pot Labels and Amounts */
 .pot-label,
 .contribution-label {
-  color: #6b7280;
+  color: var(--color-text-tertiary);
 }
 
 [data-theme="dark"] .pot-label,
@@ -1251,7 +1276,7 @@
 
 /* Members Section */
 .members-title {
-  color: #1f2937;
+  color: var(--color-text-primary);
 }
 
 [data-theme="dark"] .members-title,
@@ -1261,21 +1286,21 @@
 
 /* Member Avatars - Light Mode */
 .member-avatar.paid {
-  background: #fff8e7;
-  color: #ffb800;
-  border-color: #ffb800;
+  background: var(--color-gold-100);
+  color: var(--color-gold-500);
+  border-color: var(--color-gold-500);
 }
 
 [data-theme="dark"] .member-avatar.paid {
   background: rgba(255, 184, 0, 0.2);
-  color: #ffb800;
+  color: var(--color-gold-500);
   border-color: rgba(255, 184, 0, 0.5);
 }
 
 .member-avatar.pending {
-  background: #f3f4f6;
-  color: #6b7280;
-  border-color: #d1d5db;
+  background: var(--color-cream-200);
+  color: var(--color-text-tertiary);
+  border-color: var(--color-cream-400);
 }
 
 [data-theme="dark"] .member-avatar.pending {
@@ -1285,21 +1310,21 @@
 }
 
 .member-avatar.received {
-  background: #e8f4f8;
-  color: #2c7a9b;
-  border-color: #2c7a9b;
+  background: var(--color-cyan-50);
+  color: var(--color-cyan-600);
+  border-color: var(--color-cyan-600);
 }
 
 [data-theme="dark"] .member-avatar.received {
   background: rgba(96, 209, 246, 0.2);
-  color: #60d1f6;
+  color: var(--color-cyan-400);
   border-color: rgba(96, 209, 246, 0.5);
 }
 
 /* Action Buttons */
 .action-button {
-  background: #0f2937;
-  border: 1px solid #0f2937;
+  background: var(--color-navy-700);
+  border: 1px solid var(--color-navy-700);
 }
 
 [data-theme="dark"] .action-button {
@@ -1309,7 +1334,7 @@
 
 /* Score Number */
 .score-number {
-  color: #1f2937;
+  color: var(--color-text-primary);
 }
 
 [data-theme="dark"] .score-number,
@@ -1318,7 +1343,7 @@
 }
 
 .score-max {
-  color: #6b7280;
+  color: var(--color-text-tertiary);
 }
 
 [data-theme="dark"] .score-max,
@@ -1328,7 +1353,7 @@
 
 /* Progress Elements */
 .progress-bar {
-  background: #e5e7eb;
+  background: var(--color-cream-300);
 }
 
 [data-theme="dark"] .progress-bar {
@@ -1336,7 +1361,7 @@
 }
 
 .progress-label {
-  color: #6b7280;
+  color: var(--color-text-tertiary);
 }
 
 [data-theme="dark"] .progress-label,
@@ -1345,7 +1370,7 @@
 }
 
 .progress-percentage {
-  color: #ffb800;
+  color: var(--color-gold-500);
 }
 
 [data-theme="dark"] .progress-percentage,
@@ -1355,7 +1380,7 @@
 
 /* Empty States */
 .empty-title {
-  color: #1f2937;
+  color: var(--color-text-primary);
 }
 
 [data-theme="dark"] .empty-title,
@@ -1377,7 +1402,7 @@
 
 /* Timer */
 .timer-label {
-  color: #6b7280;
+  color: var(--color-text-tertiary);
 }
 
 [data-theme="dark"] .timer-label,
@@ -1387,7 +1412,7 @@
 
 /* Card Subtitle */
 .card-subtitle {
-  color: #6b7280;
+  color: var(--color-text-tertiary);
 }
 
 [data-theme="dark"] .card-subtitle,
@@ -1398,17 +1423,17 @@
 
 /* Status Colors */
 .status-paid {
-  color: #ffb800;
+  color: var(--color-gold-500);
 }
 
 [data-theme="dark"] .status-paid,
 .content-card.blue-theme .status-paid {
-  color: #ffb800;
+  color: var(--color-gold-500);
   text-shadow: 0 0 8px rgba(255, 184, 0, 0.3);
 }
 
 .status-pending {
-  color: #6b7280;
+  color: var(--color-text-tertiary);
 }
 
 [data-theme="dark"] .status-pending,
@@ -1417,7 +1442,7 @@
 }
 
 .status-separator {
-  color: #9ca3af;
+  color: var(--color-cream-500);
 }
 
 [data-theme="dark"] .status-separator,
@@ -1488,7 +1513,7 @@
 .member-avatar.current-user,
 .progress-bar-fill,
 .score-tier[style*="background-color"] {
-  color: var(--accent-honey) !important;
+  color: var(--color-hive-500) !important;
 }
 
 .stat-change.positive,

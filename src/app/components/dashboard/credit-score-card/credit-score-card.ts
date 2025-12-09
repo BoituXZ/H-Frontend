@@ -72,9 +72,9 @@ export class CreditScoreCard implements OnInit {
 
   getTierColor(): string {
     const colors: Record<string, string> = {
-      Bronze: '#CD7F32',
-      Silver: '#C0C0C0',
-      Gold: '#FFD700',
+      Bronze: 'var(--color-bronze)',
+      Silver: 'var(--color-silver)',
+      Gold: 'var(--color-tier-gold)',
     };
     return colors[this.tier] || colors['Bronze'];
   }

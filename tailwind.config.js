@@ -4,80 +4,82 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Primary: Honey/Orange (Warmth, Growth, Energy)
+        // Primary: "Honey" is now RED (#eb2528)
         honey: {
-          50: "#FFF8E7", // Lightest cream
-          100: "#FFEFC0",
-          200: "#FFE49A",
-          300: "#FFD874",
-          400: "#FFCC4D",
-          500: "#FFB800", // Primary honey
-          600: "#E6A600",
-          700: "#CC9400",
-          800: "#B38200",
-          900: "#8C6600", // Deep amber
+          50: "#fff5f5",
+          100: "#ffe3e3",
+          200: "#ffc9c9",
+          300: "#ffa5a5",
+          400: "#fa6e6e",
+          500: "#eb2528", // Base Brand Red
+          600: "#c91a1d",
+          700: "#a61214",
+          800: "#850f11",
+          900: "#6e1012",
         },
 
-        // Secondary: Blue (Trust, Stability, Financial Security)
+        // Secondary: "Hive" is now BLUE (#075ca8)
         hive: {
-          50: "#E8F4F8",
-          100: "#B8DDE8",
-          200: "#88C6D8",
-          300: "#58AFC8",
-          400: "#3D9BB8",
-          500: "#2C7A9B", // Primary blue
-          600: "#246582",
-          700: "#1D5169",
-          800: "#163D50",
-          900: "#0F2937",
+          50: "#f0f7ff",
+          100: "#e0effe",
+          200: "#b9dffc",
+          300: "#7cc2fa",
+          400: "#36a2f5",
+          500: "#075ca8", // Base Brand Blue
+          600: "#044b8a",
+          700: "#043c6f",
+          800: "#05335c",
+          900: "#082b4b",
         },
 
-        // Neutrals: Warm backgrounds
+        // Neutrals: "Cream" is now WHITE/SLATE (#ffffff)
         cream: {
-          50: "#FDFCFB", // Almost white
-          100: "#FAF8F5", // Main background
-          200: "#F5F2ED",
-          300: "#EBE6DD",
-          400: "#DDD6C8",
-          500: "#C8BFB0",
+          50: "#ffffff", // Pure White
+          100: "#f8fafc",
+          200: "#f1f5f9",
+          300: "#e2e8f0",
+          400: "#cbd5e1",
+          500: "#94a3b8",
         },
 
         // Supporting colors
         success: {
-          light: "#D4EDDA",
-          DEFAULT: "#28A745",
-          dark: "#1E7E34",
+          light: "#dcfce7",
+          DEFAULT: "#22c55e",
+          dark: "#15803d",
         },
         warning: {
-          light: "#FFF3CD",
-          DEFAULT: "#FFC107",
-          dark: "#E0A800",
+          light: "#fef9c3",
+          DEFAULT: "#eab308",
+          dark: "#a16207",
         },
         danger: {
-          light: "#F8D7DA",
-          DEFAULT: "#DC3545",
-          dark: "#C82333",
+          light: "#fee2e2",
+          DEFAULT: "#ef4444",
+          dark: "#b91c1c",
         },
 
-        // Text colors
+        // Text colors (Slate scale)
         text: {
-          primary: "#2D2D2D", // Almost black
-          secondary: "#5A5A5A", // Gray
-          tertiary: "#8C8C8C", // Light gray
-          inverse: "#FFFFFF", // White
+          primary: "#0f172a", // Slate 900
+          secondary: "#475569", // Slate 600
+          tertiary: "#94a3b8", // Slate 400
+          inverse: "#ffffff",
         },
       },
 
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],
-        display: ["Poppins", "Inter", "sans-serif"], // For headers
+        display: ["Poppins", "Inter", "sans-serif"],
       },
 
       boxShadow: {
-        soft: "0 2px 15px rgba(255, 184, 0, 0.08)",
-        honey: "0 4px 20px rgba(255, 184, 0, 0.15)",
-        hive: "0 4px 20px rgba(44, 122, 155, 0.15)",
-        card: "0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08)",
+        // Red Glow
+        soft: "0 2px 15px rgba(235, 37, 40, 0.05)",
+        honey: "0 4px 20px rgba(235, 37, 40, 0.15)",
+        // Blue Glow
+        hive: "0 4px 20px rgba(7, 92, 168, 0.15)",
+        card: "0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)",
       },
 
       borderRadius: {

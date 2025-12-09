@@ -1,0 +1,63 @@
+<!-- Main container for the circle detail page -->
+<div class="container mt-4">
+  <!-- Section 1: Circle Details -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <h2>Circle Details</h2>
+    </div>
+    <div class="card-body">
+      <div *ngIf="isLoadingDetails" class="text-center">
+        <p>Loading details...</p>
+        <!-- You can place a spinner component here -->
+      </div>
+      <div *ngIf="!isLoadingDetails">
+        <!-- The 'default' pipe handles any null/undefined values from the backend -->
+        <p><strong>Name:</strong> {{ details?.name | default }}</p>
+        <p>
+          <strong>Description:</strong> {{ details?.description | default }}
+        </p>
+        <p><strong>Owner:</strong> {{ details?.owner | default }}</p>
+        <p>
+          <strong>Created:</strong>
+          {{ details?.createdAt | date: "medium" | default }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 2: Circle Members -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <h3>Members</h3>
+    </div>
+    <div class="card-body">
+      <div *ngIf="isLoadingMembers" class="text-center">
+        <p>Loading members...</p>
+      </div>
+      <div *ngIf="!isLoadingMembers">
+        <ul
+          *ngIf="members && members.length > 0; else noMembers"
+          class="list-group"
+        >
+          <li *ngFor="let member of members" class="list-group-item">
+            {{ member.username }}
+          </li>
+        </ul>
+        <ng-template #noMembers>
+          <p>No members found or data could not be loaded.</p>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 3: Circle Posts (Example for your third endpoint) -->
+  <div class="card">
+    <div class="card-header">
+      <h3>Recent Posts</h3>
+    </div>
+    <div class="card-body">
+      <!-- You can apply the same loading/error pattern here for posts -->
+      <p>Post data will be loaded here...</p>
+    </div>
+  </div>
+</div>
