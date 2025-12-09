@@ -1,159 +1,142 @@
-import { Component, signal, computed, OnInit, OnDestroy, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Router, RouterModule, ActivatedRoute } from '@angular/router';
+import { Component, computed, inject, signal } from '@angular/core';
+import { CommonModule, Location } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { forkJoin } from 'rxjs';
+import {
+  LucideAngularModule,
+  AlertCircle,
+  ArrowLeft,
+  MoreVertical,
+  Copy,
+} from 'lucide-angular';
+
+import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
 import { CirclesService } from '../../../services/circles.service';
 import {
   CircleDetail,
   CircleMember,
   PayoutEntry,
 } from '../../../models/circle.model';
-import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
-import {
-  LucideAngularModule,
-  ArrowLeft,
-  MoreVertical,
-  Users,
-  DollarSign,
-  CheckCircle,
-  Clock,
-  Calendar,
-  AlertCircle,
-  Award,
-  Shield,
-  Copy,
-} from 'lucide-angular';
-import {
-  fadeInAnimation,
-  slideUpAnimation,
-} from '../../../shared/utils/animations';
-import { Subscription, forkJoin } from 'rxjs';
+import { fadeIn, slideUp } from '../../../shared/utils/animations';
 
 @Component({
   selector: 'app-circle-detail',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    LoadingSpinnerComponent,
-    LucideAngularModule,
-  ],
+  imports: [CommonModule, LucideAngularModule, LoadingSpinnerComponent],
   templateUrl: './circle-detail.page.html',
-  styleUrl: './circle-detail.page.css',
-  animations: [fadeInAnimation, slideUpAnimation],
+  styleUrls: ['./circle-detail.page.css'],
+  animations: [fadeIn, slideUp],
 })
-export class CircleDetailPage implements OnInit, OnDestroy {
+export class CircleDetailPage {
   private route = inject(ActivatedRoute);
-  private router = inject(Router);
+  private location = inject(Location);
   private circlesService = inject(CirclesService);
 
-  // Lucide icons
-  readonly ArrowLeft = ArrowLeft;
-  readonly MoreVertical = MoreVertical;
-  readonly Users = Users;
-  readonly DollarSign = DollarSign;
-  readonly CheckCircle = CheckCircle;
-  readonly Clock = Clock;
-  readonly Calendar = Calendar;
-  readonly AlertCircle = AlertCircle;
-  readonly Award = Award;
-  readonly Shield = Shield;
-  readonly Copy = Copy;
+  // Icons
+  AlertCircle = AlertCircle;
+  ArrowLeft = ArrowLeft;
+  MoreVertical = MoreVertical;
+  Copy = Copy;
 
-  // State signals
-  circleDetail = signal<CircleDetail | null>(null);
-  members = signal<CircleMember[]>([]);
-  timeline = signal<PayoutEntry[]>([]);
+  // State Signals
+  private circleId = signal<string | null>(null);
+  private circleData = signal<{
+    circle: CircleDetail;
+    members: CircleMember[];
+    timeline: PayoutEntry[];
+  } | null>(null);
 
-  loading = signal(true);
-  error = signal<string | null>(null);
-  activeTab = signal<'overview' | 'members' | 'timeline'>('overview');
-  showDropdown = signal(false);
+  public loading = signal<boolean>(true);
+  public error = signal<string | null>(null);
+  public showDropdown = signal<boolean>(false);
+  public activeTab = signal<'overview' | 'members' | 'timeline'>('overview');
 
-  private routeSub?: Subscription;
+  // Computed Signals
+  public circleDetail = computed(() => this.circleData()?.circle);
+  public members = computed(() => this.circleData()?.members || []);
+  public timeline = computed(() => this.circleData()?.timeline || []);
 
-  ngOnInit(): void {
-    this.routeSub = this.route.paramMap.subscribe((params) => {
-      const id = params.get('id');
-      if (id) {
-        this.loadCircleData(id);
-      } else {
-        this.error.set('No circle ID provided');
-        this.loading.set(false);
-      }
-    });
+  constructor() {
+    this.circleId.set(this.route.snapshot.paramMap.get('id'));
+    this.loadCircleData();
   }
 
-  ngOnDestroy(): void {
-    this.routeSub?.unsubscribe();
-  }
+  loadCircleData(): void {
+    if (!this.circleId()) {
+      this.error.set('Circle ID is missing.');
+      this.loading.set(false);
+      return;
+    }
 
-  private loadCircleData(id: string): void {
     this.loading.set(true);
     this.error.set(null);
 
+    // Using forkJoin to handle multiple parallel requests
     forkJoin({
-      details: this.circlesService.getCircleById(id),
-      members: this.circlesService.getCircleMembers(id),
-      timeline: this.circlesService.getCircleTimeline(id),
+      circle: this.circlesService.getCircleById(this.circleId()!),
+      members: this.circlesService.getCircleMembers(this.circleId()!),
+      timeline: this.circlesService.getCircleTimeline(this.circleId()!), // Assuming this method exists
     }).subscribe({
-      next: ({ details, members, timeline }) => {
-        this.circleDetail.set(details);
-        this.members.set(members);
-        this.timeline.set(timeline);
+      next: (data) => {
+        this.circleData.set(data);
         this.loading.set(false);
       },
       error: (err) => {
-        console.error('Error loading circle data:', err);
-        this.error.set('Failed to load circle details. Please try again.');
+        console.error('Failed to load circle details:', err);
+        this.error.set(
+          'We had trouble loading the circle details. Please try again.',
+        );
         this.loading.set(false);
       },
     });
   }
 
-  switchTab(tab: 'overview' | 'members' | 'timeline'): void {
-    this.activeTab.set(tab);
+  retry(): void {
+    this.loadCircleData();
   }
 
   navigateBack(): void {
-    this.router.navigate(['/app/circles']);
+    this.location.back();
   }
 
   toggleDropdown(): void {
     this.showDropdown.update((v) => !v);
   }
 
+  switchTab(tab: 'overview' | 'members' | 'timeline'): void {
+    this.activeTab.set(tab);
+  }
+
   getStatusBadgeClass(status: string): string {
-    switch (status) {
+    switch (status.toLowerCase()) {
       case 'active':
-        return 'badge-success';
-      case 'completed':
-        return 'badge-info';
+        return 'status-badge-success';
       case 'pending':
-        return 'badge-warning';
+        return 'status-badge-warning';
+      case 'closed':
+        return 'status-badge-neutral';
       default:
-        return 'badge-default';
+        return 'status-badge-neutral';
     }
   }
 
   formatDate(dateString: string): string {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
+    if (!dateString) return 'N/A';
+    return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
+      month: 'long',
+      day: 'numeric',
     });
   }
 
-  retry(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.loadCircleData(id);
+  async copyInviteCode(code: string): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(code);
+      // Optional: Add a toast notification for better UX
+      alert('Invite code copied to clipboard!');
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+      alert('Failed to copy invite code.');
     }
-  }
-
-  copyInviteCode(code: string): void {
-    navigator.clipboard.writeText(code);
-    // Maybe show a toast notification
   }
 }
