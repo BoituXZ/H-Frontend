@@ -82,6 +82,7 @@ export interface LearningContent {
   tier: 'Beginner' | 'Growing' | 'Established' | 'Trusted';
   isCompleted: boolean;
   category: string;
+  content?: string; // Optional content field for article/video descriptions
 }
 
 export interface Badge {

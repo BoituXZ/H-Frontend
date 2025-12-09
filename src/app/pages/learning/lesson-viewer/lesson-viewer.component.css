@@ -48,6 +48,59 @@
 
 .article-content {
   line-height: 1.75;
+  position: relative;
+}
+
+.typing-controls {
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.stop-generating-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 184, 0, 0.1);
+  border: 1px solid rgba(255, 184, 0, 0.3);
+  border-radius: 8px;
+  color: #ffb800;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.stop-generating-btn:hover {
+  background: rgba(255, 184, 0, 0.2);
+  border-color: rgba(255, 184, 0, 0.5);
+  transform: translateY(-1px);
+}
+
+.article-text {
+  min-height: 200px;
+  line-height: 1.8;
+}
+
+.article-text.blinking-cursor::after {
+  content: '|';
+  animation: blink 1s step-start infinite;
+  color: #FFB800; /* Honey color */
+  margin-left: 2px;
+  font-weight: 300;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.typing-placeholder {
+  color: #9ca3af;
+  font-style: italic;
+  font-size: 1rem;
 }
 
 .article-paragraph {
@@ -72,6 +125,30 @@
   font-size: 1.5rem;
   font-weight: 600;
   border-radius: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.video-description {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(20px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.description-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f2937;
+  margin-bottom: 0.75rem;
+}
+
+.description-text {
+  font-size: 1rem;
+  color: #374151;
+  line-height: 1.8;
+  margin: 0;
 }
 
 /* Success Toast */
