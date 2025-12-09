@@ -101,9 +101,9 @@ export class DashboardPage implements OnInit {
   // Helper methods for template
   getTierColor(tier: string): string {
     const colors: Record<string, string> = {
-      Bronze: '#CD7F32',
-      Silver: '#C0C0C0',
-      Gold: '#FFD700',
+      Bronze: 'var(--color-bronze)',
+      Silver: 'var(--color-silver)',
+      Gold: 'var(--color-tier-gold)',
     };
     return colors[tier] || colors['Bronze'];
   }
@@ -177,7 +177,9 @@ export class DashboardPage implements OnInit {
   navigateToWallet(): void {
     // Wallet endpoint not supported by backend - commenting out
     // this.router.navigate(['/app/wallet']);
-    console.log('Wallet feature not available - backend endpoint not supported');
+    console.log(
+      'Wallet feature not available - backend endpoint not supported',
+    );
   }
 
   navigateToCircles(): void {

@@ -294,7 +294,7 @@
 
 /* Share Button */
 .btn-share {
-  background-color: #ffffff;
+  background-color: var(--color-cream-50);
   color: var(--text-secondary);
   border: 1px solid rgba(0, 0, 0, 0.08);
   padding: 0.5rem 1.25rem;
@@ -307,7 +307,7 @@
 }
 
 .btn-share:hover {
-  background-color: #f8f9fa;
+  background-color: var(--color-cream-100);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   color: var(--text-primary);
@@ -319,7 +319,7 @@
 
 :host-context([data-theme="dark"]) .btn-share {
   background-color: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
+  color: var(--color-text-inverse);
   border-color: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(4px);
 }

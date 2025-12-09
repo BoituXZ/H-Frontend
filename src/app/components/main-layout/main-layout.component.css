@@ -9,7 +9,12 @@
 }
 
 [data-theme="dark"] .app-layout {
-  background: linear-gradient(135deg, #0a1929 0%, #0f2937 50%, #1a3a4a 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-navy-800) 0%,
+    var(--color-navy-700) 50%,
+    var(--color-navy-500) 100%
+  );
   background-attachment: fixed;
 }
 

@@ -71,7 +71,11 @@
 /* Active Loan Card - Blue Theme */
 .active-loan-card {
   padding: 1.5rem;
-  background: linear-gradient(135deg, #0f2937 0%, #163d50 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-navy-700) 0%,
+    var(--color-navy-600) 100%
+  );
   border: 1px solid rgba(96, 209, 246, 0.2);
   color: white;
 }
