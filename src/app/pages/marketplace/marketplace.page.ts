@@ -1,10 +1,12 @@
 import { Component, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { PageHeaderComponent } from '../../components/page-header/page-header.component';
 import { GigCard } from '../../components/gig-card/gig-card';
 import { PostGigModalComponent } from '../../shared/components/post-gig-modal/post-gig-modal';
 import { BookingModalComponent } from '../../shared/components/booking-modal/booking-modal';
-import { LucideAngularModule, Plus, CheckCircle2 } from 'lucide-angular';
+import { LucideAngularModule, Plus, CheckCircle2, Search, MapPin, Clock, Briefcase, Star } from 'lucide-angular';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { Gig, GigCategory, GigType } from '../../models/gig.model';
 
@@ -37,6 +39,8 @@ const scaleAnimation = trigger('scale', [
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
+    FormsModule,
     PageHeaderComponent,
     GigCard,
     PostGigModalComponent,
@@ -51,6 +55,11 @@ export class MarketplacePage {
   protected readonly Plus = Plus;
   protected readonly CheckCircle2 = CheckCircle2;
   protected readonly GigCategory = GigCategory;
+  protected readonly Search = Search;
+  protected readonly MapPin = MapPin;
+  protected readonly Clock = Clock;
+  protected readonly Briefcase = Briefcase;
+  protected readonly Star = Star;
 
   // Modal states
   showPostGigModal = signal(false);
@@ -61,6 +70,7 @@ export class MarketplacePage {
 
   // Filter state
   selectedCategory = signal<GigCategory | 'all'>('all');
+  searchQuery = signal<string>('');
 
   // Dummy data
   allGigs = signal<Gig[]>([
@@ -171,20 +181,31 @@ export class MarketplacePage {
   // Filtered and sorted gigs
   filteredGigs = computed(() => {
     let gigs = this.allGigs();
-    
+
     // Filter by category
     if (this.selectedCategory() !== 'all') {
       gigs = gigs.filter(gig => gig.category === this.selectedCategory());
+    }
+
+    // Filter by search query
+    const query = this.searchQuery().toLowerCase();
+    if (query) {
+      gigs = gigs.filter(
+        (gig) =>
+          gig.title.toLowerCase().includes(query) ||
+          gig.description.toLowerCase().includes(query) ||
+          gig.providerName.toLowerCase().includes(query)
+      );
     }
 
     // Sort: Featured/Verified first, then by rating
     return gigs.sort((a, b) => {
       const aIsFeatured = a.isMukandoMember || a.creditScore >= 700;
       const bIsFeatured = b.isMukandoMember || b.creditScore >= 700;
-      
+
       if (aIsFeatured && !bIsFeatured) return -1;
       if (!aIsFeatured && bIsFeatured) return 1;
-      
+
       return b.rating - a.rating;
     });
   });
@@ -268,5 +289,23 @@ export class MarketplacePage {
 
   onCategoryChange(category: GigCategory | 'all'): void {
     this.selectedCategory.set(category);
+  }
+
+  onSearchChange(query: string): void {
+    this.searchQuery.set(query);
+  }
+
+  getInitials(name: string): string {
+    return name
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase()
+      .substring(0, 2);
+  }
+
+  clearFilters(): void {
+    this.selectedCategory.set('all');
+    this.searchQuery.set('');
   }
 }

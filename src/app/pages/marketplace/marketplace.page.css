@@ -1,92 +1,76 @@
-.banner {
-  background: linear-gradient(135deg, var(--color-hive-500) 0%, var(--color-hive-600) 100%);
-  border-radius: 16px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 4px 12px rgba(109, 186, 255, 0.3);
+/* Hide scrollbar for horizontal category scroll */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
 
-.banner-text {
-  color: white;
-  font-size: 1.125rem;
-  font-weight: 600;
-  text-align: center;
-  margin: 0;
-  line-height: 1.5;
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-.filter-section {
-  margin-bottom: 2rem;
-}
-
-.filter-buttons {
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  overflow-x: auto;
-  padding-bottom: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: 1rem;
 }
 
-.filter-btn {
-  padding: 0.625rem 1.25rem;
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  color: var(--text-primary);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  white-space: nowrap;
+.modal-container {
+  background: white;
+  border-radius: 16px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
-.filter-btn:hover {
-  background: rgba(109, 186, 255, 0.1);
-  border-color: var(--color-hive-500);
-  transform: translateY(-2px);
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
 }
 
-.filter-btn.active {
-  background: var(--color-hive-500);
-  color: white;
-  border-color: var(--color-hive-500);
-  box-shadow: 0 4px 12px rgba(109, 186, 255, 0.3);
+.header-content {
+  flex: 1;
 }
 
-.section-title {
+.modal-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 1.5rem;
-  letter-spacing: -0.02em;
-}
-
-.featured-section {
-  width: 100%;
-  display: block;
-}
-
-.regular-gigs-section {
-  width: 100%;
-}
-
-.empty-state {
-  text-align: center;
-  padding: 4rem 2rem;
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(20px);
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.8);
-}
-
-.empty-text {
-  color: var(--text-secondary);
-  font-size: 1rem;
+  color: var(--color-text-primary);
   margin: 0;
 }
 
-/* Completion Modal Styles */
+.close-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  padding: 0.5rem;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.close-button:hover {
+  color: var(--color-text-primary);
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-footer {
+  padding-top: 1rem;
+}
+
+/* Completion Modal Specific Styles */
 .completion-content {
   text-align: center;
   padding: 1rem 0;
@@ -112,7 +96,7 @@
 .completion-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--color-ui-text-main, #0f172a);
+  color: var(--color-text-primary);
   margin: 0 0 1rem 0;
 }
 
@@ -129,42 +113,10 @@
 
 .completion-suggestion {
   font-size: 1rem;
-  color: var(--color-ui-text-muted, #64748b);
+  color: var(--color-text-secondary);
   margin: 0;
   padding: 1rem;
   background: rgba(109, 186, 255, 0.1);
   border-radius: 12px;
   border: 1px solid rgba(109, 186, 255, 0.2);
 }
-
-/* Modal animations */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes scale {
-  from {
-    transform: scale(0.9);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.fadeIn {
-  animation: fadeIn 0.2s ease-in;
-}
-
-.scale {
-  animation: scale 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Import modal styles */
-@import '../../shared/components/create-circle-modal/create-circle-modal.css';

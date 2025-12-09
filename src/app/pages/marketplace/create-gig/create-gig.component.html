@@ -13,7 +13,9 @@
             @if (loadingCreditScore()) {
               <span class="loading-dots">...</span>
             } @else {
-              <span class="credit-score-value">{{ creditScore() || 'N/A' }}</span>
+              <span class="credit-score-value">{{
+                creditScore() || "N/A"
+              }}</span>
             }
           </p>
         </div>

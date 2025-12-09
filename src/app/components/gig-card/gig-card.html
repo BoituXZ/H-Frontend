@@ -1,6 +1,6 @@
 <div
-  class="card-container"
-  [class.featured]="isFeatured"
+  class="dashboard-card cursor-pointer transition-all hover:shadow-lg"
+  [class.featured-card]="isFeatured"
   role="button"
   tabindex="0"
   [attr.aria-label]="'Gig: ' + gig.title"
@@ -8,59 +8,76 @@
   (keydown)="onKeydown($event)"
   @fadeSlide
 >
-  <!-- Card Header -->
-  <div class="card-header">
-    <h3 class="card-title">{{ gig.title }}</h3>
-    <div class="badge-group">
-      @if (isVerified()) {
-      <span class="status-badge badge-verified">
-        <lucide-angular [img]="ShieldCheck" class="badge-icon" [size]="12"></lucide-angular>
-        Verified
-      </span>
-      }
-      @if (isFeatured) {
-      <span class="status-badge badge-featured">
-        <lucide-angular [img]="Award" class="badge-icon" [size]="12"></lucide-angular>
-        Featured
-      </span>
-      }
+  <!-- Top Row: Provider Info + Price Badge -->
+  <div class="flex items-start justify-between mb-4">
+    <div class="flex items-center gap-3">
+      <!-- Avatar with Initials -->
+      <div class="w-10 h-10 rounded-full bg-hive-100 text-hive-600 flex items-center justify-center font-semibold text-sm shrink-0">
+        {{ getInitials(gig.providerName) }}
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="font-semibold text-text-primary">{{ gig.providerName }}</span>
+          @if (isVerified()) {
+            <lucide-icon [name]="ShieldCheck" class="w-4 h-4 text-hive-500"></lucide-icon>
+          }
+        </div>
+        <div class="flex items-center gap-1 bg-hive-50 px-2 py-0.5 rounded-full w-fit">
+          <lucide-icon [name]="Star" class="w-3.5 h-3.5 text-yellow-400 fill-yellow-400"></lucide-icon>
+          <span class="text-xs font-medium text-hive-600">{{ gig.rating }}</span>
+        </div>
+      </div>
+    </div>
+    <!-- Price Badge -->
+    <div class="bg-honey-50 text-honey-600 font-bold px-3 py-1 rounded-lg text-sm whitespace-nowrap">
+      ${{ gig.price }}
     </div>
   </div>
 
-  <!-- Main Content -->
-  <div class="card-content">
-    <!-- Price Section -->
-    <div class="price-section">
-      <p class="price-label">Price</p>
-      <p class="price-amount">${{ gig.price }}</p>
+  <!-- Featured Badge -->
+  @if (isFeatured) {
+    <div class="flex items-center gap-1 bg-honey-50 text-honey-600 px-2 py-1 rounded-full w-fit mb-3 text-xs font-semibold">
+      <lucide-icon [name]="Award" class="w-3.5 h-3.5"></lucide-icon>
+      Featured
     </div>
+  }
 
-    <!-- Provider Info -->
-    <div class="provider-section">
-      <div class="provider-info">
-        <p class="provider-name">{{ gig.providerName }}</p>
-        <div class="rating-group">
-          <lucide-angular [img]="Star" class="star-icon" [size]="14"></lucide-angular>
-          <span class="rating-value">{{ gig.rating }}</span>
-        </div>
-      </div>
-      <div class="credit-score">
-        <span class="credit-label">Credit:</span>
-        <span class="credit-value">{{ gig.creditScore }}</span>
-      </div>
-    </div>
+  <!-- Middle: Title + Description -->
+  <div class="mb-4">
+    <h3 class="font-bold text-lg text-text-primary mb-2">{{ gig.title }}</h3>
+    <p class="text-sm text-text-secondary line-clamp-2">{{ gig.description }}</p>
   </div>
 
   <!-- Category Badge -->
-  <div class="category-badge">
+  <div class="inline-block bg-hive-50 text-hive-600 px-3 py-1 rounded-full text-xs font-semibold mb-4">
     {{ gig.category }}
   </div>
 
-  <!-- Footer -->
-  <div class="card-footer">
-    <div class="action-buttons">
-      <button class="btn-view">View Details</button>
+  <!-- Meta Row: Location + Availability -->
+  <div class="flex items-center gap-4 mb-4 text-sm text-text-secondary">
+    <div class="flex items-center gap-1">
+      <lucide-icon [name]="MapPin" class="w-4 h-4"></lucide-icon>
+      <span>{{ getLocation() }}</span>
+    </div>
+    <div class="flex items-center gap-1">
+      <lucide-icon [name]="Clock" class="w-4 h-4"></lucide-icon>
+      <span>{{ getAvailability() }}</span>
     </div>
   </div>
-</div>
 
+  <!-- Footer: Action Buttons -->
+  <div class="flex gap-2 pt-4 border-t border-cream-300">
+    <button
+      (click)="onViewDetails($event)"
+      class="flex-1 text-center py-2 px-4 border border-cream-300 text-text-primary font-medium rounded-lg hover:bg-cream-100 transition-colors"
+    >
+      View Details
+    </button>
+    <button
+      (click)="onBookNow($event)"
+      class="flex-1 btn-outline py-2 text-center"
+    >
+      Book Now
+    </button>
+  </div>
+</div>

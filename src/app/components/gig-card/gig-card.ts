@@ -5,6 +5,8 @@ import {
   Star,
   ShieldCheck,
   Award,
+  MapPin,
+  Clock,
 } from 'lucide-angular';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { Gig } from '../../models/gig.model';
@@ -36,12 +38,41 @@ export class GigCard {
   protected readonly Star = Star;
   protected readonly ShieldCheck = ShieldCheck;
   protected readonly Award = Award;
+  protected readonly MapPin = MapPin;
+  protected readonly Clock = Clock;
 
   isVerified(): boolean {
     return this.gig.isMukandoMember || this.gig.creditScore >= 700;
   }
 
+  getInitials(name: string): string {
+    return name
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase()
+      .substring(0, 2);
+  }
+
+  getLocation(): string {
+    return this.gig.category === 'Tech' || this.gig.category === 'Academic' ? 'Remote' : 'On-site';
+  }
+
+  getAvailability(): string {
+    return 'Flexible';
+  }
+
   onCardClick(): void {
+    this.gigClick.emit(this.gig.id);
+  }
+
+  onViewDetails(event: Event): void {
+    event.stopPropagation();
+    this.gigClick.emit(this.gig.id);
+  }
+
+  onBookNow(event: Event): void {
+    event.stopPropagation();
     this.gigClick.emit(this.gig.id);
   }
 

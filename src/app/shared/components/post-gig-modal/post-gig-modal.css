@@ -1,3 +1,67 @@
-/* Reuse the same modal styles from create-circle-modal */
+/* Import base modal styles */
 @import '../create-circle-modal/create-circle-modal.css';
 
+/* Override colors to match marketplace design specs */
+
+/* Primary Button - Use Honey Red instead of Gold */
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-honey-500) 0%, var(--color-honey-600) 100%);
+  box-shadow: 0 4px 12px rgba(235, 37, 40, 0.3);
+}
+
+.btn-primary:hover:not(:disabled) {
+  box-shadow: 0 6px 16px rgba(235, 37, 40, 0.4);
+}
+
+/* Pill Button Active - Use Hive Blue */
+.pill-button.active {
+  background: linear-gradient(135deg, var(--color-hive-500) 0%, var(--color-hive-600) 100%);
+  box-shadow: 0 4px 12px rgba(7, 92, 168, 0.3);
+}
+
+/* Input Focus - Use Hive Blue */
+.input-field:focus {
+  border-color: var(--color-hive-500);
+  box-shadow: 0 0 0 3px rgba(7, 92, 168, 0.1);
+}
+
+/* Input Prefix - Use Honey Red for price */
+.input-prefix {
+  color: var(--color-honey-600);
+}
+
+/* Pill Button Hover */
+.pill-button:hover {
+  background: rgba(7, 92, 168, 0.1);
+  border-color: var(--color-hive-500);
+}
+
+/* Ghost Button Hover */
+.btn-ghost:hover:not(:disabled) {
+  background: rgba(7, 92, 168, 0.1);
+  border-color: var(--color-hive-500);
+  color: var(--color-hive-600);
+}
+
+/* Modal Container - White background instead of glass */
+.modal-container {
+  background: white;
+  border: 1px solid var(--color-cream-300);
+}
+
+.modal-header {
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom-color: var(--color-cream-300);
+}
+
+@media (prefers-color-scheme: dark) {
+  .modal-container {
+    background: white;
+    border-color: var(--color-cream-300);
+  }
+
+  .modal-header {
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom-color: var(--color-cream-300);
+  }
+}
