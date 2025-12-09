@@ -1,215 +1,192 @@
-<!-- Modal Overlay -->
-<div class="modal-overlay" (click)="onBackdropClick($event)" @fadeIn>
-  <!-- Modal Container -->
-  <div class="modal-container" @scale [@shake]="shakeState()">
-    <!-- Header -->
-    <div class="modal-header">
-      <div class="header-content">
-        <h2 class="modal-title">Create New Circle</h2>
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" @fadeIn (click)="onBackdropClick($event)">
+  <div 
+    class="relative w-full max-w-lg bg-white rounded-card shadow-2xl overflow-hidden flex flex-col max-h-[90vh]" 
+    @scale 
+    [@shake]="shakeState()"
+  >
+    
+    <!-- Loading Overlay -->
+    @if (isLoading()) {
+      <div class="absolute inset-0 z-20 bg-white/80 backdrop-blur-sm flex items-center justify-center">
+        <app-loading-spinner message="Creating your circle..."></app-loading-spinner>
       </div>
-      <button
-        type="button"
-        class="close-button"
-        (click)="close()"
-        [disabled]="isLoading()"
+    }
+
+    <!-- Header -->
+    <div class="px-6 py-5 border-b border-cream-200 flex items-center justify-between sticky top-0 bg-white z-10">
+      <h2 class="text-xl font-display font-bold text-text-primary">Start a New Circle</h2>
+      <button 
+        type="button" 
+        (click)="close()" 
+        class="text-text-tertiary hover:text-text-primary transition-colors p-1 rounded-full hover:bg-cream-100"
       >
-        ✕
+        <lucide-angular [img]="X" class="w-6 h-6"></lucide-angular>
       </button>
     </div>
 
-    <!-- Loading State -->
-    @if (isLoading()) {
-    <div class="loading-state">
-      <app-loading-spinner [size]="50" message="Creating circle..." />
+    <!-- Body (Scrollable) -->
+    <div class="p-6 overflow-y-auto custom-scrollbar">
+      <form [formGroup]="circleForm" class="space-y-6">
+        
+        <!-- Name -->
+        <div class="space-y-1.5">
+          <label class="block text-sm font-bold text-text-secondary">Circle Name</label>
+          <input 
+            type="text" 
+            formControlName="name" 
+            class="input-field" 
+            placeholder="e.g. MSU Hustlers"
+            [class.border-danger]="isFieldInvalid('name')"
+          >
+          @if (isFieldInvalid('name')) {
+            <p class="text-xs text-danger mt-1">{{ getErrorMsg('name') }}</p>
+          }
+        </div>
+
+        <!-- Contribution & Frequency Row -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <!-- Contribution -->
+          <div class="space-y-1.5">
+            <label class="block text-sm font-bold text-text-secondary">Monthly Amount</label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <lucide-angular [img]="DollarSign" class="w-4 h-4 text-text-tertiary"></lucide-angular>
+              </div>
+              <input 
+                type="number" 
+                formControlName="contributionAmount" 
+                class="input-field pl-9" 
+                placeholder="0.00"
+                [class.border-danger]="isFieldInvalid('contributionAmount')"
+              >
+            </div>
+            @if (isFieldInvalid('contributionAmount')) {
+              <p class="text-xs text-danger mt-1">{{ getErrorMsg('contributionAmount') }}</p>
+            }
+          </div>
+
+          <!-- Frequency -->
+          <div class="space-y-1.5">
+            <label class="block text-sm font-bold text-text-secondary">Frequency</label>
+            <div class="flex p-1 bg-cream-100 rounded-lg">
+              <button 
+                type="button"
+                class="flex-1 py-2 px-3 text-sm font-medium rounded-md transition-all"
+                [class.bg-white]="circleForm.get('frequency')?.value !== 'weekly'"
+                [class.text-text-secondary]="circleForm.get('frequency')?.value !== 'weekly'"
+                [class.shadow-sm]="circleForm.get('frequency')?.value !== 'weekly'"
+                [class.bg-honey-500]="circleForm.get('frequency')?.value === 'weekly'"
+                [class.text-white]="circleForm.get('frequency')?.value === 'weekly'"
+                (click)="selectFrequency(CircleFrequency.WEEKLY)"
+              >
+                Weekly
+              </button>
+              <button 
+                type="button"
+                class="flex-1 py-2 px-3 text-sm font-medium rounded-md transition-all"
+                [class.bg-white]="circleForm.get('frequency')?.value !== 'monthly'"
+                [class.text-text-secondary]="circleForm.get('frequency')?.value !== 'monthly'"
+                [class.shadow-sm]="circleForm.get('frequency')?.value !== 'monthly'"
+                [class.bg-honey-500]="circleForm.get('frequency')?.value === 'monthly'"
+                [class.text-white]="circleForm.get('frequency')?.value === 'monthly'"
+                (click)="selectFrequency(CircleFrequency.MONTHLY)"
+              >
+                Monthly
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Max Members Slider -->
+        <div class="space-y-3">
+          <div class="flex justify-between items-center">
+            <label class="block text-sm font-bold text-text-secondary">Max Members</label>
+            <span class="text-lg font-bold text-hive-600">{{ circleForm.get('maxMembers')?.value }} Members</span>
+          </div>
+          <input 
+            type="range" 
+            formControlName="maxMembers" 
+            min="2" 
+            max="20" 
+            step="1"
+            class="w-full h-2 bg-cream-200 rounded-lg appearance-none cursor-pointer accent-honey-500"
+          >
+          <div class="flex justify-between text-xs text-text-tertiary px-1">
+            <span>2</span>
+            <span>10</span>
+            <span>20</span>
+          </div>
+        </div>
+
+        <!-- Start Date -->
+        <div class="space-y-1.5">
+          <label class="block text-sm font-bold text-text-secondary">Start Date</label>
+          <div class="relative">
+             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <lucide-angular [img]="Calendar" class="w-4 h-4 text-text-tertiary"></lucide-angular>
+             </div>
+             <input 
+               type="date" 
+               formControlName="startDate" 
+               class="input-field pl-10"
+             >
+          </div>
+        </div>
+
+        <!-- Smart Summary -->
+        <div class="bg-hive-50 border border-hive-200 rounded-xl p-4 grid grid-cols-3 gap-4">
+          <div class="flex flex-col items-center text-center">
+             <div class="w-8 h-8 rounded-full bg-white text-hive-600 flex items-center justify-center mb-1 shadow-sm">
+                <lucide-angular [img]="Clock" class="w-4 h-4"></lucide-angular>
+             </div>
+             <span class="text-xs font-medium text-hive-800 uppercase tracking-wide">Duration</span>
+             <span class="text-sm font-bold text-hive-900">{{ cycleDuration() }}</span>
+          </div>
+          <div class="flex flex-col items-center text-center border-l border-hive-200">
+             <div class="w-8 h-8 rounded-full bg-white text-hive-600 flex items-center justify-center mb-1 shadow-sm">
+                <lucide-angular [img]="PiggyBank" class="w-4 h-4"></lucide-angular>
+             </div>
+             <span class="text-xs font-medium text-hive-800 uppercase tracking-wide">Total</span>
+             <span class="text-sm font-bold text-hive-900">${{ totalCommitment() }}</span>
+          </div>
+          <div class="flex flex-col items-center text-center border-l border-hive-200">
+             <div class="w-8 h-8 rounded-full bg-white text-hive-600 flex items-center justify-center mb-1 shadow-sm">
+                <lucide-angular [img]="Trophy" class="w-4 h-4"></lucide-angular>
+             </div>
+             <span class="text-xs font-medium text-hive-800 uppercase tracking-wide">Payout</span>
+             <span class="text-sm font-bold text-hive-900">${{ payoutValue() }}</span>
+          </div>
+        </div>
+        
+        <!-- Error Message -->
+        @if (errorMessage()) {
+          <div class="p-3 bg-danger-light border border-danger rounded-lg flex items-start gap-2 text-danger-dark text-sm">
+             <lucide-angular [img]="Info" class="w-4 h-4 mt-0.5 shrink-0"></lucide-angular>
+             <span>{{ errorMessage() }}</span>
+          </div>
+        }
+
+      </form>
     </div>
-    } @else {
-    <!-- Form Content -->
-    <form [formGroup]="circleForm" (ngSubmit)="onSubmit()" class="modal-body">
-      <!-- Error Message -->
-      @if (errorMessage()) {
-      <div class="error-banner">
-        {{ errorMessage() }}
-      </div>
-      }
 
-      <!-- Circle Name -->
-      <div class="form-group">
-        <label for="name" class="form-label"> Circle Name </label>
-        <input
-          id="name"
-          type="text"
-          formControlName="name"
-          [class]="getInputClass('name')"
-          placeholder="e.g., MSU Hustlers"
-          maxlength="50"
-        />
-        <app-form-error [message]="getErrorMsg('name')"></app-form-error>
-      </div>
+    <!-- Footer -->
+    <div class="p-6 border-t border-cream-200 bg-cream-50 flex gap-4">
+      <button 
+        type="button" 
+        (click)="close()" 
+        class="flex-1 btn-secondary bg-white border border-cream-300 hover:bg-cream-100 text-text-secondary"
+      >
+        Cancel
+      </button>
+      <button 
+        type="button" 
+        (click)="onSubmit()" 
+        class="flex-[2] btn-primary"
+        [disabled]="isLoading()"
+      >
+        Create Circle
+      </button>
+    </div>
 
-      <!-- Description (Optional) -->
-      <div class="form-group">
-        <label for="description" class="form-label">
-          Description
-          <span class="optional-badge">Optional</span>
-        </label>
-        <textarea
-          id="description"
-          formControlName="description"
-          [class]="getInputClass('description')"
-          placeholder="What's this circle for?"
-          rows="2"
-          maxlength="200"
-        ></textarea>
-        <div class="char-count">
-          {{ description?.value?.length || 0 }}/200
-        </div>
-      </div>
-
-      <!-- Contribution Amount -->
-      <div class="form-group">
-        <label for="contributionAmount" class="form-label">
-          Contribution Amount
-        </label>
-        <div class="input-with-prefix">
-          <span class="input-prefix">$</span>
-          <input
-            id="contributionAmount"
-            type="number"
-            formControlName="contributionAmount"
-            [class]="getInputClass('contributionAmount')"
-            placeholder="20"
-            min="1"
-            max="1000"
-            step="5"
-          />
-        </div>
-        <app-form-error
-          [message]="getErrorMsg('contributionAmount')"
-        ></app-form-error>
-        <p class="field-hint">Minimum $1, Maximum $1000</p>
-      </div>
-
-      <!-- Frequency Pills -->
-      <div class="form-group">
-        <label class="form-label"> Payment Frequency </label>
-        <div class="pill-row">
-          <button
-            type="button"
-            class="pill-button"
-            [class.active]="frequency?.value === CircleFrequency.WEEKLY"
-            (click)="selectFrequency(CircleFrequency.WEEKLY)"
-          >
-            Weekly
-          </button>
-          <button
-            type="button"
-            class="pill-button"
-            [class.active]="frequency?.value === CircleFrequency.BI_WEEKLY"
-            (click)="selectFrequency(CircleFrequency.BI_WEEKLY)"
-          >
-            Bi-weekly
-          </button>
-          <button
-            type="button"
-            class="pill-button"
-            [class.active]="frequency?.value === CircleFrequency.MONTHLY"
-            (click)="selectFrequency(CircleFrequency.MONTHLY)"
-          >
-            Monthly
-          </button>
-        </div>
-      </div>
-
-      <!-- Max Members Slider -->
-      <div class="form-group">
-        <label for="maxMembers" class="form-label">
-          Maximum Members
-          <span class="member-count">{{ maxMembers?.value }} Members</span>
-        </label>
-        <input
-          id="maxMembers"
-          type="range"
-          formControlName="maxMembers"
-          class="slider"
-          min="4"
-          max="10"
-          step="1"
-        />
-        <div class="slider-labels">
-          <span>4</span>
-          <span>10</span>
-        </div>
-      </div>
-
-      <!-- Visibility -->
-      <div class="form-group">
-        <label class="form-label">Visibility</label>
-        <div class="toggle-switch">
-          <input
-            type="checkbox"
-            id="isPublic"
-            formControlName="isPublic"
-            class="toggle-input"
-          />
-          <label for="isPublic" class="toggle-label">
-            <span class="toggle-text">
-              @if (circleForm.get('isPublic')?.value) {
-              <lucide-angular [img]="Eye" class="w-4 h-4" /> Public } @else {
-              <lucide-angular [img]="Lock" class="w-4 h-4" /> Private }
-            </span>
-          </label>
-        </div>
-        <p class="field-hint">
-          Public circles can be found, private ones need an invite.
-        </p>
-      </div>
-
-      <!-- Smart Summary -->
-      <div class="summary-card">
-        <div class="summary-header">
-          <h3 class="summary-title">Circle Summary</h3>
-        </div>
-        <div class="summary-grid">
-          <div class="summary-item">
-            <span class="summary-label">Cycle Duration</span>
-            <span class="summary-value">{{ cycleDuration() }}</span>
-          </div>
-          <div class="summary-item">
-            <span class="summary-label">Total Commitment</span>
-            <span class="summary-value">
-              ${{ contributionAmount?.value || 0 }} ×
-              {{ maxMembers?.value || 0 }} = ${{ totalCommitment() }}
-            </span>
-          </div>
-          <div class="summary-item highlight">
-            <span class="summary-label">Your Payout Value</span>
-            <span class="summary-value-large"> ${{ payoutValue() }} </span>
-            <span class="summary-sublabel"
-              >Lump sum when it's your turn</span
-            >
-          </div>
-        </div>
-      </div>
-
-      <!-- Form Actions -->
-      <div class="modal-footer">
-        <button
-          type="button"
-          class="btn-ghost"
-          (click)="close()"
-          [disabled]="isLoading()"
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          class="btn-primary"
-          [disabled]="circleForm.invalid || isLoading()"
-        >
-          Create Circle
-        </button>
-      </div>
-    </form>
-    }
   </div>
 </div>

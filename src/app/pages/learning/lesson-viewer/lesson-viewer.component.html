@@ -1,0 +1,105 @@
+<div class="page-wrapper">
+  @if (loading()) {
+    <div class="flex items-center justify-center min-h-[60vh]">
+      <div class="text-center">
+        <div class="spinner w-12 h-12 mx-auto mb-4"></div>
+        <p class="text-[var(--text-secondary)]">Loading lesson...</p>
+      </div>
+    </div>
+  } @else if (content(); as lesson) {
+    <!-- Header -->
+    <div class="lesson-header">
+      <button (click)="goBack()" class="back-button">
+        <lucide-angular [img]="ArrowLeft" class="w-5 h-5"></lucide-angular>
+        Lesson
+      </button>
+      <h1 class="lesson-title">{{ lesson.title }}</h1>
+      <p class="lesson-metadata">{{ getMetadata() }}</p>
+    </div>
+
+    <!-- Content Area -->
+    <div class="lesson-content" #contentContainer>
+      @switch (lesson.type) {
+        @case ('article') {
+          <div class="article-content">
+            <!-- Stop Generating Button (shown while typing) -->
+            @if (isTyping()) {
+              <div class="typing-controls">
+                <button (click)="showFullContent()" class="stop-generating-btn">
+                  <lucide-angular [img]="X" class="w-4 h-4"></lucide-angular>
+                  Show Full
+                </button>
+              </div>
+            }
+
+            <!-- Article Content with Typewriter Effect -->
+            <div class="article-text" [class.blinking-cursor]="isTyping()">
+              @if (displayedContent() && displayedContent().length > 0) {
+                <div [innerHTML]="formatArticleContent(displayedContent())"></div>
+              } @else if (fullArticleContent() && fullArticleContent().length > 0 && !isTyping()) {
+                <!-- Fallback: Show full content if typing didn't start -->
+                <div [innerHTML]="formatArticleContent(fullArticleContent())"></div>
+              } @else {
+                <div class="typing-placeholder">Generating content...</div>
+              }
+            </div>
+          </div>
+        }
+        @case ('video') {
+          <div class="video-player">
+            <div class="video-placeholder">
+              VIDEO PLAYER
+            </div>
+            @if (displayedContent() && displayedContent().length > 0) {
+              <div class="video-description">
+                <h3 class="description-title">About this video:</h3>
+                <p class="description-text">{{ displayedContent() }}</p>
+              </div>
+            }
+          </div>
+        }
+      }
+    </div>
+
+    <!-- Success Toast -->
+    @if (showSuccess()) {
+      <div class="success-toast">
+        <lucide-angular [img]="Check" class="w-5 h-5"></lucide-angular>
+        <span>Lesson completed! +{{ lesson.points }} points earned</span>
+      </div>
+    }
+
+    <!-- Action Footer (Sticky) -->
+    <div class="action-footer">
+      <div class="footer-content">
+        @if (!lesson.isCompleted) {
+          <button (click)="markAsComplete()" class="btn-primary complete-button">
+            <lucide-angular [img]="Check" class="w-5 h-5"></lucide-angular>
+            Mark as Complete
+          </button>
+          <p class="footer-subtext">(+{{ lesson.points }} credit points)</p>
+        } @else {
+          <div class="completed-state">
+            <lucide-angular [img]="Check" class="w-5 h-5 text-success"></lucide-angular>
+            <span class="completed-text">Lesson Completed</span>
+          </div>
+          <p class="footer-subtext">You earned +{{ lesson.points }} points</p>
+        }
+      </div>
+
+      <!-- Next Lesson -->
+      @if (nextContent(); as next) {
+        <div class="next-lesson">
+          <p class="next-lesson-label">Next Lesson:</p>
+          <a [routerLink]="['/app/learning/lesson', next.id]" class="next-lesson-link">
+            {{ next.title }} →
+          </a>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="error-state">
+      <p class="text-gray-500">Lesson not found.</p>
+    </div>
+  }
+</div>

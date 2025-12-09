@@ -1,0 +1,188 @@
+<div class="budget-assistant-wrapper">
+  <div class="budget-grid">
+    <!-- Left Column: Inputs -->
+    <div class="input-column">
+      <div class="input-card">
+        <h2 class="card-title">Monthly Planner</h2>
+        <form (ngSubmit)="analyzeBudget()" class="budget-form">
+          <div class="form-group">
+            <label class="form-label">Income</label>
+            <input
+              type="number"
+              class="input-field"
+              [ngModel]="totalIncome()"
+              (ngModelChange)="totalIncome.set(+$event)"
+              placeholder="0"
+              min="0"
+              step="0.01"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Rent</label>
+            <input
+              type="number"
+              class="input-field"
+              [ngModel]="rent()"
+              (ngModelChange)="rent.set(+$event)"
+              placeholder="0"
+              min="0"
+              step="0.01"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Groceries</label>
+            <input
+              type="number"
+              class="input-field"
+              [ngModel]="groceries()"
+              (ngModelChange)="groceries.set(+$event)"
+              placeholder="0"
+              min="0"
+              step="0.01"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Transport</label>
+            <input
+              type="number"
+              class="input-field"
+              [ngModel]="transport()"
+              (ngModelChange)="transport.set(+$event)"
+              placeholder="0"
+              min="0"
+              step="0.01"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Utilities</label>
+            <input
+              type="number"
+              class="input-field"
+              [ngModel]="utilities()"
+              (ngModelChange)="utilities.set(+$event)"
+              placeholder="0"
+              min="0"
+              step="0.01"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Entertainment</label>
+            <input
+              type="number"
+              class="input-field"
+              [ngModel]="entertainment()"
+              (ngModelChange)="entertainment.set(+$event)"
+              placeholder="0"
+              min="0"
+              step="0.01"
+              required
+            />
+          </div>
+
+          <button type="submit" class="btn-primary w-full" [disabled]="loading()">
+            @if (loading()) {
+              Analyzing...
+            } @else {
+              Analyze Budget
+            }
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Right Column: Results -->
+    <div class="results-column">
+      @if (loading()) {
+        <div class="loading-state">
+          <div class="spinner w-12 h-12 mx-auto mb-4"></div>
+          <p class="text-[var(--text-secondary)]">Analyzing your budget...</p>
+        </div>
+      } @else if (hasAnalyzed() && analysis(); as analysisData) {
+        <!-- Main Result Card -->
+        <div class="result-card card-theme card-blue">
+          <h3 class="result-card-title">Health Score</h3>
+          <div class="health-score">
+            <span class="health-score-value">{{ analysisData.healthScore }}</span>
+            <span class="health-score-max">/100</span>
+          </div>
+          <p class="projected-savings">
+            Projected Savings: ${{ analysisData.remainingBudget > 0 ? analysisData.remainingBudget.toFixed(2) : '0.00' }}
+          </p>
+        </div>
+
+        <!-- AI Tips Card -->
+        <div class="tips-card">
+          <h3 class="tips-card-title">HiveCoach Recommendations</h3>
+          @if (analysisData.recommendations.length > 0) {
+            <div class="recommendations-list">
+              @for (tip of analysisData.recommendations; track tip) {
+                <div class="recommendation-item">
+                  @if (tip.includes('🎉') || tip.includes('Great')) {
+                    <lucide-icon [name]="Check" class="w-5 h-5 text-success"></lucide-icon>
+                  } @else {
+                    <lucide-icon [name]="AlertTriangle" class="w-5 h-5 text-warning"></lucide-icon>
+                  }
+                  <span class="recommendation-text">{{ tip }}</span>
+                </div>
+              }
+            </div>
+          } @else {
+            <p class="no-recommendations">No recommendations at this time.</p>
+          }
+        </div>
+
+        <!-- Visual Bar -->
+        <div class="breakdown-card">
+          <h3 class="breakdown-title">Budget Breakdown</h3>
+          <div class="breakdown-bar">
+            @if (getBreakdownPercentages(); as percentages) {
+              <div
+                class="breakdown-segment needs-segment"
+                [style.width.%]="percentages.needs"
+                [title]="'Needs: $' + analysisData.breakdown.needs.toFixed(2)"
+              ></div>
+              <div
+                class="breakdown-segment wants-segment"
+                [style.width.%]="percentages.wants"
+                [title]="'Wants: $' + analysisData.breakdown.wants.toFixed(2)"
+              ></div>
+              <div
+                class="breakdown-segment savings-segment"
+                [style.width.%]="percentages.savings"
+                [title]="'Savings: $' + analysisData.breakdown.savings.toFixed(2)"
+              ></div>
+            }
+          </div>
+          <div class="breakdown-legend">
+            <div class="legend-item">
+              <div class="legend-color needs-color"></div>
+              <span>Needs: ${{ analysisData.breakdown.needs.toFixed(2) }}</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color wants-color"></div>
+              <span>Wants: ${{ analysisData.breakdown.wants.toFixed(2) }}</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color savings-color"></div>
+              <span>Savings: ${{ analysisData.breakdown.savings.toFixed(2) }}</span>
+            </div>
+          </div>
+        </div>
+      } @else {
+        <div class="empty-state">
+          <p class="text-gray-500">Enter your monthly budget details and click "Analyze Budget" to get started.</p>
+        </div>
+      }
+    </div>
+  </div>
+</div>

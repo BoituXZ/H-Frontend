@@ -1,0 +1,125 @@
+<div class="page-wrapper">
+  <app-page-header pageTitle="Post a Gig" />
+
+  <div class="form-container">
+    <!-- Tip Widget -->
+    <div class="tip-widget">
+      <div class="tip-content">
+        <lucide-icon [name]="Info" class="w-5 h-5 text-honey-600"></lucide-icon>
+        <div class="tip-text">
+          <p class="tip-title">Higher credit scores get featured!</p>
+          <p class="tip-subtitle">
+            Your score:
+            @if (loadingCreditScore()) {
+              <span class="loading-dots">...</span>
+            } @else {
+              <span class="credit-score-value">{{
+                creditScore() || "N/A"
+              }}</span>
+            }
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <form (ngSubmit)="onSubmit()" class="gig-form">
+      <div class="form-group">
+        <label class="form-label">Title</label>
+        <input
+          type="text"
+          class="input-field"
+          [ngModel]="title()"
+          (ngModelChange)="title.set($event)"
+          placeholder="e.g., ZIMSEC Math Tutoring"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <textarea
+          class="input-field"
+          rows="5"
+          [ngModel]="description()"
+          (ngModelChange)="description.set($event)"
+          placeholder="Describe your service in detail..."
+          required
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <select
+          class="input-field"
+          [ngModel]="category()"
+          (ngModelChange)="category.set($event)"
+          required
+        >
+          @for (cat of categories; track cat) {
+            <option [value]="cat">{{ cat }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Rate</label>
+        <div class="rate-input-group">
+          <input
+            type="number"
+            class="input-field rate-input"
+            [ngModel]="rate()"
+            (ngModelChange)="rate.set(+$event)"
+            placeholder="0.00"
+            min="0"
+            step="0.01"
+            required
+          />
+          <div class="rate-type-group">
+            <label class="radio-label">
+              <input
+                type="radio"
+                name="rateType"
+                [value]="'hourly'"
+                [ngModel]="rateType()"
+                (ngModelChange)="rateType.set($event)"
+              />
+              <span>Per hour</span>
+            </label>
+            <label class="radio-label">
+              <input
+                type="radio"
+                name="rateType"
+                [value]="'fixed'"
+                [ngModel]="rateType()"
+                (ngModelChange)="rateType.set($event)"
+              />
+              <span>Fixed</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Availability</label>
+        <input
+          type="text"
+          class="input-field"
+          [ngModel]="availability()"
+          (ngModelChange)="availability.set($event)"
+          placeholder="e.g., Saturdays & Sundays, Weekdays 9am-5pm"
+          required
+        />
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-outline" (click)="onCancel()">
+          Cancel
+        </button>
+        <button type="submit" class="btn-primary" [disabled]="!canSubmit()">
+          Post Gig
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,20 @@
+/* Minimal custom styles - most styling is done with Tailwind */
+
+/* Custom range slider styling for better cross-browser support */
+input[type='range']::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background-color: #eb2528;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+input[type='range']::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background-color: #eb2528;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}

@@ -1,0 +1,128 @@
+<div class="min-h-screen p-4 md:p-6 max-w-7xl mx-auto">
+  <!-- Header -->
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold text-text-primary mb-4">Marketplace</h1>
+
+    <!-- Search Row -->
+    <div class="flex gap-3 mb-6">
+      <div class="flex-1 relative">
+        <lucide-icon
+          [name]="Search"
+          class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-tertiary"
+        ></lucide-icon>
+        <input
+          type="text"
+          [value]="searchQuery()"
+          (input)="onSearchChange($any($event.target).value)"
+          placeholder="Search gigs, providers, or skills..."
+          class="input-field pl-12 w-full"
+        />
+      </div>
+      <a routerLink="/app/earn/marketplace/create" class="btn-primary flex items-center whitespace-nowrap">
+        <lucide-icon [name]="Plus" class="w-4 h-4 mr-2"></lucide-icon>
+        Post a Gig
+      </a>
+    </div>
+
+    <!-- Category Tabs -->
+    <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+      @for (category of categories; track category) {
+        <button
+          (click)="filterByCategory(category)"
+          [class]="selectedCategory() === category
+            ? 'bg-hive-500 text-white px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap'
+            : 'bg-white border border-cream-300 text-text-secondary px-4 py-2 rounded-full text-sm font-medium hover:bg-hive-50 transition-all whitespace-nowrap'"
+        >
+          {{ category }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="flex items-center justify-center min-h-[60vh]">
+      <div class="text-center">
+        <div class="w-12 h-12 border-4 border-hive-200 border-t-hive-500 rounded-full animate-spin mx-auto mb-4"></div>
+        <p class="text-text-secondary">Loading gigs...</p>
+      </div>
+    </div>
+  } @else {
+    <!-- Gig Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      @for (gig of filteredGigs(); track gig.id) {
+        <div class="dashboard-card">
+          <!-- Top Row: Provider Info + Price Badge -->
+          <div class="flex items-start justify-between mb-4">
+            <div class="flex items-center gap-3">
+              <!-- Avatar with Initials -->
+              <div class="w-10 h-10 rounded-full bg-hive-100 text-hive-600 flex items-center justify-center font-semibold text-sm">
+                {{ getInitials(gig.provider.name) }}
+              </div>
+              <div>
+                <div class="font-semibold text-text-primary">{{ gig.provider.name }}</div>
+                <div class="flex items-center gap-1 bg-hive-50 px-2 py-0.5 rounded-full w-fit">
+                  <lucide-icon [name]="Star" class="w-3.5 h-3.5 text-yellow-400 fill-yellow-400"></lucide-icon>
+                  <span class="text-xs font-medium text-hive-600">{{ gig.provider.rating }}</span>
+                </div>
+              </div>
+            </div>
+            <!-- Price Badge -->
+            <div class="bg-honey-50 text-honey-600 font-bold px-3 py-1 rounded-lg text-sm whitespace-nowrap">
+              {{ formatRate(gig) }}
+            </div>
+          </div>
+
+          <!-- Middle: Title + Description -->
+          <div class="mb-4">
+            <h3 class="font-bold text-lg text-text-primary mb-2">{{ gig.title }}</h3>
+            <p class="text-sm text-text-secondary line-clamp-2">{{ gig.description }}</p>
+          </div>
+
+          <!-- Meta Row: Location + Duration -->
+          <div class="flex items-center gap-4 mb-4 text-sm text-text-secondary">
+            <div class="flex items-center gap-1">
+              <lucide-icon [name]="MapPin" class="w-4 h-4"></lucide-icon>
+              <span>{{ gig.location }}</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <lucide-icon [name]="Clock" class="w-4 h-4"></lucide-icon>
+              <span>{{ gig.availability }}</span>
+            </div>
+          </div>
+
+          <!-- Footer: Action Buttons -->
+          <div class="flex gap-2">
+            <a
+              [routerLink]="['/app/earn/marketplace', gig.id]"
+              class="flex-1 text-center py-2 px-4 border border-cream-300 text-text-primary font-medium rounded-lg hover:bg-cream-100 transition-colors"
+            >
+              View Details
+            </a>
+            <a
+              [routerLink]="['/app/earn/marketplace', gig.id]"
+              class="flex-1 btn-outline py-2 text-center"
+            >
+              Book Now
+            </a>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Empty State -->
+    @if (filteredGigs().length === 0) {
+      <div class="flex flex-col items-center justify-center min-h-[50vh] text-center">
+        <lucide-icon [name]="Briefcase" class="w-16 h-16 text-text-tertiary mb-4"></lucide-icon>
+        <h3 class="text-lg font-semibold text-text-primary mb-2">No gigs found</h3>
+        <p class="text-text-secondary mb-4">Try adjusting your search or filters</p>
+        <button
+          (click)="selectedCategory.set('All'); searchQuery.set(''); applyFilters()"
+          class="btn-outline"
+        >
+          Clear Filters
+        </button>
+      </div>
+    }
+  }
+</div>

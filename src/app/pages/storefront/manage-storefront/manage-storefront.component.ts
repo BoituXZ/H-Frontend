@@ -10,20 +10,43 @@ import {
   Order,
   StorefrontAnalytics,
 } from '../../../models/hive-data.models';
+import {
+  LucideAngularModule,
+  ShoppingBag,
+  Tag,
+  BarChart2,
+  Package,
+  ExternalLink,
+  Settings,
+  Edit,
+  Trash2,
+  Image,
+} from 'lucide-angular';
 
 @Component({
   selector: 'app-manage-storefront',
   standalone: true,
-  imports: [CommonModule, FormsModule, PageHeaderComponent],
+  imports: [CommonModule, FormsModule, LucideAngularModule],
   templateUrl: './manage-storefront.component.html',
   styleUrl: './manage-storefront.component.css',
 })
 export class ManageStorefrontComponent implements OnInit {
+  // Lucide icons
+  protected readonly ShoppingBag = ShoppingBag;
+  protected readonly Tag = Tag;
+  protected readonly BarChart2 = BarChart2;
+  protected readonly Package = Package;
+  protected readonly ExternalLink = ExternalLink;
+  protected readonly Settings = Settings;
+  protected readonly Edit = Edit;
+  protected readonly Trash2 = Trash2;
+  protected readonly Image = Image;
+
   activeTab = signal<'products' | 'orders' | 'analytics'>('products');
   storefront = signal<Storefront | null>(null);
   analytics = signal<StorefrontAnalytics | null>(null);
   loading = signal(true);
-  orderFilter = signal<'all' | 'this-month'>('this-month');
+  orderFilter = signal<'all' | 'pending' | 'completed'>('all');
 
   constructor(
     private mockDataService: MockDataService,
@@ -101,17 +124,43 @@ export class ManageStorefrontComponent implements OnInit {
   getFilteredOrders(): Order[] {
     if (!this.storefront()) return [];
     const orders = this.storefront()!.orders;
-    if (this.orderFilter() === 'this-month') {
-      const now = new Date();
-      return orders.filter((order) => {
-        const orderDate = new Date(order.date);
-        return (
-          orderDate.getMonth() === now.getMonth() &&
-          orderDate.getFullYear() === now.getFullYear()
-        );
-      });
+
+    if (this.orderFilter() === 'pending') {
+      return orders.filter((order) => order.status === 'pending');
     }
+
+    if (this.orderFilter() === 'completed') {
+      return orders.filter((order) => order.status === 'completed');
+    }
+
     return orders;
+  }
+
+  getCurrentMonth(): string {
+    return new Date().toLocaleDateString('en-US', { month: 'long' });
+  }
+
+  getOrderItemsSummary(order: Order): string {
+    return order.items
+      .map((item) => `${item.productName} x${item.quantity}`)
+      .join(', ');
+  }
+
+  getMukandoProgress(): number {
+    const analytics = this.analytics();
+    if (!analytics || !analytics.mukandoContributionDue) return 100;
+
+    return Math.min(
+      (analytics.revenue / analytics.mukandoContributionDue) * 100,
+      100,
+    );
+  }
+
+  canContributeToMukando(): boolean {
+    const analytics = this.analytics();
+    if (!analytics || !analytics.mukandoContributionDue) return false;
+
+    return analytics.revenue >= analytics.mukandoContributionDue;
   }
 
   formatDate(dateString: string): string {

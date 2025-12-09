@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PageHeaderComponent } from '../../components/page-header/page-header.component';
-import { LucideAngularModule, ArrowDownToLine } from 'lucide-angular';
+import { LucideAngularModule, ArrowDownToLine, Wallet } from 'lucide-angular';
 
 @Component({
   selector: 'app-wallet',
@@ -11,6 +11,7 @@ import { LucideAngularModule, ArrowDownToLine } from 'lucide-angular';
 })
 export class WalletPage {
   protected readonly ArrowDownToLine = ArrowDownToLine;
+  protected readonly Wallet = Wallet;
 
   onWithdraw(): void {
     // TODO: Implement withdraw logic

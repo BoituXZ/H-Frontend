@@ -1,0 +1,158 @@
+.page-wrapper {
+  min-height: 100vh;
+  padding: 1rem;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.tabs-container {
+  display: flex;
+  gap: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 1.5rem;
+}
+
+.tab-button {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: color 0.2s;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+}
+
+.bookings-list,
+.provider-bookings {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.booking-card {
+  padding: 1.5rem;
+  border-radius: 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+}
+
+.booking-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.booking-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #0f2937;
+}
+
+.booking-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.booking-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.info-label {
+  color: #4b5563;
+  font-weight: 500;
+}
+
+.info-value {
+  color: #111827;
+}
+
+.booking-actions {
+  display: flex;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* Provider Tab Specific */
+.provider-bookings {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.requests-section,
+.upcoming-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f2937;
+  margin-bottom: 1rem;
+}
+
+.request-card {
+  border: 2px solid #ffe49a;
+}
+
+.request-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background-color: #fff8e7;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+}
+
+.request-alert-text {
+  font-weight: 600;
+  color: #cc9400;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 0;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  .booking-title,
+  .section-title {
+    color: var(--text-primary);
+  }
+
+  .info-label {
+    color: var(--text-secondary);
+  }
+
+  .info-value {
+    color: var(--text-primary);
+  }
+
+  .booking-actions {
+    border-color: #374151;
+  }
+
+  .request-card {
+    border-color: rgba(255, 184, 0, 0.3);
+  }
+
+  .request-alert {
+    background-color: rgba(255, 184, 0, 0.1);
+  }
+
+  .request-alert-text {
+    color: #ffb800;
+  }
+}

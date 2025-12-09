@@ -49,8 +49,8 @@
   padding: 0.75rem 1.5rem;
   background: linear-gradient(
     135deg,
-    var(--accent-honey) 0%,
-    var(--accent-honey-dark) 100%
+    var(--color-hive-500) 0%,
+    var(--color-hive-600) 100%
   );
   color: white;
   font-weight: 600;
@@ -59,17 +59,17 @@
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 15px rgba(255, 184, 0, 0.08);
+  box-shadow: 0 2px 15px rgba(7, 92, 168, 0.08);
   white-space: nowrap;
 }
 
 .page-header-action:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 20px rgba(255, 184, 0, 0.15);
+  box-shadow: 0 4px 20px rgba(7, 92, 168, 0.15);
   background: linear-gradient(
     135deg,
-    var(--accent-honey-dark) 0%,
-    var(--accent-honey-darker) 100%
+    var(--color-hive-600) 0%,
+    var(--color-hive-700) 100%
   );
 }
 

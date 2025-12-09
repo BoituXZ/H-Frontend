@@ -1,0 +1,166 @@
+<!-- Modal Overlay -->
+<div class="modal-overlay" (click)="onBackdropClick($event)" @fadeIn>
+  <!-- Modal Container -->
+  <div class="modal-container" @scale [@shake]="shakeState()">
+    <!-- Header -->
+    <div class="modal-header">
+      <div class="header-content">
+        <h2 class="modal-title">Post a Gig</h2>
+      </div>
+      <button
+        type="button"
+        class="close-button"
+        (click)="close()"
+        [disabled]="isLoading()"
+      >
+        ✕
+      </button>
+    </div>
+
+    <!-- Form Content -->
+    <form [formGroup]="gigForm" (ngSubmit)="onSubmit()" class="modal-body">
+      <!-- Error Message -->
+      @if (errorMessage()) {
+      <div class="error-banner">
+        {{ errorMessage() }}
+      </div>
+      }
+
+      <!-- Type Selection -->
+      <div class="form-group">
+        <label class="form-label">What would you like to post?</label>
+        <div class="pill-row">
+          <button
+            type="button"
+            class="pill-button"
+            [class.active]="selectedType() === GigType.GIG"
+            (click)="gigForm.patchValue({ type: GigType.GIG })"
+          >
+            <lucide-angular [img]="Briefcase" [size]="18"></lucide-angular>
+            Post a Gig
+          </button>
+          <button
+            type="button"
+            class="pill-button"
+            [class.active]="selectedType() === GigType.SKILL"
+            (click)="gigForm.patchValue({ type: GigType.SKILL })"
+          >
+            <lucide-angular [img]="User" [size]="18"></lucide-angular>
+            Post Skills
+          </button>
+        </div>
+        <input type="hidden" formControlName="type" />
+      </div>
+
+      <!-- Title -->
+      <div class="form-group">
+        <label for="title" class="form-label">
+          @if (selectedType() === GigType.GIG) {
+            Gig Title
+          } @else {
+            Service Title
+          }
+        </label>
+        <input
+          id="title"
+          type="text"
+          formControlName="title"
+          [class]="getInputClass('title')"
+          [placeholder]="selectedType() === GigType.GIG ? 'e.g., Need help with math homework' : 'e.g., Professional Graphic Design Services'"
+          maxlength="100"
+        />
+        <app-form-error [message]="getErrorMsg('title')"></app-form-error>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label for="description" class="form-label">
+          Description
+        </label>
+        <textarea
+          id="description"
+          formControlName="description"
+          [class]="getInputClass('description')"
+          [placeholder]="selectedType() === GigType.GIG ? 'Describe what you need done in detail...' : 'Describe your skills and what you can offer...'"
+          rows="4"
+          maxlength="500"
+        ></textarea>
+        <app-form-error [message]="getErrorMsg('description')"></app-form-error>
+      </div>
+
+      <!-- Skills (for skill posts) -->
+      @if (selectedType() === GigType.SKILL) {
+      <div class="form-group">
+        <label for="skills" class="form-label">
+          Skills (comma separated)
+        </label>
+        <input
+          id="skills"
+          type="text"
+          formControlName="skills"
+          [class]="getInputClass('skills')"
+          placeholder="e.g., Graphic Design, Logo Creation, Branding"
+          maxlength="200"
+        />
+        <app-form-error [message]="getErrorMsg('skills')"></app-form-error>
+        <p class="field-hint">List your key skills separated by commas</p>
+      </div>
+      }
+
+      <!-- Price -->
+      <div class="form-group">
+        <label for="price" class="form-label">
+          @if (selectedType() === GigType.GIG) {
+            Budget / Price
+          } @else {
+            Rate / Price
+          }
+        </label>
+        <div class="input-with-prefix">
+          <span class="input-prefix">$</span>
+          <input
+            id="price"
+            type="number"
+            formControlName="price"
+            [class]="getInputClass('price')"
+            placeholder="0.00"
+            min="1"
+          />
+        </div>
+        <app-form-error [message]="getErrorMsg('price')"></app-form-error>
+      </div>
+
+      <!-- Category -->
+      <div class="form-group">
+        <label for="category" class="form-label">Category</label>
+        <select
+          id="category"
+          formControlName="category"
+          [class]="getInputClass('category')"
+        >
+          <option [value]="GigCategory.ACADEMIC">{{ GigCategory.ACADEMIC }}</option>
+          <option [value]="GigCategory.CREATIVE">{{ GigCategory.CREATIVE }}</option>
+          <option [value]="GigCategory.TECH">{{ GigCategory.TECH }}</option>
+          <option [value]="GigCategory.PHYSICAL">{{ GigCategory.PHYSICAL }}</option>
+          <option [value]="GigCategory.EVENTS">{{ GigCategory.EVENTS }}</option>
+        </select>
+        <app-form-error [message]="getErrorMsg('category')"></app-form-error>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn-ghost" (click)="close()" [disabled]="isLoading()">
+          Cancel
+        </button>
+        <button type="submit" class="btn-primary" [disabled]="isLoading()">
+          @if (isLoading()) {
+            Posting...
+          } @else {
+            Post Gig
+          }
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+

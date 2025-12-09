@@ -39,9 +39,9 @@
 }
 
 .step.active .step-number {
-  background: var(--accent-honey);
+  background: var(--color-hive-500);
   color: white;
-  border-color: var(--accent-honey);
+  border-color: var(--color-hive-500);
 }
 
 .step.completed .step-number {

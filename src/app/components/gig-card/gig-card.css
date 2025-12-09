@@ -1,0 +1,26 @@
+:host {
+  display: contents;
+}
+
+/* Featured Card Enhancement - using honey/red theme for featured */
+.featured-card {
+  border: 2px solid rgba(235, 37, 40, 0.2);
+  box-shadow: 0 4px 20px rgba(235, 37, 40, 0.15);
+  position: relative;
+}
+
+.featured-card:hover {
+  border-color: rgba(235, 37, 40, 0.3);
+  box-shadow: 0 8px 30px rgba(235, 37, 40, 0.25);
+}
+
+.featured-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-honey-500) 0%, var(--color-honey-600) 100%);
+  border-radius: 16px 16px 0 0;
+}

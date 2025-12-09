@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import {
   LucideAngularModule,
   DollarSign,
-  Users,
+  Users, // Added Users icon
   CheckCircle2,
 } from 'lucide-angular';
 import { trigger, transition, style, animate } from '@angular/animations';
@@ -34,7 +34,7 @@ export class CircleCard {
 
   // Icons
   protected readonly DollarSign = DollarSign;
-  protected readonly Users = Users;
+  protected readonly Users = Users; // Added Users icon
   protected readonly CheckCircle2 = CheckCircle2;
 
   getStatusBadge(): { label: string; class: string } {

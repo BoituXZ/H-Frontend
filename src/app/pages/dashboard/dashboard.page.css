@@ -1513,7 +1513,7 @@
 .member-avatar.current-user,
 .progress-bar-fill,
 .score-tier[style*="background-color"] {
-  color: var(--accent-honey) !important;
+  color: var(--color-hive-500) !important;
 }
 
 .stat-change.positive,

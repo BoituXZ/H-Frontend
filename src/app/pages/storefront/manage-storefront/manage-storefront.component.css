@@ -82,7 +82,7 @@
 
 .product-card:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-honey);
+  box-shadow: var(--shadow-hive);
 }
 
 .product-card-content {
@@ -144,7 +144,7 @@
 }
 
 .action-btn:hover {
-  color: var(--accent-honey);
+  color: var(--color-hive-600);
   text-decoration: underline;
 }
 

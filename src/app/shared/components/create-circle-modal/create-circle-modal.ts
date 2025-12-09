@@ -19,15 +19,13 @@ import {
   LucideAngularModule,
   X,
   DollarSign,
-  Users,
-  TrendingUp,
-  Repeat,
-  Sparkles,
-  Eye,
-  Lock,
+  Clock,
+  PiggyBank,
+  Trophy,
+  Calendar,
+  Info,
 } from 'lucide-angular';
 import { trigger, transition, style, animate, keyframes } from '@angular/animations';
-import { FormErrorComponent } from '../../../components/form-error/form-error.component';
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
@@ -39,16 +37,16 @@ import { finalize, startWith } from 'rxjs';
 
 const scaleAnimation = trigger('scale', [
   transition(':enter', [
-    style({ transform: 'scale(0.9)', opacity: 0 }),
+    style({ transform: 'scale(0.95)', opacity: 0 }),
     animate(
-      '300ms cubic-bezier(0.4, 0, 0.2, 1)',
+      '200ms cubic-bezier(0.16, 1, 0.3, 1)',
       style({ transform: 'scale(1)', opacity: 1 }),
     ),
   ]),
   transition(':leave', [
     animate(
-      '200ms cubic-bezier(0.4, 0, 0.2, 1)',
-      style({ transform: 'scale(0.9)', opacity: 0 }),
+      '150ms cubic-bezier(0.16, 1, 0.3, 1)',
+      style({ transform: 'scale(0.95)', opacity: 0 }),
     ),
   ]),
 ]);
@@ -56,19 +54,19 @@ const scaleAnimation = trigger('scale', [
 const fadeInAnimation = trigger('fadeIn', [
   transition(':enter', [
     style({ opacity: 0 }),
-    animate('200ms ease-in', style({ opacity: 1 })),
+    animate('200ms ease-out', style({ opacity: 1 })),
   ]),
-  transition(':leave', [animate('150ms ease-out', style({ opacity: 0 }))]),
+  transition(':leave', [animate('150ms ease-in', style({ opacity: 0 }))]),
 ]);
 
 const shakeAnimation = trigger('shake', [
   transition('* => shake', [
     animate('0.5s', keyframes([
       style({ transform: 'translateX(0)', offset: 0 }),
-      style({ transform: 'translateX(-10px)', offset: 0.2 }),
-      style({ transform: 'translateX(10px)', offset: 0.4 }),
-      style({ transform: 'translateX(-10px)', offset: 0.6 }),
-      style({ transform: 'translateX(10px)', offset: 0.8 }),
+      style({ transform: 'translateX(-4px)', offset: 0.2 }),
+      style({ transform: 'translateX(4px)', offset: 0.4 }),
+      style({ transform: 'translateX(-4px)', offset: 0.6 }),
+      style({ transform: 'translateX(4px)', offset: 0.8 }),
       style({ transform: 'translateX(0)', offset: 1.0 })
     ]))
   ])
@@ -81,7 +79,6 @@ const shakeAnimation = trigger('shake', [
     CommonModule,
     ReactiveFormsModule,
     LucideAngularModule,
-    FormErrorComponent,
     LoadingSpinnerComponent,
   ],
   templateUrl: './create-circle-modal.html',
@@ -98,12 +95,11 @@ export class CreateCircleModalComponent {
   // Icons
   protected readonly X = X;
   protected readonly DollarSign = DollarSign;
-  protected readonly Users = Users;
-  protected readonly TrendingUp = TrendingUp;
-  protected readonly Repeat = Repeat;
-  protected readonly Sparkles = Sparkles;
-  protected readonly Eye = Eye;
-  protected readonly Lock = Lock;
+  protected readonly Clock = Clock;
+  protected readonly PiggyBank = PiggyBank;
+  protected readonly Trophy = Trophy;
+  protected readonly Calendar = Calendar;
+  protected readonly Info = Info;
 
   // State
   isLoading = signal(false);
@@ -116,6 +112,9 @@ export class CreateCircleModalComponent {
   formValue: Signal<any>;
 
   constructor() {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    
     this.circleForm = this.fb.group({
       name: [
         '',
@@ -128,13 +127,14 @@ export class CreateCircleModalComponent {
       description: ['', [Validators.maxLength(200)]],
       contributionAmount: [
         20,
-        [Validators.required, Validators.min(1), Validators.max(1000)],
+        [Validators.required, Validators.min(1), Validators.max(5000)],
       ],
       frequency: [CircleFrequency.MONTHLY, [Validators.required]],
       maxMembers: [
         8,
-        [Validators.required, Validators.min(4), Validators.max(10)],
+        [Validators.required, Validators.min(2), Validators.max(20)],
       ],
+      startDate: [tomorrow.toISOString().split('T')[0], [Validators.required]],
       isPublic: [false],
     });
 
@@ -145,46 +145,34 @@ export class CreateCircleModalComponent {
 
   // Smart Summary Computed Values
   cycleDuration = computed(() => {
-    const { maxMembers, frequency } = this.formValue();
+    const val = this.formValue();
+    if (!val) return '0 Months';
+    
+    const { maxMembers, frequency } = val;
+    const members = Number(maxMembers) || 0;
 
     if (frequency === CircleFrequency.WEEKLY) {
-      return `${maxMembers} Weeks`;
+      return `${members} Weeks`;
     }
     if (frequency === CircleFrequency.BI_WEEKLY) {
-      return `${maxMembers * 2} Weeks`;
+      return `${members * 2} Weeks`;
     }
-    return `${maxMembers} Months`;
+    return `${members} Months`;
   });
 
   totalCommitment = computed(() => {
-    const { contributionAmount, maxMembers } = this.formValue();
-    return contributionAmount * maxMembers;
+    const val = this.formValue();
+    if (!val) return 0;
+    
+    const amount = Number(val.contributionAmount) || 0;
+    const members = Number(val.maxMembers) || 0;
+    
+    return amount * members;
   });
 
   payoutValue = computed(() => {
     return this.totalCommitment();
   });
-
-  // Form getters for template
-  get name() {
-    return this.circleForm.get('name');
-  }
-
-  get description() {
-    return this.circleForm.get('description');
-  }
-
-  get contributionAmount() {
-    return this.circleForm.get('contributionAmount');
-  }
-
-  get frequency() {
-    return this.circleForm.get('frequency');
-  }
-
-  get maxMembers() {
-    return this.circleForm.get('maxMembers');
-  }
 
   // Utility methods
   getErrorMsg(fieldName: string): string {
@@ -193,39 +181,26 @@ export class CreateCircleModalComponent {
 
     const errors = field.errors;
 
-    if (errors['required'])
-      return `${this.getFieldLabel(fieldName)} is required`;
+    if (errors['required']) return 'This field is required';
     if (errors['minlength'])
-      return `Minimum ${errors['minlength'].requiredLength} characters required`;
+      return `Minimum ${errors['minlength'].requiredLength} characters`;
     if (errors['maxlength'])
-      return `Maximum ${errors['maxlength'].requiredLength} characters allowed`;
-    if (errors['min']) return `Minimum value is $${errors['min'].min}`;
-    if (errors['max']) return `Maximum value is $${errors['max'].max}`;
+      return `Maximum ${errors['maxlength'].requiredLength} characters`;
+    if (errors['min']) return `Min value: ${errors['min'].min}`;
+    if (errors['max']) return `Max value: ${errors['max'].max}`;
 
     return 'Invalid value';
   }
 
-  private getFieldLabel(fieldName: string): string {
-    const labels: Record<string, string> = {
-      name: 'Circle name',
-      contributionAmount: 'Contribution amount',
-      frequency: 'Frequency',
-      maxMembers: 'Max members',
-    };
-    return labels[fieldName] || fieldName;
-  }
-
-  getInputClass(fieldName: string): string {
+  isFieldInvalid(fieldName: string): boolean {
     const field = this.circleForm.get(fieldName);
-    if (!field || !field.touched) {
-      return 'input-field';
-    }
-    return field.valid ? 'input-field valid' : 'input-field error';
+    return !!(field && field.invalid && field.touched);
   }
 
   // Frequency selection
   selectFrequency(freq: CircleFrequency): void {
     this.circleForm.patchValue({ frequency: freq });
+    this.circleForm.markAsDirty();
   }
 
   // Close handlers
@@ -257,7 +232,6 @@ export class CreateCircleModalComponent {
         this.circleForm.get(key)?.markAsTouched();
       });
 
-      this.errorMessage.set('Please fill in all required fields correctly');
       return;
     }
 
@@ -273,6 +247,8 @@ export class CreateCircleModalComponent {
       frequency: formValue.frequency,
       maxMembers: Number(formValue.maxMembers),
       isPublic: formValue.isPublic,
+      // Note: startDate is used for UI calculation/preview but might not be in DTO yet
+      // If backend supports it, add it here.
     };
 
     this.circlesService
@@ -289,7 +265,7 @@ export class CreateCircleModalComponent {
         },
         error: (err) => {
           this.errorMessage.set(
-            err.error?.message || 'An unexpected error occurred.',
+            err.error?.message || 'Failed to create circle. Please try again.',
           );
           this.shakeState.set('shake');
           setTimeout(() => this.shakeState.set(''), 500);

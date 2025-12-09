@@ -1,4 +1,4 @@
-<div class="page-wrapper">
+<div class="page-wrapper p-4 md:p-6">
   <!-- Page Header -->
   <app-page-header
     pageTitle="Wallet"
@@ -7,30 +7,21 @@
     (actionClick)="onWithdraw()"
   />
 
-  <div class="container mx-auto px-4 py-8">
-    <div class="max-w-4xl mx-auto">
-      <div class="card-theme p-8 text-center">
-        <div class="mb-4 text-hive-500">
-          <svg
-            class="w-16 h-16 mx-auto"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
-            />
-          </svg>
+  <div class="container mx-auto py-8">
+    <div class="max-w-2xl mx-auto">
+      <div class="dashboard-card flex flex-col items-center justify-center text-center p-12 bg-gradient-wallet text-white">
+        <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mb-6 backdrop-blur-sm">
+          <lucide-angular
+            [img]="Wallet"
+            class="w-10 h-10 text-white"
+            [strokeWidth]="1.5"
+          ></lucide-angular>
         </div>
-        <h2 class="text-xl font-semibold text-text-primary mb-2">
+        <h2 class="text-2xl font-display font-bold mb-2">
           Wallet Coming Soon
         </h2>
-        <p class="text-text-secondary">
-          Manage your transactions, view balance, and track your financial
-          activity.
+        <p class="text-white/80 max-w-md mx-auto text-lg">
+          Manage your transactions, view balance, and track your financial activity.
         </p>
       </div>
     </div>

@@ -1,0 +1,196 @@
+/* Import base modal styles */
+@import '../create-circle-modal/create-circle-modal.css';
+
+/* Override colors to match marketplace design specs */
+
+/* Primary Button - Use Honey Red for payment actions */
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-honey-500) 0%, var(--color-honey-600) 100%);
+  box-shadow: 0 4px 12px rgba(235, 37, 40, 0.3);
+}
+
+.btn-primary:hover:not(:disabled) {
+  box-shadow: 0 6px 16px rgba(235, 37, 40, 0.4);
+}
+
+/* Ghost Button - Use Hive Blue for secondary actions */
+.btn-ghost:hover:not(:disabled) {
+  background: rgba(7, 92, 168, 0.1);
+  border-color: var(--color-hive-500);
+  color: var(--color-hive-600);
+}
+
+/* Modal Container - White background */
+.modal-container {
+  background: white;
+  border: 1px solid var(--color-cream-300);
+}
+
+.modal-header {
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom-color: var(--color-cream-300);
+}
+
+@media (prefers-color-scheme: dark) {
+  .modal-container {
+    background: white;
+    border-color: var(--color-cream-300);
+  }
+
+  .modal-header {
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom-color: var(--color-cream-300);
+  }
+}
+
+/* Gig Info Section */
+.gig-info {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-cream-300);
+}
+
+@media (prefers-color-scheme: dark) {
+  .gig-info {
+    border-bottom-color: var(--color-cream-300);
+  }
+}
+
+.gig-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  .gig-title {
+    color: var(--color-text-primary);
+  }
+}
+
+.gig-provider {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  margin: 0 0 0.75rem 0;
+}
+
+.gig-category {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background-color: var(--color-hive-50);
+  color: var(--color-hive-600);
+  border: 1px solid rgba(7, 92, 168, 0.2);
+}
+
+/* Payment Section */
+.payment-section {
+  margin-bottom: 1.5rem;
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 1rem 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  .section-title {
+    color: var(--color-text-primary);
+  }
+}
+
+.breakdown-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  font-size: 0.9375rem;
+}
+
+.breakdown-item.completed {
+  color: var(--color-success);
+}
+
+.breakdown-item.completed .breakdown-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-success);
+}
+
+.breakdown-item.total {
+  font-size: 1.125rem;
+  font-weight: 700;
+  padding-top: 1rem;
+  border-top: 2px solid var(--color-cream-300);
+  margin-top: 0.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .breakdown-item.total {
+    border-top-color: var(--color-cream-300);
+  }
+}
+
+.breakdown-label {
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.breakdown-item.total .breakdown-label {
+  color: var(--color-text-primary);
+}
+
+@media (prefers-color-scheme: dark) {
+  .breakdown-item.total .breakdown-label {
+    color: var(--color-text-primary);
+  }
+}
+
+.breakdown-value {
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+@media (prefers-color-scheme: dark) {
+  .breakdown-value {
+    color: var(--color-text-primary);
+  }
+}
+
+.breakdown-item.total .breakdown-value {
+  font-size: 1.5rem;
+  color: var(--color-honey-600);
+  font-weight: 800;
+}
+
+.breakdown-divider {
+  height: 1px;
+  background: var(--color-cream-300);
+  margin: 0.5rem 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  .breakdown-divider {
+    background: var(--color-cream-300);
+  }
+}
+
+.payment-method {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: var(--color-hive-50);
+  border-radius: 12px;
+  color: var(--color-hive-600);
+  font-weight: 600;
+  font-size: 0.875rem;
+  border: 1px solid rgba(7, 92, 168, 0.2);
+}

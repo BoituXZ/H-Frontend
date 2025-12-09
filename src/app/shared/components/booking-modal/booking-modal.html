@@ -1,0 +1,95 @@
+<!-- Modal Overlay -->
+<div class="modal-overlay" (click)="onBackdropClick($event)" @fadeIn>
+  <!-- Modal Container -->
+  <div class="modal-container" @scale>
+    <!-- Header -->
+    <div class="modal-header">
+      <div class="header-content">
+        <h2 class="modal-title">Book Gig</h2>
+      </div>
+      <button
+        type="button"
+        class="close-button"
+        (click)="close()"
+      >
+        ✕
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="modal-body">
+      <!-- Gig Info -->
+      <div class="gig-info">
+        <h3 class="gig-title">{{ gig.title }}</h3>
+        <p class="gig-provider">by {{ gig.providerName }}</p>
+        <div class="gig-category">{{ gig.category }}</div>
+      </div>
+
+      <!-- Payment Breakdown -->
+      <div class="payment-section">
+        <h4 class="section-title">Payment Breakdown</h4>
+        
+        <div class="breakdown-item">
+          <span class="breakdown-label">Total Price</span>
+          <span class="breakdown-value">${{ gig.price | number: '1.2-2' }}</span>
+        </div>
+
+        @if (bookingStatus === 'pending') {
+        <div class="breakdown-item">
+          <span class="breakdown-label">Deposit (50%)</span>
+          <span class="breakdown-value">${{ depositAmount() | number: '1.2-2' }}</span>
+        </div>
+
+        <div class="breakdown-item">
+          <span class="breakdown-label">Transaction Fee (2.5%)</span>
+          <span class="breakdown-value">${{ transactionFee() | number: '1.2-2' }}</span>
+        </div>
+
+        <div class="breakdown-divider"></div>
+
+        <div class="breakdown-item total">
+          <span class="breakdown-label">Total to Pay Now</span>
+          <span class="breakdown-value">${{ depositTotal() | number: '1.2-2' }}</span>
+        </div>
+
+        <div class="payment-method">
+          <lucide-angular [img]="CreditCard" [size]="20"></lucide-angular>
+          <span>Payment via EcoCash</span>
+        </div>
+        } @else if (bookingStatus === 'deposit_paid') {
+        <div class="breakdown-item completed">
+          <span class="breakdown-label">
+            <lucide-angular [img]="CheckCircle2" [size]="16"></lucide-angular>
+            Deposit Paid
+          </span>
+          <span class="breakdown-value">${{ depositTotal() | number: '1.2-2' }}</span>
+        </div>
+
+        <div class="breakdown-divider"></div>
+
+        <div class="breakdown-item">
+          <span class="breakdown-label">Remaining (50%)</span>
+          <span class="breakdown-value">${{ remainingAmount() | number: '1.2-2' }}</span>
+        </div>
+        }
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn-ghost" (click)="close()">
+          Cancel
+        </button>
+        @if (bookingStatus === 'pending') {
+        <button type="button" class="btn-primary" (click)="onPayDeposit()">
+          Pay Deposit (${{ depositTotal() | number: '1.2-2' }})
+        </button>
+        } @else if (bookingStatus === 'deposit_paid') {
+        <button type="button" class="btn-primary" (click)="onReleaseRemaining()">
+          Release Remaining 50% + Rate Provider
+        </button>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+

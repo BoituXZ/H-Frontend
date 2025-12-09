@@ -21,9 +21,7 @@
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.8);
-  box-shadow:
-    0 8px 32px 0 rgba(31, 38, 135, 0.07),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 20px rgba(7, 92, 168, 0.15);
 
   transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
   cursor: pointer;
@@ -76,7 +74,7 @@
   transform: translateY(-8px) scale(1.02);
   box-shadow:
     0 20px 40px -5px rgba(0, 0, 0, 0.15),
-    inset 0 0 0 1px rgba(255, 184, 0, 0.4); /* Honey glow */
+    inset 0 0 0 1px rgba(7, 92, 168, 0.4); /* Hive glow */
 }
 
 :host-context([data-theme="dark"]) .card-container:hover {
@@ -87,7 +85,7 @@
 }
 
 .card-container:focus-visible {
-  outline: 2px solid var(--accent-honey);
+  outline: 2px solid var(--color-hive-500);
   outline-offset: 4px;
 }
 
@@ -160,10 +158,9 @@
 .payout-amount {
   font-size: 2.25rem;
   font-weight: 800;
-  color: var(--accent-honey);
+  color: var(--color-hive-500);
   line-height: 1;
   letter-spacing: -0.03em;
-  text-shadow: 0 2px 10px rgba(255, 184, 0, 0.2);
 }
 
 /* Members */
@@ -233,12 +230,12 @@
   height: 100%;
   background: linear-gradient(
     90deg,
-    var(--accent-honey),
-    var(--accent-honey-dark)
+    var(--color-hive-500),
+    var(--color-hive-600)
   );
   border-radius: 99px;
   transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 0 10px rgba(255, 184, 0, 0.3);
+  box-shadow: 0 0 10px rgba(7, 92, 168, 0.3);
 }
 
 .progress-text {
@@ -331,7 +328,7 @@
 
 /* View Button */
 .btn-view {
-  background-color: var(--accent-honey);
+  background-color: var(--color-honey-500);
   color: #fff;
   border: none;
   padding: 0.5rem 1.25rem;
@@ -340,14 +337,14 @@
   font-size: 0.875rem;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 12px rgba(255, 184, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(235, 37, 40, 0.3);
   letter-spacing: 0.02em;
 }
 
 .btn-view:hover {
-  background-color: var(--accent-honey-dark);
+  background-color: var(--color-honey-600);
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(255, 184, 0, 0.4);
+  box-shadow: 0 6px 16px rgba(235, 37, 40, 0.4);
 }
 
 .btn-view:active {
