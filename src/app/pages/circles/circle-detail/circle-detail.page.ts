@@ -1,7 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { forkJoin } from 'rxjs';
 import {
   LucideAngularModule,
   AlertCircle,
@@ -40,21 +39,38 @@ export class CircleDetailPage {
 
   // State Signals
   private circleId = signal<string | null>(null);
-  private circleData = signal<{
-    circle: CircleDetail;
-    members: CircleMember[];
-    timeline: PayoutEntry[];
-  } | null>(null);
 
-  public loading = signal<boolean>(true);
-  public error = signal<string | null>(null);
+  // Separate data signals for each endpoint
+  private circleData = signal<CircleDetail | null>(null);
+  private membersData = signal<CircleMember[]>([]);
+  private timelineData = signal<PayoutEntry[]>([]);
+
+  // Granular loading states
+  public circleLoading = signal<boolean>(true);
+  public membersLoading = signal<boolean>(true);
+  public timelineLoading = signal<boolean>(true);
+
+  // Granular error states
+  public circleError = signal<string | null>(null);
+  public membersError = signal<string | null>(null);
+  public timelineError = signal<string | null>(null);
+
   public showDropdown = signal<boolean>(false);
   public activeTab = signal<'overview' | 'members' | 'timeline'>('overview');
 
   // Computed Signals
-  public circleDetail = computed(() => this.circleData()?.circle);
-  public members = computed(() => this.circleData()?.members || []);
-  public timeline = computed(() => this.circleData()?.timeline || []);
+  public circleDetail = computed(() => this.circleData());
+  public members = computed(() => this.membersData());
+  public timeline = computed(() => this.timelineData());
+
+  // Overall loading state - true if any section is loading
+  public loading = computed(
+    () =>
+      this.circleLoading() || this.membersLoading() || this.timelineLoading(),
+  );
+
+  // Overall error - only if circle detail fails (critical data)
+  public error = computed(() => this.circleError());
 
   constructor() {
     this.circleId.set(this.route.snapshot.paramMap.get('id'));
@@ -63,36 +79,86 @@ export class CircleDetailPage {
 
   loadCircleData(): void {
     if (!this.circleId()) {
-      this.error.set('Circle ID is missing.');
-      this.loading.set(false);
+      this.circleError.set('Circle ID is missing.');
+      this.circleLoading.set(false);
+      this.membersLoading.set(false);
+      this.timelineLoading.set(false);
       return;
     }
 
-    this.loading.set(true);
-    this.error.set(null);
+    // Load circle details (critical)
+    this.loadCircleDetails();
 
-    // Using forkJoin to handle multiple parallel requests
-    forkJoin({
-      circle: this.circlesService.getCircleById(this.circleId()!),
-      members: this.circlesService.getCircleMembers(this.circleId()!),
-      timeline: this.circlesService.getCircleTimeline(this.circleId()!), // Assuming this method exists
-    }).subscribe({
-      next: (data) => {
-        this.circleData.set(data);
-        this.loading.set(false);
+    // Load members (independent)
+    this.loadMembers();
+
+    // Load timeline (independent)
+    this.loadTimeline();
+  }
+
+  private loadCircleDetails(): void {
+    this.circleLoading.set(true);
+    this.circleError.set(null);
+
+    this.circlesService.getCircleById(this.circleId()!).subscribe({
+      next: (circle) => {
+        this.circleData.set(circle);
+        this.circleLoading.set(false);
       },
       error: (err) => {
         console.error('Failed to load circle details:', err);
-        this.error.set(
+        this.circleError.set(
           'We had trouble loading the circle details. Please try again.',
         );
-        this.loading.set(false);
+        this.circleLoading.set(false);
       },
     });
   }
 
-  retry(): void {
-    this.loadCircleData();
+  private loadMembers(): void {
+    this.membersLoading.set(true);
+    this.membersError.set(null);
+
+    this.circlesService.getCircleMembers(this.circleId()!).subscribe({
+      next: (members) => {
+        this.membersData.set(members);
+        this.membersLoading.set(false);
+      },
+      error: (err) => {
+        console.error('Failed to load circle members:', err);
+        this.membersError.set('Unable to load members at this time.');
+        this.membersLoading.set(false);
+      },
+    });
+  }
+
+  private loadTimeline(): void {
+    this.timelineLoading.set(true);
+    this.timelineError.set(null);
+
+    this.circlesService.getCircleTimeline(this.circleId()!).subscribe({
+      next: (timeline) => {
+        this.timelineData.set(timeline);
+        this.timelineLoading.set(false);
+      },
+      error: (err) => {
+        console.error('Failed to load circle timeline:', err);
+        this.timelineError.set('Unable to load timeline at this time.');
+        this.timelineLoading.set(false);
+      },
+    });
+  }
+
+  retryCircle(): void {
+    this.loadCircleDetails();
+  }
+
+  retryMembers(): void {
+    this.loadMembers();
+  }
+
+  retryTimeline(): void {
+    this.loadTimeline();
   }
 
   navigateBack(): void {
@@ -108,6 +174,8 @@ export class CircleDetailPage {
   }
 
   getStatusBadgeClass(status: string): string {
+    if (!status) return 'status-badge-neutral';
+
     switch (status.toLowerCase()) {
       case 'active':
         return 'status-badge-success';
@@ -122,11 +190,15 @@ export class CircleDetailPage {
 
   formatDate(dateString: string): string {
     if (!dateString) return 'N/A';
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
+    try {
+      return new Date(dateString).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+    } catch {
+      return 'N/A';
+    }
   }
 
   async copyInviteCode(code: string): Promise<void> {
