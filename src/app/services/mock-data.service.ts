@@ -164,7 +164,8 @@ export class MockDataService {
         isCompleted: false,
         isLocked: false,
         category: 'Finance',
-        content: 'When you take a loan through HiveFund, ensuring you repay on time is critical to maintaining your credit score and accessing better rates in the future. Here are three key strategies to master repayment.\n\nFirst, Auto-Deduct is your friend. Never rely on your memory alone. Our system integrates directly with EcoCash to automate your payments. By setting this up, you avoid the risk of forgetting a due date and losing valuable credit points.\n\nSecond, Pay Early When Possible. Did you know that every early payment earns you +2 bonus points? If you have a good week with your side hustle, consider clearing your debt immediately. This lowers your utilization ratio and boosts your \'Trusted\' status faster.\n\nFinally, Communicate if you struggle. Life happens. If you know you will miss a payment, do not default silently. Use the app to request a 3-day grace period. Transparency builds trust, while silence destroys it.',
+        content:
+          "When you take a loan through HiveFund, ensuring you repay on time is critical to maintaining your credit score and accessing better rates in the future. Here are three key strategies to master repayment.\n\nFirst, Auto-Deduct is your friend. Never rely on your memory alone. Our system integrates directly with EcoCash to automate your payments. By setting this up, you avoid the risk of forgetting a due date and losing valuable credit points.\n\nSecond, Pay Early When Possible. Did you know that every early payment earns you +2 bonus points? If you have a good week with your side hustle, consider clearing your debt immediately. This lowers your utilization ratio and boosts your 'Trusted' status faster.\n\nFinally, Communicate if you struggle. Life happens. If you know you will miss a payment, do not default silently. Use the app to request a 3-day grace period. Transparency builds trust, while silence destroys it.",
       },
       {
         id: '2',
@@ -174,8 +175,10 @@ export class MockDataService {
         points: 15,
         tier: 'Beginner',
         isCompleted: false,
+        isLocked: false,
         category: 'Finance',
-        content: 'Building a credit score from scratch can feel daunting, but with HiveFund, your community participation counts. Your score is not just about how much money you have; it is about how reliable you are.\n\nStart by Joining a Mukando Circle. Consistency is king. Making your $20 contribution on time for three months in a row is the fastest way to jump from \'Newbie\' to \'Established\'.\n\nNext, Complete Learning Modules. You are doing it right now! Every article you read proves you are serious about financial literacy. We reward this curiosity with +5 points per lesson.\n\nLastly, Avoid Over-Borrowing. Just because you are eligible for a $50 loan does not mean you should take it. Only borrow what you can turn into profit or essential value. A paid-off small loan looks better than a struggling large one.',
+        content:
+          "Building a credit score from scratch can feel daunting, but with HiveFund, your community participation counts. Your score is not just about how much money you have; it is about how reliable you are.\n\nStart by Joining a Mukando Circle. Consistency is king. Making your $20 contribution on time for three months in a row is the fastest way to jump from 'Newbie' to 'Established'.\n\nNext, Complete Learning Modules. You are doing it right now! Every article you read proves you are serious about financial literacy. We reward this curiosity with +5 points per lesson.\n\nLastly, Avoid Over-Borrowing. Just because you are eligible for a $50 loan does not mean you should take it. Only borrow what you can turn into profit or essential value. A paid-off small loan looks better than a struggling large one.",
       },
       {
         id: '3',
@@ -185,8 +188,10 @@ export class MockDataService {
         points: 20,
         tier: 'Growing',
         isCompleted: false,
+        isLocked: false,
         category: 'Business',
-        content: 'Learn how to turn your weekend gig into a full-time business. In this lesson, we cover pricing strategies that ensure profit, how to market on a budget using WhatsApp Status, and knowing exactly when to hire help without going into debt.',
+        content:
+          'Learn how to turn your weekend gig into a full-time business. In this lesson, we cover pricing strategies that ensure profit, how to market on a budget using WhatsApp Status, and knowing exactly when to hire help without going into debt.',
       },
       {
         id: '4',
@@ -366,7 +371,8 @@ export class MockDataService {
       {
         id: '1',
         title: 'Math Tutoring',
-        description: 'Expert math tutoring for high school students. Specializing in algebra, calculus, and test prep.',
+        description:
+          'Expert math tutoring for high school students. Specializing in algebra, calculus, and test prep.',
         category: 'Academic',
         rate: 25,
         rateType: 'hourly',
@@ -384,15 +390,28 @@ export class MockDataService {
         availability: 'Weekdays 3-6 PM',
         reviewCount: 12,
         reviews: [
-          { name: 'John D.', rating: 5, comment: 'Excellent tutor, very patient and clear explanations.' },
-          { name: 'Sarah M.', rating: 5, comment: 'Helped my child improve significantly in math.' },
-          { name: 'Mike T.', rating: 4, comment: 'Good service, would recommend.' },
+          {
+            name: 'John D.',
+            rating: 5,
+            comment: 'Excellent tutor, very patient and clear explanations.',
+          },
+          {
+            name: 'Sarah M.',
+            rating: 5,
+            comment: 'Helped my child improve significantly in math.',
+          },
+          {
+            name: 'Mike T.',
+            rating: 4,
+            comment: 'Good service, would recommend.',
+          },
         ],
       },
       {
         id: '2',
         title: 'Logo Design',
-        description: 'Professional logo design services for businesses and startups. Includes 3 revisions.',
+        description:
+          'Professional logo design services for businesses and startups. Includes 3 revisions.',
         category: 'Creative',
         rate: 50,
         rateType: 'fixed',
@@ -410,14 +429,23 @@ export class MockDataService {
         availability: 'Flexible',
         reviewCount: 8,
         reviews: [
-          { name: 'Lisa K.', rating: 5, comment: 'Amazing work! Captured our brand perfectly.' },
-          { name: 'Tom R.', rating: 5, comment: 'Fast turnaround and excellent communication.' },
+          {
+            name: 'Lisa K.',
+            rating: 5,
+            comment: 'Amazing work! Captured our brand perfectly.',
+          },
+          {
+            name: 'Tom R.',
+            rating: 5,
+            comment: 'Fast turnaround and excellent communication.',
+          },
         ],
       },
       {
         id: '3',
         title: 'Web Development',
-        description: 'Full-stack web development services. React, Angular, Node.js expertise.',
+        description:
+          'Full-stack web development services. React, Angular, Node.js expertise.',
         category: 'Tech',
         rate: 45,
         rateType: 'hourly',
@@ -435,14 +463,23 @@ export class MockDataService {
         availability: 'Monday-Friday, 9 AM - 5 PM',
         reviewCount: 15,
         reviews: [
-          { name: 'David P.', rating: 5, comment: 'Built our entire platform. Highly skilled!' },
-          { name: 'Emily W.', rating: 5, comment: 'Professional and delivers on time.' },
+          {
+            name: 'David P.',
+            rating: 5,
+            comment: 'Built our entire platform. Highly skilled!',
+          },
+          {
+            name: 'Emily W.',
+            rating: 5,
+            comment: 'Professional and delivers on time.',
+          },
         ],
       },
       {
         id: '4',
         title: 'Home Cleaning',
-        description: 'Professional home cleaning services. Deep cleaning and regular maintenance.',
+        description:
+          'Professional home cleaning services. Deep cleaning and regular maintenance.',
         category: 'Physical',
         rate: 30,
         rateType: 'hourly',
@@ -460,14 +497,23 @@ export class MockDataService {
         availability: 'Weekends & Evenings',
         reviewCount: 9,
         reviews: [
-          { name: 'Rachel B.', rating: 5, comment: 'Very thorough and reliable.' },
-          { name: 'James L.', rating: 4, comment: 'Good service, always on time.' },
+          {
+            name: 'Rachel B.',
+            rating: 5,
+            comment: 'Very thorough and reliable.',
+          },
+          {
+            name: 'James L.',
+            rating: 4,
+            comment: 'Good service, always on time.',
+          },
         ],
       },
       {
         id: '5',
         title: 'Photography Session',
-        description: 'Professional photography for events, portraits, and product shoots.',
+        description:
+          'Professional photography for events, portraits, and product shoots.',
         category: 'Creative',
         rate: 75,
         rateType: 'fixed',
@@ -485,14 +531,19 @@ export class MockDataService {
         availability: 'Flexible',
         reviewCount: 18,
         reviews: [
-          { name: 'Sophia M.', rating: 5, comment: 'Captured our wedding beautifully!' },
+          {
+            name: 'Sophia M.',
+            rating: 5,
+            comment: 'Captured our wedding beautifully!',
+          },
           { name: 'Mark H.', rating: 5, comment: 'Professional and creative.' },
         ],
       },
       {
         id: '6',
         title: 'Essay Writing Help',
-        description: 'Academic writing assistance for college and university students.',
+        description:
+          'Academic writing assistance for college and university students.',
         category: 'Academic',
         rate: 20,
         rateType: 'hourly',
@@ -510,14 +561,23 @@ export class MockDataService {
         availability: 'Daily, 8 AM - 10 PM',
         reviewCount: 28,
         reviews: [
-          { name: 'Chris P.', rating: 5, comment: 'Helped me get an A on my thesis!' },
-          { name: 'Nina S.', rating: 5, comment: 'Excellent guidance and feedback.' },
+          {
+            name: 'Chris P.',
+            rating: 5,
+            comment: 'Helped me get an A on my thesis!',
+          },
+          {
+            name: 'Nina S.',
+            rating: 5,
+            comment: 'Excellent guidance and feedback.',
+          },
         ],
       },
       {
         id: '7',
         title: 'Furniture Assembly',
-        description: 'Professional furniture assembly service. All types of furniture.',
+        description:
+          'Professional furniture assembly service. All types of furniture.',
         category: 'Physical',
         rate: 35,
         rateType: 'hourly',
@@ -542,7 +602,8 @@ export class MockDataService {
       {
         id: '8',
         title: 'Mobile App Development',
-        description: 'iOS and Android app development. Native and cross-platform solutions.',
+        description:
+          'iOS and Android app development. Native and cross-platform solutions.',
         category: 'Tech',
         rate: 55,
         rateType: 'hourly',
@@ -560,8 +621,16 @@ export class MockDataService {
         availability: 'Monday-Saturday',
         reviewCount: 12,
         reviews: [
-          { name: 'Kevin L.', rating: 5, comment: 'Built our app from scratch. Great work!' },
-          { name: 'Olivia C.', rating: 5, comment: 'Very responsive and skilled.' },
+          {
+            name: 'Kevin L.',
+            rating: 5,
+            comment: 'Built our app from scratch. Great work!',
+          },
+          {
+            name: 'Olivia C.',
+            rating: 5,
+            comment: 'Very responsive and skilled.',
+          },
         ],
       },
     ];

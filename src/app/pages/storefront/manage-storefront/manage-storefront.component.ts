@@ -26,7 +26,7 @@ import {
 @Component({
   selector: 'app-manage-storefront',
   standalone: true,
-  imports: [CommonModule, FormsModule, PageHeaderComponent, LucideAngularModule],
+  imports: [CommonModule, FormsModule, LucideAngularModule],
   templateUrl: './manage-storefront.component.html',
   styleUrl: './manage-storefront.component.css',
 })
@@ -126,11 +126,11 @@ export class ManageStorefrontComponent implements OnInit {
     const orders = this.storefront()!.orders;
 
     if (this.orderFilter() === 'pending') {
-      return orders.filter(order => order.status === 'pending');
+      return orders.filter((order) => order.status === 'pending');
     }
 
     if (this.orderFilter() === 'completed') {
-      return orders.filter(order => order.status === 'completed');
+      return orders.filter((order) => order.status === 'completed');
     }
 
     return orders;
@@ -141,14 +141,19 @@ export class ManageStorefrontComponent implements OnInit {
   }
 
   getOrderItemsSummary(order: Order): string {
-    return order.items.map(item => `${item.productName} x${item.quantity}`).join(', ');
+    return order.items
+      .map((item) => `${item.productName} x${item.quantity}`)
+      .join(', ');
   }
 
   getMukandoProgress(): number {
     const analytics = this.analytics();
     if (!analytics || !analytics.mukandoContributionDue) return 100;
 
-    return Math.min((analytics.revenue / analytics.mukandoContributionDue) * 100, 100);
+    return Math.min(
+      (analytics.revenue / analytics.mukandoContributionDue) * 100,
+      100,
+    );
   }
 
   canContributeToMukando(): boolean {

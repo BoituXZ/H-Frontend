@@ -6,7 +6,16 @@ import { PageHeaderComponent } from '../../components/page-header/page-header.co
 import { GigCard } from '../../components/gig-card/gig-card';
 import { PostGigModalComponent } from '../../shared/components/post-gig-modal/post-gig-modal';
 import { BookingModalComponent } from '../../shared/components/booking-modal/booking-modal';
-import { LucideAngularModule, Plus, CheckCircle2, Search, MapPin, Clock, Briefcase, Star } from 'lucide-angular';
+import {
+  LucideAngularModule,
+  Plus,
+  CheckCircle2,
+  Search,
+  MapPin,
+  Clock,
+  Briefcase,
+  Star,
+} from 'lucide-angular';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { Gig, GigCategory, GigType } from '../../models/gig.model';
 
@@ -41,7 +50,6 @@ const scaleAnimation = trigger('scale', [
     CommonModule,
     RouterModule,
     FormsModule,
-    PageHeaderComponent,
     GigCard,
     PostGigModalComponent,
     BookingModalComponent,
@@ -184,7 +192,7 @@ export class MarketplacePage {
 
     // Filter by category
     if (this.selectedCategory() !== 'all') {
-      gigs = gigs.filter(gig => gig.category === this.selectedCategory());
+      gigs = gigs.filter((gig) => gig.category === this.selectedCategory());
     }
 
     // Filter by search query
@@ -194,7 +202,7 @@ export class MarketplacePage {
         (gig) =>
           gig.title.toLowerCase().includes(query) ||
           gig.description.toLowerCase().includes(query) ||
-          gig.providerName.toLowerCase().includes(query)
+          gig.providerName.toLowerCase().includes(query),
       );
     }
 
@@ -213,8 +221,9 @@ export class MarketplacePage {
   // Featured gigs (first one)
   featuredGig = computed(() => {
     const gigs = this.filteredGigs();
-    return gigs.length > 0 && (gigs[0].isMukandoMember || gigs[0].creditScore >= 700) 
-      ? gigs[0] 
+    return gigs.length > 0 &&
+      (gigs[0].isMukandoMember || gigs[0].creditScore >= 700)
+      ? gigs[0]
       : null;
   });
 
@@ -251,13 +260,13 @@ export class MarketplacePage {
       type: gigData.type,
       skills: gigData.skills || [],
     };
-    
-    this.allGigs.update(gigs => [newGig, ...gigs]);
+
+    this.allGigs.update((gigs) => [newGig, ...gigs]);
     this.showPostGigModal.set(false);
   }
 
   onGigClick(gigId: string): void {
-    const gig = this.allGigs().find(g => g.id === gigId);
+    const gig = this.allGigs().find((g) => g.id === gigId);
     if (gig) {
       this.selectedGig.set(gig);
       this.bookingStatus.set('pending');
