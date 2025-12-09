@@ -1,6 +1,6 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap, BehaviorSubject } from 'rxjs';
+import { Observable, tap, BehaviorSubject, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { StorageService } from './storage.service';
 import { TokenService } from './token.service';
@@ -63,6 +63,14 @@ export class AuthService {
    * Register a new user
    */
   register(data: RegisterRequest): Observable<RegisterResponse> {
+    if (environment.useMockData) {
+      return of({
+        success: true,
+        message: 'Registration successful. Please verify your phone number.',
+        userId: 'mock-user-' + Date.now()
+      }).pipe(tap(() => console.log('Mock register:', data)));
+    }
+
     return this.http.post<RegisterResponse>(`${this.apiUrl}/auth/register`, data);
   }
 
@@ -71,6 +79,19 @@ export class AuthService {
    */
   private extractUserFromToken(token: string): User {
     const decoded = this.tokenService.decodeToken(token);
+
+    // Handle mock tokens that can't be decoded
+    if (!decoded) {
+      return {
+        id: 'mock-user-id',
+        phoneNumber: '0712345678',
+        name: 'Mock User',
+        ecocashNumber: '0712345678',
+        verified: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+    }
 
     return {
       id: decoded.sub || '',
@@ -88,6 +109,30 @@ export class AuthService {
    */
   verifyOtp(userId: string, code: string): Observable<AuthResponse> {
     const payload: VerifyOtpRequest = { userId, code };
+
+    if (environment.useMockData) {
+      const mockResponse: AuthResponse = {
+        accessToken: 'mock-access-token-' + Date.now(),
+        refreshToken: 'mock-refresh-token-' + Date.now()
+      };
+
+      return of(mockResponse).pipe(
+        tap(response => {
+          const rememberMe = this.storageService.getRememberMe();
+          const user = this.extractUserFromToken(response.accessToken);
+
+          this.setAuthData(
+            {
+              accessToken: response.accessToken,
+              refreshToken: response.refreshToken
+            },
+            user,
+            rememberMe
+          );
+          console.log('Mock OTP verification for user:', userId);
+        })
+      );
+    }
 
     return this.http.post<AuthResponse>(`${this.apiUrl}/auth/verify-otp`, payload).pipe(
       tap(response => {
@@ -111,6 +156,14 @@ export class AuthService {
    */
   resendOtp(userId: string): Observable<ResendOtpResponse> {
     const payload: ResendOtpRequest = { userId };
+
+    if (environment.useMockData) {
+      return of({
+        success: true,
+        message: 'OTP sent successfully'
+      }).pipe(tap(() => console.log('Mock resend OTP for user:', userId)));
+    }
+
     return this.http.post<ResendOtpResponse>(`${this.apiUrl}/auth/resend-otp`, payload);
   }
 
@@ -118,6 +171,29 @@ export class AuthService {
    * Login user
    */
   login(phoneNumber: string, password: string, rememberMe: boolean): Observable<AuthResponse> {
+    if (environment.useMockData) {
+      const mockResponse: AuthResponse = {
+        accessToken: 'mock-access-token-' + Date.now(),
+        refreshToken: 'mock-refresh-token-' + Date.now()
+      };
+
+      return of(mockResponse).pipe(
+        tap(response => {
+          const user = this.extractUserFromToken(response.accessToken);
+
+          this.setAuthData(
+            {
+              accessToken: response.accessToken,
+              refreshToken: response.refreshToken
+            },
+            user,
+            rememberMe
+          );
+          console.log('Mock login for user:', phoneNumber);
+        })
+      );
+    }
+
     return this.http.post<AuthResponse>(`${this.apiUrl}/auth/login`, {
       phoneNumber,
       password
@@ -147,6 +223,27 @@ export class AuthService {
       throw new Error('No refresh token available');
     }
 
+    if (environment.useMockData) {
+      const mockResponse = { accessToken: 'mock-refreshed-token-' + Date.now() };
+
+      return of(mockResponse).pipe(
+        tap(response => {
+          // Update tokens in storage
+          const tokens = this.storageService.getTokens();
+          if (tokens) {
+            const updatedTokens: Tokens = {
+              ...tokens,
+              accessToken: response.accessToken
+            };
+            const rememberMe = this.storageService.getRememberMe();
+            this.storageService.saveTokens(updatedTokens, rememberMe);
+          }
+          this.refreshTokenSubject.next(response.accessToken);
+          console.log('Mock token refresh');
+        })
+      );
+    }
+
     return this.http.post<{ accessToken: string }>(`${this.apiUrl}/auth/refresh-token`, {
       refreshToken
     }).pipe(
@@ -172,8 +269,8 @@ export class AuthService {
   logout(): void {
     const accessToken = this.storageService.getAccessToken();
 
-    // Call logout endpoint if token exists
-    if (accessToken) {
+    // Call logout endpoint if token exists and not using mock data
+    if (accessToken && !environment.useMockData) {
       this.http.post(`${this.apiUrl}/auth/logout`, {}).subscribe({
         error: (error) => console.error('Logout API error:', error)
       });

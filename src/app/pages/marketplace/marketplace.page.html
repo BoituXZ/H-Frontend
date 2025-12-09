@@ -1,38 +1,278 @@
-<div class="page-wrapper">
-  <!-- Page Header -->
+<div class="min-h-screen circles-container">
+  <!-- Page Header (reuses existing header component which places action button top-right) -->
   <app-page-header
     pageTitle="Marketplace"
-    actionLabel="Post Gig"
+    actionLabel="Post a Gig"
     [actionIcon]="Plus"
     (actionClick)="onPostGig()"
   />
 
-  <div class="container mx-auto px-4 py-8">
-    <div class="max-w-4xl mx-auto">
-      <div class="card-theme p-8 text-center">
-        <div class="mb-4 text-honey-500">
-          <svg
-            class="w-16 h-16 mx-auto"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-            />
-          </svg>
-        </div>
-        <h2 class="text-xl font-semibold text-text-primary mb-2">
-          Marketplace Coming Soon
-        </h2>
-        <p class="text-text-secondary">
-          Browse gigs, offer services, and earn money to support your
-          contributions.
-        </p>
-      </div>
+  <!-- Banner / Subtitle -->
+  <div class="section">
+    <p class="page-subtitle">Need funds for mukando? Here are gigs you can complete</p>
+  </div>
+
+  <!-- Filters -->
+  <div class="section">
+    <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+      @for (cat of categories; track cat) {
+        <button
+          class="marketplace-filter-btn"
+          [class.active]="selectedCategory() === cat"
+          (click)="selectCategory(cat)"
+        >
+          {{ cat }}
+        </button>
+      }
     </div>
   </div>
+
+  <!-- Post Gig Modal -->
+  @if (showPostGigModal()) {
+    <div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:60;">
+      <div style="position:absolute;inset:0;background:rgba(0,0,0,0.45);" (click)="closePostGigModal()"></div>
+
+      <div style="width:96%;max-width:600px;background:var(--card-bg,#fff);border-radius:16px;padding:2rem;border:1px solid var(--card-border,#e5e7eb);box-shadow:0 8px 30px rgba(0,0,0,0.2);z-index:70;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+          <h3 style="font-size:1.375rem;font-weight:700;color:var(--text-primary,#1f2937);">Post a New Gig</h3>
+          <button class="btn-view-details" (click)="closePostGigModal()">Close</button>
+        </div>
+
+        <form style="display:flex;flex-direction:column;gap:1rem;">
+          <!-- Gig Title -->
+          <div style="display:flex;flex-direction:column;gap:0.375rem;">
+            <label style="font-size:0.875rem;font-weight:600;color:var(--text-primary,#1f2937);">Gig Title *</label>
+            <input
+              type="text"
+              placeholder="e.g., Write a 5-page essay"
+              [value]="postGigForm().title"
+              (input)="updatePostGigForm('title', $any($event.target).value)"
+              style="padding:0.75rem;border:1px solid var(--border-color,#d1d5db);border-radius:8px;font-size:0.875rem;color:var(--text-primary,#1f2937);background:var(--bg-primary,#fff);"
+            />
+          </div>
+
+          <!-- Category -->
+          <div style="display:flex;flex-direction:column;gap:0.375rem;">
+            <label style="font-size:0.875rem;font-weight:600;color:var(--text-primary,#1f2937);">Category *</label>
+            <select
+              [value]="postGigForm().category"
+              (change)="updatePostGigForm('category', $any($event.target).value)"
+              style="padding:0.75rem;border:1px solid var(--border-color,#d1d5db);border-radius:8px;font-size:0.875rem;color:var(--text-primary,#1f2937);background:var(--bg-primary,#fff);"
+            >
+              <option value="Academic">Academic</option>
+              <option value="Creative">Creative</option>
+              <option value="Tech">Tech</option>
+              <option value="Physical">Physical</option>
+              <option value="Events">Events</option>
+            </select>
+          </div>
+
+          <!-- Price + Currency -->
+          <div style="display:flex;gap:0.75rem;align-items:center;">
+            <div style="flex:1;display:flex;flex-direction:column;gap:0.375rem;">
+              <label style="font-size:0.875rem;font-weight:600;color:var(--text-primary,#1f2937);">Price *</label>
+              <input
+                type="number"
+                placeholder="e.g., 25"
+                min="0"
+                step="0.01"
+                [value]="postGigForm().price"
+                (input)="updatePostGigForm('price', $any($event.target).value)"
+                style="padding:0.75rem;border:1px solid var(--border-color,#d1d5db);border-radius:8px;font-size:0.875rem;color:var(--text-primary,#1f2937);background:var(--bg-primary,#fff);"
+              />
+            </div>
+
+            <div style="width:140px;display:flex;flex-direction:column;gap:0.375rem;">
+              <label style="font-size:0.875rem;font-weight:600;color:var(--text-primary,#1f2937);">Currency</label>
+              <select
+                [value]="postGigForm().currency"
+                (change)="updatePostGigForm('currency', $any($event.target).value)"
+                style="padding:0.75rem;border:1px solid var(--border-color,#d1d5db);border-radius:8px;font-size:0.875rem;color:var(--text-primary,#1f2937);background:var(--bg-primary,#fff);"
+              >
+                <option value="ZWL">ZWL</option>
+                <option value="USD">USD</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Provider Name -->
+          <div style="display:flex;flex-direction:column;gap:0.375rem;">
+            <label style="font-size:0.875rem;font-weight:600;color:var(--text-primary,#1f2937);">Your Name / Business *</label>
+            <input
+              type="text"
+              placeholder="e.g., Acme Tutors"
+              [value]="postGigForm().providerName"
+              (input)="updatePostGigForm('providerName', $any($event.target).value)"
+              style="padding:0.75rem;border:1px solid var(--border-color,#d1d5db);border-radius:8px;font-size:0.875rem;color:var(--text-primary,#1f2937);background:var(--bg-primary,#fff);"
+            />
+          </div>
+
+          <!-- Info Note -->
+          <div style="padding:0.75rem;border-radius:8px;background:#f3f4f6;color:#6b7280;font-size:0.75rem;line-height:1.5;">
+            <strong>Note:</strong> Rating and credit score will be assigned by the system as you complete gigs and build your reputation.
+          </div>
+
+          <!-- Mukando Member -->
+          <div style="display:flex;gap:0.75rem;align-items:center;">
+            <label style="font-size:0.875rem;font-weight:600;color:var(--text-primary,#1f2937);min-width:140px;">Mukando Member</label>
+            <div style="display:flex;gap:0.5rem;align-items:center;">
+              <label style="font-size:0.875rem;display:flex;align-items:center;gap:0.5rem;"><input type="radio" name="mukando" value="yes" (change)="updatePostGigForm('isMukandoMember', 'yes')" [checked]="postGigForm().isMukandoMember === 'yes'"/> Yes</label>
+              <label style="font-size:0.875rem;display:flex;align-items:center;gap:0.5rem;"><input type="radio" name="mukando" value="no" (change)="updatePostGigForm('isMukandoMember', 'no')" [checked]="postGigForm().isMukandoMember === 'no'"/> No</label>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div style="display:flex;gap:0.75rem;justify-content:flex-end;margin-top:0.75rem;">
+            <button
+              type="button"
+              (click)="closePostGigModal()"
+              style="padding:0.75rem 1.5rem;border:1px solid var(--border-color,#d1d5db);border-radius:8px;background:transparent;color:var(--text-primary,#1f2937);font-weight:600;cursor:pointer;transition:all 0.3s;"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              (click)="submitPostGig()"
+              style="padding:0.75rem 1.5rem;border:none;border-radius:8px;background:linear-gradient(135deg, #0f2937 0%, #163d50 100%);color:white;font-weight:600;cursor:pointer;transition:all 0.3s;"
+            >
+              Post Gig
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+
+  <!-- Gig Grid -->
+  <div class="section">
+    <div class="circles-grid">
+      @for (gig of filteredGigs(); track gig.id) {
+        <div class="card-theme circle-card">
+          <div class="circle-header">
+            <div class="circle-title-row">
+              <h3 class="circle-name">{{ gig.title }}</h3>
+              @if (isFeatured(gig)) {
+                <span class="status-badge status-active">
+                  <lucide-angular [img]="Check" class="w-3 h-3" [strokeWidth]="2"></lucide-angular>
+                  Featured
+                </span>
+              }
+            </div>
+            <div style="display:flex;gap:0.5rem;align-items:center;">
+              <span class="info-label">{{ gig.category }}</span>
+              <span class="info-value">{{ gig.currency }} ${{ gig.price }}</span>
+            </div>
+          </div>
+
+          <div class="circle-info-row">
+            <div class="info-item">
+              <span class="info-label">Provider</span>
+              <span class="info-value">{{ gig.providerName }}</span>
+            </div>
+
+            <div class="info-item">
+              <span class="info-label">Rating</span>
+              <span class="info-value">{{ gig.rating }} / 5</span>
+            </div>
+
+            <div class="info-item">
+              <span class="info-label">Credit Score</span>
+              <span class="info-value">{{ gig.creditScore }}</span>
+            </div>
+
+            <div class="info-item">
+              <span class="info-label">Mukando Member</span>
+              <span class="info-value">{{ gig.isMukandoMember ? 'Yes' : 'No' }}</span>
+            </div>
+          </div>
+
+          <div class="circle-footer">
+            <div class="next-payment">
+              <lucide-angular [img]="User" class="w-4 h-4" [strokeWidth]="2"></lucide-angular>
+              <span>{{ gig.providerName }}</span>
+            </div>
+            <div style="display:flex;gap:0.5rem;align-items:center;">
+              <button class="btn-view-details" (click)="openBooking(gig)">Book</button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Booking Modal (simple simulated modal) -->
+  @if (showModal()) {
+    <div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:60;">
+      <div style="position:absolute;inset:0;background:rgba(0,0,0,0.45);" (click)="closeModal()"></div>
+
+      <div style="width:96%;max-width:720px;background:var(--card-bg,#fff);border-radius:16px;padding:1.25rem;border:1px solid var(--card-border,#e5e7eb);box-shadow:0 8px 30px rgba(0,0,0,0.2);z-index:70;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
+          <h3 style="font-size:1.125rem;font-weight:700;color:var(--text-primary,#1f2937);">Booking</h3>
+          <button class="btn-view-details" (click)="closeModal()">Close</button>
+        </div>
+
+        @if (selectedGig()) {
+          <div style="display:flex;flex-direction:column;gap:0.75rem;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div>
+                <div class="info-label">{{ selectedGig()!.title }}</div>
+                <div class="info-value">Provider: {{ selectedGig()!.providerName }}</div>
+              </div>
+              <div style="text-align:right;">
+                <div class="info-label">Price</div>
+                <div class="info-value">{{ selectedGig()!.currency }} ${{ selectedGig()!.price }}</div>
+              </div>
+            </div>
+
+            <hr />
+
+            <div>
+              <div class="info-label">Payment Breakdown (50% deposit)</div>
+              <div style="display:flex;justify-content:space-between;margin-top:0.5rem;">
+                <div>50% Deposit</div>
+                <div>{{ selectedGig()!.currency }} ${{ (selectedGig()!.price * 0.5) | number:'1.2-2' }}</div>
+              </div>
+              <div style="display:flex;justify-content:space-between;">
+                <div>Transaction Fee (2.5%)</div>
+                <div>{{ selectedGig()!.currency }} ${{ (selectedGig()!.price * 0.5 * 0.025) | number:'1.2-2' }}</div>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-weight:700;margin-top:0.5rem;">
+                <div>Total Deposit</div>
+                <div>{{ selectedGig()!.currency }} ${{ (selectedGig()!.price * 0.5 * 1.025) | number:'1.2-2' }}</div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:0.5rem;justify-content:flex-end;margin-top:0.75rem;">
+              @if (bookingState() === 'idle') {
+                @if (selectedGig()!.currency === 'ZWL') {
+                  <button class="btn-view-details" (click)="payDeposit()">Pay 50% deposit via EcoCash (ZWL)</button>
+                } @else {
+                  <button class="btn-view-details" (click)="payDeposit()">Pay 50% deposit (USD - bank/online)</button>
+                }
+              } @else if (bookingState() === 'paidDeposit') {
+                <button class="btn-view-details" (click)="simulateProviderComplete()">Simulate Provider Complete</button>
+              } @else if (bookingState() === 'completed') {
+                <button class="btn-view-details" (click)="releaseAndRate()">Release remaining 50% + Rate Provider</button>
+              } @else if (bookingState() === 'released') {
+                <div style="padding:0.5rem 1rem;border-radius:8px;background:#d1fae5;color:#059669;font-weight:700;">Released & Rated</div>
+              }
+            </div>
+
+            @if (showEarningsMsg()) {
+              <div style="margin-top:0.75rem;display:flex;flex-direction:column;gap:0.5rem;">
+                <div style="padding:0.75rem;border-radius:12px;background:#f0fdf4;color:#064e3b;font-weight:700;">
+                  Earnings received! Suggestion: Add this to your mukando contribution.
+                </div>
+                @if (lastAssignedRating() !== null) {
+                  <div style="padding:0.5rem;border-radius:8px;background:var(--bg-secondary);color:var(--text-primary);font-weight:600;">
+                    Auto-assigned rating: {{ lastAssignedRating() }} / 5 — Credit score change: +{{ lastCreditDelta() }}
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  }
 </div>

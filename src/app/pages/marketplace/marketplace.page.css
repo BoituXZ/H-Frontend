@@ -1,3 +1,153 @@
+/* Import Circles styles so Marketplace uses identical UI tokens & card styles */
+@import '../circles/circles.page.css';
+
+/* Local overrides and small modal tweaks only */
+
+:root {
+  /* ensure fallback theme vars used for the modal */
+  --card-bg: #ffffff;
+  --card-border: #e5e7eb;
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --bg-primary: #f9fafb;
+  --bg-tertiary: #f3f4f6;
+}
+
+/* Ensure marketplace container respects theme */
+.circles-container {
+  background: var(--bg-primary);
+}
+
+/* Card styles - let circles.css handle dark mode via !important, light mode via defaults */
+.circle-card {
+  background: var(--card-bg);
+  border-color: var(--card-border);
+}
+
+.circle-name,
+.info-value,
+.section-title {
+  color: var(--text-primary);
+}
+
+.info-label,
+.page-subtitle,
+.next-payment {
+  color: var(--text-secondary);
+}
+
+.circle-info-row,
+.user-position {
+  background: var(--bg-tertiary);
+}
+
+.status-badge.status-active {
+  background: rgba(5, 150, 105, 0.1);
+  color: #059669;
+}
+
+/* Enhanced Marketplace Filter Buttons */
+/* Override generic btn-view-details for category filters */
+.marketplace-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.875rem 1.5rem;
+  background: #f3f4f6;
+  color: #4b5563;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  text-transform: capitalize;
+  letter-spacing: 0.3px;
+}
+
+.marketplace-filter-btn:hover {
+  background: #e5e7eb;
+  border-color: #d1d5db;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.marketplace-filter-btn.active {
+  background: linear-gradient(135deg, #0f2937 0%, #1a3d4f 100%);
+  color: white;
+  border-color: #0f2937;
+  font-weight: 700;
+  box-shadow: 0 6px 20px rgba(15, 41, 55, 0.3);
+  transform: translateY(-3px);
+}
+
+.marketplace-filter-btn.active:hover {
+  background: linear-gradient(135deg, #1a3d4f 0%, #245568 100%);
+  box-shadow: 0 8px 28px rgba(15, 41, 55, 0.4);
+}
+
+/* Dark Mode Filter Buttons */
+[data-theme="dark"] .marketplace-filter-btn {
+  background: var(--bg-tertiary) !important;
+  color: var(--text-secondary) !important;
+  border-color: var(--border-color, #404a52) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+[data-theme="dark"] .marketplace-filter-btn:hover {
+  background: var(--bg-secondary, #2d3748) !important;
+  border-color: var(--accent-hive, #60d1f6) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-theme="dark"] .marketplace-filter-btn.active {
+  background: linear-gradient(135deg, var(--accent-hive, #2c7a9b) 0%, var(--accent-hive-light, #60d1f6) 100%) !important;
+  color: white !important;
+  border-color: var(--accent-hive, #2c7a9b) !important;
+  box-shadow: 0 6px 20px rgba(44, 122, 155, 0.4) !important;
+}
+
+/* Modal specific small styles to match theme */
+.marketplace-modal {
+  border-radius: 16px;
+}
+
+/* Form inputs and modals - use theme variables */
+input,
+select,
+textarea {
+  background: var(--card-bg);
+  color: var(--text-primary);
+  border-color: var(--border-color, #d1d5db);
+}
+
+input::placeholder,
+select::placeholder {
+  color: var(--text-secondary);
+}
+
+label {
+  color: var(--text-primary);
+}
+
+/* Dark Mode Form/Modal Overrides */
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+  background: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color, #404a52) !important;
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] select::placeholder {
+  color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] label {
+  color: var(--text-primary) !important;
+}
 .page-wrapper {
   min-height: 100vh;
 }

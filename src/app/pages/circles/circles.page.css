@@ -1,12 +1,14 @@
+/* Theme variables are defined in styles.css at [data-theme] level */
+
 /* Circles Container */
 .circles-container {
-  background: #f9fafb;
+  background: var(--bg-primary);
   padding-bottom: 2rem;
 }
 
 /* Page Header */
 .page-header {
-  background: #f9fafb;
+  background: var(--bg-primary);
   padding: 2rem 1.5rem 1.5rem;
   position: sticky;
   top: 0;
@@ -29,14 +31,14 @@
 .page-title {
   font-size: 2rem;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--text-primary);
   font-family: "Poppins", sans-serif;
   margin-bottom: 0.25rem;
 }
 
 .page-subtitle {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--text-secondary);
 }
 
 .btn-create {
@@ -114,20 +116,21 @@
 }
 
 .stat-card {
-  background: white;
+  background: var(--card-bg);
   border-radius: 16px;
   padding: 1.5rem;
   display: flex;
   align-items: center;
   gap: 1.25rem;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--card-shadow, 0 4px 12px rgba(0, 0, 0, 0.1));
   transition: all 0.3s;
 }
 
 .stat-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  border-color: var(--card-border);
 }
 
 .stat-card.blue-theme {
@@ -174,12 +177,13 @@
 .stat-label {
   font-size: 0.75rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 0.25rem;
 }
 
+.stat-card.blue-theme .stat-label,
 .stat-card.gold-theme .stat-label {
   color: rgba(255, 255, 255, 0.8);
 }
@@ -187,15 +191,25 @@
 .stat-value {
   font-size: 1.5rem;
   font-weight: 700;
-  color: white;
+  color: var(--text-primary);
   font-family: "Poppins", sans-serif;
   line-height: 1.2;
 }
 
+.stat-card.blue-theme .stat-value,
+.stat-card.gold-theme .stat-value {
+  color: white;
+}
+
 .stat-meta {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-tertiary);
   margin-top: 0.25rem;
+}
+
+.stat-card.blue-theme .stat-meta,
+.stat-card.gold-theme .stat-meta {
+  color: rgba(255, 255, 255, 0.6);
 }
 
 /* Section */
@@ -208,7 +222,7 @@
 .section-title {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--text-primary);
   font-family: "Poppins", sans-serif;
   margin-bottom: 1.5rem;
 }
@@ -239,11 +253,11 @@
 
 /* Circle Card */
 .circle-card {
-  background: white;
+  background: var(--card-bg);
   border-radius: 20px;
   padding: 1.75rem;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--card-shadow, 0 4px 12px rgba(0, 0, 0, 0.1));
   transition: all 0.3s;
   display: flex;
   flex-direction: column;
@@ -253,7 +267,7 @@
 .circle-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  border-color: #d1d5db;
+  border-color: var(--card-border);
 }
 
 .circle-card.completed {
@@ -283,7 +297,7 @@
 .circle-name {
   font-size: 1.125rem;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--text-primary);
   font-family: "Poppins", sans-serif;
   flex: 1;
 }
@@ -315,7 +329,7 @@
   justify-content: space-between;
   gap: 1rem;
   padding: 1rem;
-  background: #f9fafb;
+  background: var(--bg-secondary);
   border-radius: 12px;
 }
 
@@ -327,7 +341,7 @@
 
 .info-label {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--text-secondary);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -336,7 +350,7 @@
 .info-value {
   font-size: 0.875rem;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--text-primary);
 }
 
 /* Members Display */
@@ -376,7 +390,7 @@
 
 .member-count {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--text-secondary);
   font-weight: 500;
   margin-left: 0.25rem;
 }
@@ -387,10 +401,10 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1rem;
-  background: #eff6ff;
+  background: var(--bg-secondary);
   border-radius: 8px;
   font-size: 0.875rem;
-  color: #1f2937;
+  color: var(--text-primary);
 }
 
 .user-position strong {
@@ -436,19 +450,19 @@
 
 .progress-label {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
 .progress-text {
   font-size: 0.75rem;
-  color: #1f2937;
+  color: var(--text-primary);
   font-weight: 600;
 }
 
 .progress-bar-container {
   height: 8px;
-  background: #e5e7eb;
+  background: var(--card-border);
   border-radius: 999px;
   overflow: hidden;
 }
@@ -467,7 +481,7 @@
   align-items: center;
   gap: 1rem;
   padding-top: 0.5rem;
-  border-top: 1px solid #f3f4f6;
+  border-top: 1px solid var(--card-border);
 }
 
 .next-payment {
@@ -475,11 +489,11 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--text-secondary);
 }
 
 .next-payment strong {
-  color: #1f2937;
+  color: var(--text-primary);
   font-weight: 600;
 }
 
@@ -495,8 +509,8 @@
 .btn-view-details {
   padding: 0.5rem 1rem;
   background: transparent;
-  color: #0f2937;
-  border: 1px solid #d1d5db;
+  color: var(--accent-hive);
+  border: 1px solid var(--card-border);
   border-radius: 8px;
   font-size: 0.75rem;
   font-weight: 600;
@@ -506,9 +520,9 @@
 }
 
 .btn-view-details:hover {
-  background: #0f2937;
+  background: var(--accent-hive);
   color: white;
-  border-color: #0f2937;
+  border-color: var(--accent-hive);
 }
 
 /* Empty State */
@@ -516,9 +530,9 @@
   grid-column: 1 / -1;
   text-align: center;
   padding: 4rem 2rem;
-  background: white;
+  background: var(--card-bg);
   border-radius: 20px;
-  border: 2px dashed #e5e7eb;
+  border: 2px dashed var(--card-border);
 }
 
 .empty-icon {
@@ -533,13 +547,13 @@
 .empty-title {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--text-primary);
   margin-bottom: 0.5rem;
 }
 
 .empty-description {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--text-secondary);
   margin-bottom: 1.5rem;
 }
 
@@ -668,11 +682,45 @@
 }
 
 /* Dark theme specific overrides */
+[data-theme="dark"] .circles-container {
+  background: var(--bg-primary) !important;
+}
+
+[data-theme="dark"] .page-header {
+  background: var(--bg-primary) !important;
+}
+
+[data-theme="dark"] .stat-card {
+  background: var(--card-bg) !important;
+  border-color: var(--card-border) !important;
+}
+
+[data-theme="dark"] .stat-label {
+  color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] .stat-value {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .stat-meta {
+  color: var(--text-tertiary, rgba(255, 255, 255, 0.6)) !important;
+}
+
+[data-theme="dark"] .circle-card {
+  background: var(--card-bg) !important;
+  border-color: var(--card-border) !important;
+}
+
+[data-theme="dark"] .circle-info-row {
+  background: var(--bg-secondary) !important;
+}
+
 [data-theme="dark"] .page-title,
 [data-theme="dark"] .circle-name,
 [data-theme="dark"] .info-value,
 [data-theme="dark"] .empty-title {
-  color: var(--text-primary);
+  color: var(--text-primary) !important;
 }
 
 [data-theme="dark"] .page-subtitle,
@@ -680,7 +728,7 @@
 [data-theme="dark"] .info-label,
 [data-theme="dark"] .member-count,
 [data-theme="dark"] .empty-description {
-  color: var(--text-secondary);
+  color: var(--text-secondary) !important;
 }
 
 /* Avatar colors */
