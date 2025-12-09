@@ -22,7 +22,7 @@
 .banner-placeholder {
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, var(--accent-hive) 0%, var(--accent-honey) 100%);
+  background: linear-gradient(135deg, var(--color-hive-500) 0%, var(--color-hive-700) 100%);
   opacity: 0.8;
 }
 
@@ -56,7 +56,7 @@
   height: 6rem;
   border-radius: 50%;
   border: 4px solid white;
-  background: var(--accent-honey);
+  background: var(--color-hive-500);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -137,8 +137,8 @@
 
 .product-card:hover {
   transform: translateY(-4px);
-  box-shadow: var(--shadow-honey);
-  border-color: var(--accent-honey);
+  box-shadow: var(--shadow-hive);
+  border-color: var(--color-hive-500);
 }
 
 /* Product Image */
@@ -156,7 +156,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--accent-honey) 0%, var(--accent-hive) 100%);
+  background: linear-gradient(135deg, var(--color-hive-500) 0%, var(--color-hive-700) 100%);
   opacity: 0.1;
 }
 

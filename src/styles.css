@@ -92,9 +92,9 @@
 /* ===================== */
 
 .btn-primary {
-  @apply bg-honey-500 text-white font-semibold py-3 px-6 rounded-hive 
-         hover:bg-honey-600 active:bg-honey-700 
-         transition-all duration-200 shadow-soft hover:shadow-honey;
+  @apply bg-hive-500 text-white font-semibold py-3 px-6 rounded-hive 
+         hover:bg-hive-600 active:bg-hive-700 
+         transition-all duration-200 shadow-soft hover:shadow-hive;
 }
 
 .btn-secondary {
@@ -104,8 +104,8 @@
 }
 
 .btn-outline {
-  @apply border-2 border-honey-500 text-honey-600 font-semibold py-3 px-6 rounded-hive 
-         hover:bg-honey-50 active:bg-honey-100 
+  @apply border-2 border-hive-500 text-hive-600 font-semibold py-3 px-6 rounded-hive 
+         hover:bg-hive-50 active:bg-hive-100 
          transition-all duration-200;
 }
 
@@ -117,7 +117,7 @@
 
 .card-interactive {
   @apply bg-white rounded-card shadow-card p-6
-         cursor-pointer hover:shadow-honey
+         cursor-pointer hover:shadow-hive
          transform hover:-translate-y-1 transition-all duration-200;
 }
 
@@ -149,7 +149,7 @@
 
 .input-field {
   @apply w-full px-4 py-3 border border-cream-300 rounded-hive 
-         focus:border-honey-500 focus:ring-2 focus:ring-honey-200 
+         focus:border-hive-500 focus:ring-2 focus:ring-hive-200 
          transition-colors duration-200 bg-white;
 }
 
@@ -359,6 +359,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 :focus-visible {
-  outline: 2px solid #eb2528; /* Red focus ring */
+  outline: 2px solid #6dbaff; /* Blue focus ring */
   outline-offset: 2px;
 }
