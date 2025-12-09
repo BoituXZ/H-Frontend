@@ -81,6 +81,12 @@ export const routes: Routes = [
         title: 'Loan Hub - HiveFund',
       },
       {
+        path: 'transact',
+        loadComponent: () =>
+          import('./pages/transact/transact.page').then((m) => m.TransactPage),
+        title: 'Transact - HiveFund',
+      },
+      {
         path: 'learning',
         loadComponent: () =>
           import('./pages/learning/learning-library/learning-library.component').then(

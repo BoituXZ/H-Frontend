@@ -11,6 +11,7 @@ import {
   Banknote,
   Tag,
   BookOpen,
+  ArrowRightLeft,
 } from 'lucide-angular';
 
 interface NavItem {
@@ -27,9 +28,11 @@ interface NavItem {
 })
 export class BottomNavComponent {
   protected readonly BookOpen = BookOpen;
+  protected readonly ArrowRightLeft = ArrowRightLeft;
 
   protected readonly navItems: NavItem[] = [
     { label: 'Home', route: '/app/dashboard', icon: Home },
+    { label: 'Transact', route: '/app/transact', icon: ArrowRightLeft },
     { label: 'Circles', route: '/app/circles', icon: Users },
     // Wallet endpoint not supported by backend - commenting out
     // { label: 'Wallet', route: '/app/wallet', icon: Wallet },
