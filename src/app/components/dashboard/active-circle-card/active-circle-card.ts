@@ -93,16 +93,16 @@ export class ActiveCircleCard implements OnInit, OnDestroy {
   }
 
   getStatusClass(status: string, isCurrentUser: boolean): string {
-    if (isCurrentUser) return 'ring-2 ring-honey-500 ring-offset-2';
-    if (status === 'paid') return 'border-2 border-green-500';
-    if (status === 'received') return 'border-2 border-hive-500';
-    return 'border-2 border-gray-300 opacity-60';
+    if (isCurrentUser) return 'ring-2 ring-honey-500 ring-offset-2 ring-offset-hive-600';
+    if (status === 'paid') return 'border-success';
+    if (status === 'received') return 'border-white';
+    return 'border-transparent';
   }
 
   getStatusBg(status: string): string {
-    if (status === 'paid') return 'bg-green-100 text-green-700';
-    if (status === 'received') return 'bg-hive-100 text-hive-700';
-    return 'bg-gray-100 text-gray-500';
+    if (status === 'paid') return 'bg-success text-white';
+    if (status === 'received') return 'bg-white text-hive-600';
+    return 'bg-hive-600/50 text-hive-100'; // Subtle pending state on dark background
   }
 
   getPaidCount(): number {

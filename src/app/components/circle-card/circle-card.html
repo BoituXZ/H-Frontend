@@ -1,6 +1,7 @@
 <div
-  class="card-container"
-  [class.featured]="isFeatured"
+  class="dashboard-card hover:shadow-honey transition-all cursor-pointer h-full flex flex-col relative overflow-hidden group"
+  [class.border-honey-200]="isFeatured"
+  [class.bg-honey-50]="isFeatured"
   role="button"
   tabindex="0"
   [attr.aria-label]="'Circle: ' + circle.name + ', ' + getStatusBadge().label"
@@ -8,38 +9,58 @@
   (keydown)="onKeydown($event)"
   @fadeSlide
 >
+  <!-- Featured Badge -->
+  @if (isFeatured) {
+    <div class="absolute top-0 right-0 bg-honey-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
+      Featured
+    </div>
+  }
+
   <!-- Card Header -->
-  <div class="card-header">
-    <h3 class="card-title">{{ circle.name }}</h3>
-    <span class="status-badge" [ngClass]="getStatusBadge().class">
-      {{ getStatusBadge().label }}
-    </span>
+  <div class="flex justify-between items-start mb-4">
+    <div>
+      <h3 class="font-display font-bold text-lg text-text-primary mb-1 line-clamp-1 group-hover:text-honey-600 transition-colors">{{ circle.name }}</h3>
+      <span
+        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+        [ngClass]="getStatusBadge().class"
+      >
+        {{ getStatusBadge().label }}
+      </span>
+    </div>
   </div>
 
   <!-- Main Content -->
-  <div class="card-content">
+  <div class="flex-1 mb-6">
     <!-- Member Avatars -->
-    <div class="members-section">
-      <div class="avatar-group">
+    <div class="flex items-center justify-between">
+      <div class="flex -space-x-3 overflow-hidden">
         @for (avatar of getDisplayMembers(); track $index) {
-        <div class="avatar">{{ avatar }}</div>
-        } @if (getRemainingCount() > 0) {
-        <div class="avatar-more">+{{ getRemainingCount() }}</div>
+          <div class="inline-block h-8 w-8 rounded-full ring-2 ring-white bg-cream-200 flex items-center justify-center text-xs font-bold text-text-secondary">
+            {{ avatar }}
+          </div>
+        } 
+        @if (getRemainingCount() > 0) {
+          <div class="inline-block h-8 w-8 rounded-full ring-2 ring-white bg-honey-100 flex items-center justify-center text-xs font-bold text-honey-700">
+            +{{ getRemainingCount() }}
+          </div>
         }
       </div>
-      <p class="members-text">
+      <span class="text-xs font-medium text-text-secondary">
         {{ circle.memberCount }} / {{ circle.maxMembers }} members
-      </p>
+      </span>
     </div>
   </div>
 
   <!-- Footer Info -->
-  <div class="card-footer">
-    <div class="action-buttons">
-      <button class="btn-share" (click)="$event.stopPropagation()">
-        Share
-      </button>
-      <button class="btn-view">View</button>
-    </div>
+  <div class="mt-auto pt-4 border-t border-cream-200 flex gap-3">
+    <button 
+      class="flex-1 btn-secondary py-2 px-3 text-sm font-medium"
+      (click)="$event.stopPropagation()"
+    >
+      Share
+    </button>
+    <button class="flex-1 btn-primary py-2 px-3 text-sm font-medium">
+      View
+    </button>
   </div>
 </div>
