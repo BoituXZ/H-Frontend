@@ -18,6 +18,7 @@ import {
   Banknote,
   Tag,
   BookOpen,
+  ArrowRightLeft,
 } from 'lucide-angular';
 import { AuthService } from '../../services/auth.service';
 import { LayoutService } from '../../services/layout.service';
@@ -47,6 +48,7 @@ export class SidebarComponent {
   protected readonly Banknote = Banknote;
   protected readonly Tag = Tag;
   protected readonly BookOpen = BookOpen;
+  protected readonly ArrowRightLeft = ArrowRightLeft;
 
   get currentUser() {
     return this.authService.currentUser();
@@ -58,6 +60,7 @@ export class SidebarComponent {
 
   protected readonly navItems: NavItem[] = [
     { label: 'Home', route: '/app/dashboard', icon: Home },
+    { label: 'Transact', route: '/app/transact', icon: ArrowRightLeft },
     { label: 'Circles', route: '/app/circles', icon: HandCoins },
     // Wallet endpoint not supported by backend - commenting out
     // { label: 'Wallet', route: '/app/wallet', icon: Wallet },

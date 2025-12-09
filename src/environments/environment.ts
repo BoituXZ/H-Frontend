@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://hf-798917326307.africa-south1.run.app',
+  apiUrl: 'http://localhost:3000',
   apiTimeout: 30000,
   tokenRefreshBuffer: 300000, // 5 minutes before expiry
   otpResendCooldown: 60000, // 60 seconds

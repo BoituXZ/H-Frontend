@@ -1,11 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { LucideAngularModule, QrCode, Smartphone, ArrowRightLeft, ShieldCheck, Contact, Building2, Share2 } from 'lucide-angular';
+import { 
+  LucideAngularModule, 
+  QrCode, 
+  Smartphone, 
+  ArrowRightLeft, 
+  ShieldCheck, 
+  Contact, 
+  Building2, 
+  Share2 
+} from 'lucide-angular';
 
 interface TransactState {
   mode: 'pay' | 'receive';
-  amount: number;
+  amount: number | null;
   recipient: string; // Phone or Merchant ID
   isLoading: boolean; // For the USSD trigger state
   myQrData: string; // The string to encode (e.g., "HIVE:26377123456")
@@ -31,7 +40,7 @@ export class TransactPage implements OnInit {
   // Component state
   state: TransactState = {
     mode: 'pay',
-    amount: 0,
+    amount: null,
     recipient: '',
     isLoading: false,
     myQrData: ''
@@ -87,7 +96,7 @@ export class TransactPage implements OnInit {
    * Validate payment form
    */
   isPaymentValid(): boolean {
-    return this.state.amount > 0 && this.state.recipient.trim().length > 0;
+    return (this.state.amount || 0) > 0 && this.state.recipient.trim().length > 0;
   }
 
   /**
@@ -109,7 +118,7 @@ export class TransactPage implements OnInit {
       alert(`Payment request sent!\nAmount: $${this.state.amount}\nRecipient: ${this.state.recipient}\n\nCheck your phone for EcoCash confirmation.`);
 
       // Reset form
-      this.state.amount = 0;
+      this.state.amount = null;
       this.state.recipient = '';
     } catch (error) {
       alert('Payment failed. Please try again.');
@@ -158,6 +167,6 @@ export class TransactPage implements OnInit {
    * Format amount display with currency
    */
   getFormattedAmount(): string {
-    return this.state.amount > 0 ? `$${this.state.amount.toFixed(2)}` : '$0.00';
+    return (this.state.amount || 0) > 0 ? `$${(this.state.amount || 0).toFixed(2)}` : '$0.00';
   }
 }
