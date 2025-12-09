@@ -131,6 +131,7 @@ export interface LearningContent {
   isLocked: boolean;
   requiredScore?: number;
   category: string;
+  content?: string; // Optional content field for article/video descriptions
 }
 
 export interface Badge {

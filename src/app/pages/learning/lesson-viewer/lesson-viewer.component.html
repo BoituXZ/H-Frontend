@@ -10,7 +10,7 @@
     <!-- Header -->
     <div class="lesson-header">
       <button (click)="goBack()" class="back-button">
-        <lucide-icon [name]="ArrowLeft" class="w-5 h-5"></lucide-icon>
+        <lucide-angular [img]="ArrowLeft" class="w-5 h-5"></lucide-angular>
         Lesson
       </button>
       <h1 class="lesson-title">{{ lesson.title }}</h1>
@@ -18,25 +18,31 @@
     </div>
 
     <!-- Content Area -->
-    <div class="lesson-content">
+    <div class="lesson-content" #contentContainer>
       @switch (lesson.type) {
         @case ('article') {
           <div class="article-content">
-            <p class="article-paragraph">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            </p>
-            <p class="article-paragraph">
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </p>
-            <p class="article-paragraph">
-              Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-            </p>
-            <p class="article-paragraph">
-              Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet.
-            </p>
-            <p class="article-paragraph">
-              At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.
-            </p>
+            <!-- Stop Generating Button (shown while typing) -->
+            @if (isTyping()) {
+              <div class="typing-controls">
+                <button (click)="showFullContent()" class="stop-generating-btn">
+                  <lucide-angular [img]="X" class="w-4 h-4"></lucide-angular>
+                  Show Full
+                </button>
+              </div>
+            }
+
+            <!-- Article Content with Typewriter Effect -->
+            <div class="article-text" [class.blinking-cursor]="isTyping()">
+              @if (displayedContent() && displayedContent().length > 0) {
+                <div [innerHTML]="formatArticleContent(displayedContent())"></div>
+              } @else if (fullArticleContent() && fullArticleContent().length > 0 && !isTyping()) {
+                <!-- Fallback: Show full content if typing didn't start -->
+                <div [innerHTML]="formatArticleContent(fullArticleContent())"></div>
+              } @else {
+                <div class="typing-placeholder">Generating content...</div>
+              }
+            </div>
           </div>
         }
         @case ('video') {
@@ -44,6 +50,12 @@
             <div class="video-placeholder">
               VIDEO PLAYER
             </div>
+            @if (displayedContent() && displayedContent().length > 0) {
+              <div class="video-description">
+                <h3 class="description-title">About this video:</h3>
+                <p class="description-text">{{ displayedContent() }}</p>
+              </div>
+            }
           </div>
         }
       }
@@ -52,7 +64,7 @@
     <!-- Success Toast -->
     @if (showSuccess()) {
       <div class="success-toast">
-        <lucide-icon [name]="Check" class="w-5 h-5"></lucide-icon>
+        <lucide-angular [img]="Check" class="w-5 h-5"></lucide-angular>
         <span>Lesson completed! +{{ lesson.points }} points earned</span>
       </div>
     }
@@ -62,13 +74,13 @@
       <div class="footer-content">
         @if (!lesson.isCompleted) {
           <button (click)="markAsComplete()" class="btn-primary complete-button">
-            <lucide-icon [name]="Check" class="w-5 h-5"></lucide-icon>
+            <lucide-angular [img]="Check" class="w-5 h-5"></lucide-angular>
             Mark as Complete
           </button>
           <p class="footer-subtext">(+{{ lesson.points }} credit points)</p>
         } @else {
           <div class="completed-state">
-            <lucide-icon [name]="Check" class="w-5 h-5 text-success"></lucide-icon>
+            <lucide-angular [img]="Check" class="w-5 h-5 text-success"></lucide-angular>
             <span class="completed-text">Lesson Completed</span>
           </div>
           <p class="footer-subtext">You earned +{{ lesson.points }} points</p>
