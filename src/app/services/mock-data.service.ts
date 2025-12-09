@@ -125,6 +125,7 @@ export class MockDataService {
       revenue: 340.0,
       totalOrders: 23,
       avgSale: 14.78,
+      mukandoContributionDue: 20.0,
       salesOverTime: [
         { label: 'Nov', amount: 120 },
         { label: 'Dec', amount: 220 },
@@ -134,6 +135,16 @@ export class MockDataService {
           name: 'Logo Design',
           sales: 12,
           revenue: 180.0,
+        },
+        {
+          name: 'Social Media Graphics',
+          sales: 8,
+          revenue: 120.0,
+        },
+        {
+          name: 'Website Banner',
+          sales: 3,
+          revenue: 40.0,
         },
       ],
     };

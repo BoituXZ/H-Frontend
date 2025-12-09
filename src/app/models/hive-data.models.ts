@@ -5,6 +5,7 @@ export interface Product {
   description: string;
   imageUrl: string;
   isAvailable: boolean;
+  salesCount?: number;
 }
 
 export interface Order {
@@ -25,6 +26,7 @@ export interface StorefrontAnalytics {
   revenue: number;
   totalOrders: number;
   avgSale: number;
+  mukandoContributionDue?: number;
   salesOverTime: Array<{
     label: string;
     amount: number;
@@ -44,8 +46,40 @@ export interface Storefront {
   logoUrl: string;
   bannerUrl: string;
   ownerId: string;
+  visitCount?: number;
   products: Product[];
   orders: Order[];
+}
+
+export interface StorefrontData {
+  details: {
+    name: string;
+    slug: string;
+    description: string;
+    logoUrl: string;
+    visitCount: number;
+  };
+  stats: {
+    revenue: number;
+    ordersCount: number;
+    avgSale: number;
+    mukandoContributionDue: number;
+  };
+  products: Array<{
+    id: string;
+    name: string;
+    price: number;
+    isAvailable: boolean;
+    salesCount: number;
+  }>;
+  recentOrders: Array<{
+    id: string;
+    customerName: string;
+    date: string;
+    total: number;
+    status: 'pending' | 'completed';
+    items: string[];
+  }>;
 }
 
 export interface Gig {
