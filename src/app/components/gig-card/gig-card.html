@@ -1,0 +1,66 @@
+<div
+  class="card-container"
+  [class.featured]="isFeatured"
+  role="button"
+  tabindex="0"
+  [attr.aria-label]="'Gig: ' + gig.title"
+  (click)="onCardClick()"
+  (keydown)="onKeydown($event)"
+  @fadeSlide
+>
+  <!-- Card Header -->
+  <div class="card-header">
+    <h3 class="card-title">{{ gig.title }}</h3>
+    <div class="badge-group">
+      @if (isVerified()) {
+      <span class="status-badge badge-verified">
+        <lucide-angular [img]="ShieldCheck" class="badge-icon" [size]="12"></lucide-angular>
+        Verified
+      </span>
+      }
+      @if (isFeatured) {
+      <span class="status-badge badge-featured">
+        <lucide-angular [img]="Award" class="badge-icon" [size]="12"></lucide-angular>
+        Featured
+      </span>
+      }
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="card-content">
+    <!-- Price Section -->
+    <div class="price-section">
+      <p class="price-label">Price</p>
+      <p class="price-amount">${{ gig.price }}</p>
+    </div>
+
+    <!-- Provider Info -->
+    <div class="provider-section">
+      <div class="provider-info">
+        <p class="provider-name">{{ gig.providerName }}</p>
+        <div class="rating-group">
+          <lucide-angular [img]="Star" class="star-icon" [size]="14"></lucide-angular>
+          <span class="rating-value">{{ gig.rating }}</span>
+        </div>
+      </div>
+      <div class="credit-score">
+        <span class="credit-label">Credit:</span>
+        <span class="credit-value">{{ gig.creditScore }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Category Badge -->
+  <div class="category-badge">
+    {{ gig.category }}
+  </div>
+
+  <!-- Footer -->
+  <div class="card-footer">
+    <div class="action-buttons">
+      <button class="btn-view">View Details</button>
+    </div>
+  </div>
+</div>
+

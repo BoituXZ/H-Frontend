@@ -81,6 +81,30 @@ export const routes: Routes = [
         title: 'Loan Hub - HiveFund',
       },
       {
+        path: 'learning',
+        loadComponent: () =>
+          import('./pages/learning/learning-library/learning-library.component').then(
+            (m) => m.LearningLibraryComponent,
+          ),
+        title: 'Learning - HiveFund',
+      },
+      {
+        path: 'learning/lesson/:id',
+        loadComponent: () =>
+          import('./pages/learning/lesson-viewer/lesson-viewer.component').then(
+            (m) => m.LessonViewerComponent,
+          ),
+        title: 'Lesson - HiveFund',
+      },
+      {
+        path: 'learning/progress',
+        loadComponent: () =>
+          import('./pages/learning/my-progress/my-progress.component').then(
+            (m) => m.MyProgressComponent,
+          ),
+        title: 'My Progress - HiveFund',
+      },
+      {
         path: 'marketplace',
         loadComponent: () =>
           import('./pages/marketplace/marketplace.page').then(
@@ -93,6 +117,38 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/settings/settings.page').then((m) => m.SettingsPage),
         title: 'Settings - HiveFund',
+      },
+      {
+        path: 'earn/marketplace',
+        loadComponent: () =>
+          import('./pages/marketplace/browse-gigs/browse-gigs.component').then(
+            (m) => m.BrowseGigsComponent,
+          ),
+        title: 'Marketplace - HiveFund',
+      },
+      {
+        path: 'earn/marketplace/create',
+        loadComponent: () =>
+          import('./pages/marketplace/create-gig/create-gig.component').then(
+            (m) => m.CreateGigComponent,
+          ),
+        title: 'Create Gig - HiveFund',
+      },
+      {
+        path: 'earn/marketplace/bookings',
+        loadComponent: () =>
+          import('./pages/marketplace/my-bookings/my-bookings.component').then(
+            (m) => m.MyBookingsComponent,
+          ),
+        title: 'My Bookings - HiveFund',
+      },
+      {
+        path: 'earn/marketplace/:gigId',
+        loadComponent: () =>
+          import('./pages/marketplace/gig-detail/gig-detail.component').then(
+            (m) => m.GigDetailComponent,
+          ),
+        title: 'Gig Details - HiveFund',
       },
       {
         path: 'earn/storefront',

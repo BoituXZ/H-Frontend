@@ -17,6 +17,7 @@ import {
   Trophy,
   Banknote,
   Tag,
+  BookOpen,
 } from 'lucide-angular';
 import { AuthService } from '../../services/auth.service';
 import { LayoutService } from '../../services/layout.service';
@@ -45,6 +46,7 @@ export class SidebarComponent {
   protected readonly Trophy = Trophy;
   protected readonly Banknote = Banknote;
   protected readonly Tag = Tag;
+  protected readonly BookOpen = BookOpen;
 
   get currentUser() {
     return this.authService.currentUser();
@@ -61,6 +63,7 @@ export class SidebarComponent {
     // { label: 'Wallet', route: '/app/wallet', icon: Wallet },
     { label: 'Credit Score', route: '/app/credit', icon: Trophy },
     { label: 'Loans', route: '/app/loans', icon: Banknote },
+    { label: 'Learning', route: '/app/learning', icon: BookOpen },
     { label: 'Marketplace', route: '/app/marketplace', icon: Store },
     { label: 'Storefront', route: '/app/earn/storefront/manage', icon: Tag },
     { label: 'Settings', route: '/app/settings', icon: Settings },

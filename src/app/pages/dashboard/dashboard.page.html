@@ -37,14 +37,17 @@
     @if (!loading()) {
       <div class="space-y-6" @fadeIn>
         <!-- Top Bar with Stats -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-          <!-- Credit Score -->
-          <div
-            class="dashboard-card group hover:shadow-honey cursor-pointer transition-all duration-200"
-            (click)="navigateToScore()"
-          >
-            <div class="flex items-start justify-between mb-4">
-              <div class="w-12 h-12 rounded-full bg-hive-50 flex items-center justify-center group-hover:bg-hive-100 transition-colors">
+        <div class="top-bar">
+          <div class="stats-grid">
+            <!-- Credit Score -->
+            <div
+              id="credit-score-card"
+              class="stat-card-theme card-blue group cursor-pointer flex flex-col justify-between gap-2"
+              (click)="navigateToScore()"
+            >
+              <div
+                class="stat-icon bg-gradient-to-br from-hive-400 to-hive-600"
+              >
                 <lucide-angular
                   [img]="TrendingUp"
                   class="w-6 h-6 text-hive-600"
@@ -233,12 +236,16 @@
             }
 
             <!-- Quick Actions -->
-            <div class="dashboard-card">
-              <h3 class="font-display font-bold text-lg text-text-primary mb-6">Quick Actions</h3>
-              <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <button class="flex flex-col items-center justify-center p-4 rounded-xl hover:bg-cream-50 transition-colors group">
-                  <div class="w-12 h-12 rounded-full bg-honey-500 text-white flex items-center justify-center mb-3 shadow-soft group-hover:scale-110 transition-transform">
-                    <lucide-angular [img]="Plus" class="w-6 h-6"></lucide-angular>
+            <div id="quick-actions" class="card-theme actions-card">
+              <h3 class="card-title mb-4">Quick Actions</h3>
+              <div class="actions-grid">
+                <button class="action-button">
+                  <div class="action-icon text-white">
+                    <lucide-angular
+                      [img]="Plus"
+                      class="w-5 h-5"
+                      [strokeWidth]="2"
+                    ></lucide-angular>
                   </div>
                   <span class="text-sm font-medium text-text-secondary group-hover:text-honey-600 transition-colors">Add Funds</span>
                 </button>

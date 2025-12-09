@@ -1,6 +1,7 @@
-import { Component, signal, OnInit } from '@angular/core';
+import { Component, signal, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { driver } from 'driver.js';
 import { AuthService } from '../../services/auth.service';
 import { DashboardService } from '../../services/dashboard.service';
 import { DashboardData } from '../../models/dashboard.model';
@@ -42,7 +43,7 @@ import {
   styleUrl: './dashboard.page.css',
   animations: [fadeInAnimation, slideUpAnimation],
 })
-export class DashboardPage implements OnInit {
+export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
   // Lucide icons
   readonly TrendingUp = TrendingUp;
   readonly Wallet = Wallet;
@@ -62,6 +63,7 @@ export class DashboardPage implements OnInit {
   dashboardData = signal<DashboardData | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
+  private tourDriver: any = null;
 
   constructor(
     private authService: AuthService,
@@ -71,6 +73,61 @@ export class DashboardPage implements OnInit {
 
   ngOnInit(): void {
     this.loadDashboardData();
+  }
+
+  ngAfterViewInit(): void {
+    // Wait for DOM to fully render and data to load, then start tour
+    // Tour runs every time for demo purposes
+    setTimeout(() => {
+      // Check if elements exist before starting tour
+      const creditScoreCard = document.getElementById('credit-score-card');
+      const quickActions = document.getElementById('quick-actions');
+      
+      if (creditScoreCard && quickActions) {
+        this.startTour();
+      } else {
+        // If elements don't exist yet (data still loading), wait a bit more
+        setTimeout(() => {
+          this.startTour();
+        }, 500);
+      }
+    }, 500);
+  }
+
+  ngOnDestroy(): void {
+    // Clean up driver instance if it exists
+    if (this.tourDriver) {
+      this.tourDriver.destroy();
+    }
+  }
+
+  startTour(): void {
+    this.tourDriver = driver({
+      showProgress: true,
+      allowClose: true, // Allow closing via X button
+      steps: [
+        {
+          element: '#credit-score-card',
+          popover: {
+            title: 'Check Your Health',
+            description: 'Track your credit score here. Keep it high to unlock better loans!',
+            side: 'bottom',
+            align: 'start',
+          },
+        },
+        {
+          element: '#quick-actions',
+          popover: {
+            title: 'Take Action',
+            description: 'Join a circle, view your wallet, or apply for a loan instantly.',
+            side: 'top',
+            align: 'start',
+          },
+        },
+      ],
+    });
+
+    this.tourDriver.drive();
   }
 
   loadDashboardData(): void {
