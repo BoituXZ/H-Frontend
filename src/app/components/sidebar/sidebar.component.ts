@@ -60,15 +60,15 @@ export class SidebarComponent {
 
   protected readonly navItems: NavItem[] = [
     { label: 'Home', route: '/app/dashboard', icon: Home },
-    { label: 'Transact', route: '/app/transact', icon: ArrowRightLeft },
     { label: 'Circles', route: '/app/circles', icon: HandCoins },
-    // Wallet endpoint not supported by backend - commenting out
-    // { label: 'Wallet', route: '/app/wallet', icon: Wallet },
     { label: 'Credit Score', route: '/app/credit', icon: Trophy },
     { label: 'Loans', route: '/app/loans', icon: Banknote },
-    { label: 'Learning', route: '/app/learning', icon: BookOpen },
     { label: 'Marketplace', route: '/app/marketplace', icon: Store },
     { label: 'Storefront', route: '/app/earn/storefront/manage', icon: Tag },
+    { label: 'Transact', route: '/app/transact', icon: ArrowRightLeft },
+    { label: 'Learn', route: '/app/learning', icon: BookOpen },
+    // Wallet endpoint not supported by backend - commenting out
+    // { label: 'Wallet', route: '/app/wallet', icon: Wallet },
     { label: 'Settings', route: '/app/settings', icon: Settings },
   ];
 
