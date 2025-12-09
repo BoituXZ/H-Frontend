@@ -120,6 +120,10 @@
          hover:shadow-soft transition-shadow duration-200;
 }
 
+.dashboard-card {
+  @apply bg-white rounded-xl border border-cream-300 shadow-card p-6;
+}
+
 .card-interactive {
   @apply bg-white rounded-card shadow-card p-6
          cursor-pointer hover:shadow-hive
