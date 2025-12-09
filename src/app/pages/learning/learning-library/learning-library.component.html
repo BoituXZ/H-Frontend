@@ -1,106 +1,166 @@
-<div class="page-wrapper">
-  <!-- Header -->
-  <div class="header-section">
-    <h1 class="page-title">Learn & Grow</h1>
+<div class="page-wrapper bg-ui-bg min-h-screen p-6">
+
+  <!-- Page Header -->
+  <div class="mb-8">
+    <h1 class="font-display font-bold text-2xl text-text-primary mb-2">Learn & Grow</h1>
+    <p class="text-text-secondary text-base">Financial literacy tailored to your journey.</p>
   </div>
 
-  <!-- Tabs -->
-  <div class="tabs-container">
-    <button
-      class="tab-button"
-      [ngClass]="{
-        'border-b-2 border-honey-500 text-hive-900 font-semibold': activeTab() === 'library',
-        'text-gray-500': activeTab() !== 'library'
-      }"
-      (click)="setActiveTab('library')"
-    >
-      Library
-    </button>
-    <button
-      class="tab-button"
-      [ngClass]="{
-        'border-b-2 border-honey-500 text-hive-900 font-semibold': activeTab() === 'budget',
-        'text-gray-500': activeTab() !== 'budget'
-      }"
-      (click)="setActiveTab('budget')"
-    >
-      Budget Assistant
-    </button>
-    <button
-      class="tab-button"
-      [ngClass]="{
-        'border-b-2 border-honey-500 text-hive-900 font-semibold': activeTab() === 'progress',
-        'text-gray-500': activeTab() !== 'progress'
-      }"
-      (click)="setActiveTab('progress')"
-    >
-      My Progress
-    </button>
-  </div>
-
-  <!-- Tab Content: Library -->
-  @if (activeTab() === 'library') {
-    @if (loading()) {
+  <!-- Loading State -->
+  @if (loading()) {
     <div class="flex items-center justify-center min-h-[60vh]">
       <div class="text-center">
         <div class="spinner w-12 h-12 mx-auto mb-4"></div>
-        <p class="text-[var(--text-secondary)]">Loading content...</p>
+        <p class="text-text-secondary">Loading content...</p>
       </div>
     </div>
   } @else {
-    <!-- Progress Banner -->
-    <div class="progress-banner card-theme card-orange">
-      <div class="banner-content">
-        <p class="banner-text">
-          <span class="banner-stat">{{ completedCount() }} lessons completed</span>
-          <span class="banner-separator">|</span>
-          <span class="banner-stat">{{ totalPoints() }} credit points earned</span>
-        </p>
+
+    <!-- My Progress Hero (Gamification Hub) -->
+    <div class="dashboard-card mb-8">
+      <h2 class="font-display font-bold text-xl text-text-primary mb-6">My Progress</h2>
+
+      <!-- Stats Row -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <!-- Lessons Completed -->
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full bg-hive-100 flex items-center justify-center shrink-0">
+            <lucide-angular [img]="BookOpen" class="w-6 h-6 text-hive-600"></lucide-angular>
+          </div>
+          <div>
+            <p class="text-2xl font-bold text-text-primary">{{ completedCount() }}</p>
+            <p class="text-sm text-text-secondary">Lessons Completed</p>
+          </div>
+        </div>
+
+        <!-- Points Earned -->
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full bg-honey-100 flex items-center justify-center shrink-0">
+            <lucide-angular [img]="Zap" class="w-6 h-6 text-honey-600"></lucide-angular>
+          </div>
+          <div>
+            <p class="text-2xl font-bold text-text-primary">{{ totalPoints() }}</p>
+            <p class="text-sm text-text-secondary">Points Earned</p>
+          </div>
+        </div>
+
+        <!-- Current Rank -->
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center shrink-0">
+            <lucide-angular [img]="GraduationCap" class="w-6 h-6 text-gray-700"></lucide-angular>
+          </div>
+          <div>
+            <p class="text-2xl font-bold text-text-primary">{{ currentRank() }}</p>
+            <p class="text-sm text-text-secondary">Current Rank</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Badges Showcase -->
+      <div class="border-t border-cream-200 pt-6">
+        <h3 class="text-sm font-bold text-text-secondary uppercase tracking-wide mb-4">Achievements</h3>
+        <div class="flex flex-wrap gap-4">
+          @for (badge of badges(); track badge.id) {
+            <div
+              class="relative group"
+              [class.opacity-50]="!badge.isUnlocked"
+            >
+              <div
+                class="w-16 h-16 rounded-full flex items-center justify-center transition-transform hover:scale-110"
+                [class.bg-hive-100]="badge.isUnlocked && (badge.icon === 'book-open' || badge.icon === 'graduation-cap')"
+                [class.bg-honey-100]="badge.isUnlocked && (badge.icon === 'zap' || badge.icon === 'trophy')"
+                [class.bg-success-light]="badge.isUnlocked && badge.icon === 'award'"
+                [class.bg-gray-200]="!badge.isUnlocked"
+              >
+                @if (!badge.isUnlocked) {
+                  <lucide-angular [img]="Lock" class="w-7 h-7 text-gray-500"></lucide-angular>
+                } @else if (badge.icon === 'book-open') {
+                  <lucide-angular [img]="BookOpen" class="w-7 h-7 text-hive-600"></lucide-angular>
+                } @else if (badge.icon === 'graduation-cap') {
+                  <lucide-angular [img]="GraduationCap" class="w-7 h-7 text-hive-600"></lucide-angular>
+                } @else if (badge.icon === 'zap') {
+                  <lucide-angular [img]="Zap" class="w-7 h-7 text-honey-600"></lucide-angular>
+                } @else if (badge.icon === 'award') {
+                  <lucide-angular [img]="Award" class="w-7 h-7 text-success-dark"></lucide-angular>
+                } @else if (badge.icon === 'trophy') {
+                  <lucide-angular [img]="Trophy" class="w-7 h-7 text-honey-600"></lucide-angular>
+                }
+              </div>
+              <!-- Tooltip -->
+              <div class="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                {{ badge.name }}
+              </div>
+            </div>
+          }
+        </div>
       </div>
     </div>
 
-    <!-- Recommended Section -->
+    <!-- Recommended for You -->
     @if (recommendedContent().length > 0) {
-      <div class="recommended-section">
-        <h2 class="section-title">
-          Recommended for You (Based on Credit Score {{ creditScore() }})
-        </h2>
-        <div class="recommended-grid">
+      <div class="mb-8">
+        <h2 class="font-display font-bold text-xl text-text-primary mb-2">Recommended for You</h2>
+        <p class="text-sm text-text-secondary mb-6">Based on your Credit Score ({{ creditScore() }})</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           @for (item of recommendedContent(); track item.id) {
-            <div class="content-card">
-              <div class="content-header">
-                <div class="content-type-icon">
-                  <lucide-icon [name]="getContentIcon(item.type)" class="w-5 h-5"></lucide-icon>
-                </div>
-                <span class="content-duration">{{ item.duration }}</span>
+            <div
+              class="dashboard-card hover:shadow-hive transition-all"
+              [class.opacity-60]="item.isLocked"
+            >
+              <!-- Tag -->
+              <div class="flex items-center justify-between mb-4">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-hive-100 text-hive-700 border border-hive-200">
+                  <lucide-angular [img]="getContentIcon(item.type)" class="w-3.5 h-3.5"></lucide-angular>
+                  {{ item.duration }} {{ getContentTypeLabel(item.type) }}
+                </span>
               </div>
-              <h3 class="content-title">{{ item.title }}</h3>
-              <div class="content-meta">
-                <span class="content-tier">{{ item.tier }}</span>
-                <span class="content-points">+{{ item.points }} pts</span>
+
+              <!-- Title -->
+              <h3 class="font-bold text-lg text-text-primary mb-4">{{ item.title }}</h3>
+
+              <!-- Reward & Action -->
+              <div class="flex items-center justify-between">
+                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-semibold text-honey-600 border-2 border-honey-200 bg-honey-50">
+                  <lucide-angular [img]="Zap" class="w-4 h-4"></lucide-angular>
+                  +{{ item.points }} Points
+                </span>
+
+                @if (item.isLocked) {
+                  <div class="flex items-center gap-2 text-text-secondary text-sm">
+                    <lucide-angular [img]="Lock" class="w-4 h-4"></lucide-angular>
+                    <span>Requires {{ item.requiredScore || 700 }}</span>
+                  </div>
+                } @else {
+                  <a
+                    [routerLink]="['/app/learning/lesson', item.id]"
+                    class="btn-primary px-5 py-2 text-sm"
+                  >
+                    Start Lesson
+                  </a>
+                }
               </div>
-              <a [routerLink]="['/app/learning/lesson', item.id]" class="content-link">
-                Start Lesson →
-              </a>
             </div>
           }
         </div>
       </div>
     }
 
-    <!-- All Content Section -->
-    <div class="all-content-section">
-      <h2 class="section-title">All Content</h2>
+    <!-- Content Library (The Curriculum) -->
+    <div class="mb-8">
+      <h2 class="font-display font-bold text-xl text-text-primary mb-6">Content Library</h2>
 
       <!-- Tier Filters -->
-      <div class="tier-filters">
+      <div class="flex flex-wrap gap-2 mb-6">
         @for (tier of tiers; track tier) {
           <button
-            class="tier-filter"
-            [ngClass]="{
-              'tier-filter-active': selectedTier() === tier,
-              'tier-filter-inactive': selectedTier() !== tier
-            }"
+            type="button"
+            class="px-4 py-2 rounded-full text-sm font-medium transition-all"
+            [class.bg-hive-500]="selectedTier() === tier"
+            [class.text-white]="selectedTier() === tier"
+            [class.bg-cream-100]="selectedTier() !== tier"
+            [class.text-text-secondary]="selectedTier() !== tier"
+            [class.hover:bg-cream-200]="selectedTier() !== tier"
             (click)="filterByTier(tier)"
           >
             {{ tier }}
@@ -109,44 +169,69 @@
       </div>
 
       <!-- Content List -->
-      <div class="content-list">
+      <div class="space-y-3">
         @for (item of filteredContent(); track item.id) {
-          <div class="content-list-item">
-            <div class="content-list-check">
+          <div class="dashboard-card flex items-center gap-4 hover:shadow-hive transition-all">
+            <!-- Icon -->
+            <div class="shrink-0">
+              <lucide-angular
+                [img]="getContentIcon(item.type)"
+                class="w-6 h-6"
+                [class.text-hive-500]="item.type === 'article'"
+                [class.text-honey-500]="item.type === 'video'"
+              ></lucide-angular>
+            </div>
+
+            <!-- Content Info -->
+            <div class="flex-1 min-w-0">
+              <h3 class="font-semibold text-base text-text-primary mb-1 truncate">{{ item.title }}</h3>
+              <div class="flex items-center gap-3 text-sm text-text-secondary">
+                <span class="px-2 py-0.5 rounded-full bg-cream-100 text-text-secondary text-xs font-medium">
+                  {{ item.tier }}
+                </span>
+                <span>{{ item.duration }}</span>
+                <span class="text-honey-600 font-semibold">+{{ item.points }} pts</span>
+              </div>
+            </div>
+
+            <!-- Status & Action -->
+            <div class="shrink-0">
               @if (item.isCompleted) {
-                <lucide-icon [name]="Check" class="w-5 h-5 text-success"></lucide-icon>
+                <div class="flex items-center gap-2">
+                  <span class="badge-success">
+                    <lucide-angular [img]="CheckCircle" class="w-4 h-4 mr-1"></lucide-angular>
+                    Completed
+                  </span>
+                </div>
+              } @else if (item.isLocked) {
+                <div class="flex items-center gap-2 text-text-secondary">
+                  <lucide-angular [img]="Lock" class="w-5 h-5"></lucide-angular>
+                  <span class="text-sm">Requires {{ item.requiredScore || 700 }} Score</span>
+                </div>
               } @else {
-                <div class="check-placeholder"></div>
+                <a
+                  [routerLink]="['/app/learning/lesson', item.id]"
+                  class="btn-outline px-4 py-2 text-sm"
+                >
+                  Start
+                </a>
               }
             </div>
-            <div class="content-list-info">
-              <div class="content-list-header">
-                <lucide-icon [name]="getContentIcon(item.type)" class="w-4 h-4 text-gray-500"></lucide-icon>
-                <h3 class="content-list-title">{{ item.title }}</h3>
-              </div>
-              <div class="content-list-meta">
-                <span class="content-list-tier">{{ item.tier }}</span>
-                <span class="content-list-duration">{{ item.duration }}</span>
-                <span class="content-list-points">+{{ item.points }} pts</span>
-              </div>
-            </div>
-            <a [routerLink]="['/app/learning/lesson', item.id]" class="content-list-link">
-              View →
-            </a>
           </div>
         }
       </div>
 
+      <!-- Empty State -->
       @if (filteredContent().length === 0) {
-        <div class="empty-state">
-          <p class="text-gray-500">No content found in this tier.</p>
+        <div class="dashboard-card text-center py-12">
+          <p class="text-text-secondary">No content found in this tier.</p>
         </div>
       }
     </div>
-    }
+
   }
 
-  <!-- Tab Content: Budget Assistant -->
+  <!-- Budget Assistant Tab -->
   @if (activeTab() === 'budget') {
     <app-budget-assistant></app-budget-assistant>
   }

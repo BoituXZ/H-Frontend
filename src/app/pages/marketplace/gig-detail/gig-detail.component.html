@@ -1,119 +1,216 @@
-<div class="page-wrapper">
+<div class="min-h-screen bg-ui-bg">
   @if (loading()) {
     <div class="flex items-center justify-center min-h-[60vh]">
       <div class="text-center">
-        <div class="spinner w-12 h-12 mx-auto mb-4"></div>
-        <p class="text-[var(--text-secondary)]">Loading gig details...</p>
+        <div class="w-12 h-12 border-4 border-hive-200 border-t-hive-500 rounded-full animate-spin mx-auto mb-4"></div>
+        <p class="text-text-secondary">Loading gig details...</p>
       </div>
     </div>
   } @else if (gig(); as gigData) {
-    <!-- Header -->
-    <div class="detail-header mb-6">
-      <button (click)="goBack()" class="back-button">
+    <!-- Back Button -->
+    <div class="p-4 md:p-6">
+      <button
+        (click)="goBack()"
+        class="flex items-center gap-2 text-text-secondary hover:text-text-primary transition-colors mb-4"
+      >
         <lucide-icon [name]="ArrowLeft" class="w-5 h-5"></lucide-icon>
-        Back
+        <span class="font-medium">Back to Marketplace</span>
       </button>
-      <h1 class="text-2xl font-display font-bold text-hive-900">{{ gigData.title }}</h1>
     </div>
 
-    <div class="detail-content">
-      <!-- Main Info Section -->
-      <div class="info-section">
-        <!-- Provider Info -->
-        <div class="provider-section mb-6">
-          <div class="flex items-center justify-between">
-            <div>
-              <h2 class="text-lg font-semibold text-hive-900">{{ gigData.providerName }}</h2>
-              <div class="flex items-center gap-2 mt-1">
-                <lucide-icon [name]="Star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></lucide-icon>
-                <span class="text-sm font-medium">{{ gigData.rating }}</span>
-                <span class="text-sm text-gray-500">({{ gigData.reviewCount }} reviews)</span>
+    <!-- Two Column Layout -->
+    <div class="px-4 md:px-6 pb-8 max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Left Column: Content (2/3 width) -->
+        <div class="lg:col-span-2 space-y-6">
+          <!-- Hero Section -->
+          <div class="dashboard-card">
+            <div class="flex items-start justify-between mb-4">
+              <div class="flex-1">
+                <h1 class="text-3xl font-bold text-text-primary mb-3">{{ gigData.title }}</h1>
+                <span class="inline-block bg-hive-50 text-hive-600 px-3 py-1 rounded-full text-sm font-semibold">
+                  {{ gigData.category }}
+                </span>
               </div>
-            </div>
-            <div class="rate-display">
-              <span class="text-2xl font-bold text-hive-900">{{ formatRate(gigData) }}</span>
+              <div class="text-right">
+                <div class="text-3xl font-bold text-honey-600">{{ formatRate(gigData) }}</div>
+                <div class="text-sm text-text-secondary">{{ gigData.rateType === 'hourly' ? 'per hour' : 'fixed price' }}</div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Description -->
-        <div class="description-section mb-6">
-          <h3 class="section-title">Description</h3>
-          <p class="description-text">{{ gigData.description }}</p>
-        </div>
+          <!-- Provider Card -->
+          <div class="dashboard-card">
+            <h2 class="text-xl font-bold text-text-primary mb-4">About the Provider</h2>
+            <div class="flex items-start gap-4 mb-4">
+              <!-- Avatar -->
+              <div class="w-16 h-16 rounded-full bg-hive-100 text-hive-600 flex items-center justify-center font-bold text-xl shrink-0">
+                {{ getInitials(gigData.provider.name) }}
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-1">
+                  <h3 class="text-xl font-semibold text-text-primary">{{ gigData.provider.name }}</h3>
+                  @if (gigData.provider.isVerified) {
+                    <lucide-icon [name]="CheckCircle" class="w-5 h-5 text-hive-500"></lucide-icon>
+                  }
+                </div>
+                <div class="flex items-center gap-1 bg-hive-50 px-2 py-1 rounded-full w-fit mb-3">
+                  <lucide-icon [name]="Star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></lucide-icon>
+                  <span class="text-sm font-semibold text-hive-600">{{ gigData.provider.rating }}</span>
+                  <span class="text-sm text-text-secondary">({{ gigData.reviewCount || 0 }} reviews)</span>
+                </div>
 
-        <!-- Availability -->
-        <div class="availability-section mb-6">
-          <h3 class="section-title">Availability</h3>
-          <p class="availability-text">{{ gigData.availability || 'Saturdays & Sundays' }}</p>
-        </div>
-
-        <!-- Reviews -->
-        <div class="reviews-section">
-          <h3 class="section-title">Reviews</h3>
-          <div class="reviews-list">
-            @for (review of reviews; track review.name) {
-              <div class="review-item">
-                <div class="review-header">
-                  <span class="reviewer-name">{{ review.name }}</span>
-                  <div class="flex items-center gap-1">
-                    @for (i of [1,2,3,4,5]; track i) {
-                      <lucide-icon
-                        [name]="Star"
-                        class="w-4 h-4"
-                        [ngClass]="i <= review.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'"
-                      ></lucide-icon>
-                    }
+                <!-- Provider Stats Grid -->
+                <div class="grid grid-cols-3 gap-4 pt-3 border-t border-cream-300">
+                  <div class="text-center">
+                    <div class="text-2xl font-bold text-text-primary">{{ gigData.provider.jobsCompleted || 0 }}</div>
+                    <div class="text-xs text-text-secondary">Jobs Completed</div>
+                  </div>
+                  <div class="text-center">
+                    <div class="text-2xl font-bold text-hive-600">{{ gigData.provider.trustScore || 0 }}</div>
+                    <div class="text-xs text-text-secondary">Trust Score</div>
+                  </div>
+                  <div class="text-center">
+                    <div class="text-2xl font-bold text-text-primary">{{ gigData.provider.memberSince || '2023' }}</div>
+                    <div class="text-xs text-text-secondary">Member Since</div>
                   </div>
                 </div>
-                <p class="review-comment">{{ review.comment }}</p>
               </div>
+            </div>
+
+            <!-- Location & Availability -->
+            <div class="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-cream-300">
+              <div class="flex items-center gap-2">
+                <lucide-icon [name]="MapPin" class="w-5 h-5 text-hive-500"></lucide-icon>
+                <div>
+                  <div class="text-xs text-text-secondary">Location</div>
+                  <div class="font-medium text-text-primary">{{ gigData.location }}</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <lucide-icon [name]="Clock" class="w-5 h-5 text-hive-500"></lucide-icon>
+                <div>
+                  <div class="text-xs text-text-secondary">Availability</div>
+                  <div class="font-medium text-text-primary">{{ gigData.availability }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="dashboard-card">
+            <h2 class="text-xl font-bold text-text-primary mb-3">Description</h2>
+            <p class="text-text-secondary leading-relaxed">{{ gigData.description }}</p>
+          </div>
+
+          <!-- Reviews Section -->
+          <div class="dashboard-card">
+            <h2 class="text-xl font-bold text-text-primary mb-4">Reviews</h2>
+            @if (gigData.reviews && gigData.reviews.length > 0) {
+              <div class="space-y-4">
+                @for (review of gigData.reviews; track review.name) {
+                  <div class="border-b border-cream-200 pb-4 last:border-0 last:pb-0">
+                    <div class="flex items-center justify-between mb-2">
+                      <span class="font-semibold text-text-primary">{{ review.name }}</span>
+                      <div class="flex items-center gap-0.5">
+                        @for (i of getRatingArray(review.rating); track i) {
+                          <lucide-icon
+                            [name]="Star"
+                            [class]="i <= review.rating
+                              ? 'w-4 h-4 text-yellow-400 fill-yellow-400'
+                              : 'w-4 h-4 text-cream-300'"
+                          ></lucide-icon>
+                        }
+                      </div>
+                    </div>
+                    <p class="text-sm text-text-secondary">{{ review.comment }}</p>
+                  </div>
+                }
+              </div>
+            } @else {
+              <p class="text-text-secondary">No reviews yet.</p>
             }
           </div>
         </div>
-      </div>
 
-      <!-- Booking Section (Sticky) -->
-      @if (showBookingSection()) {
-        <div class="booking-section">
-          <div class="booking-card">
-            <h3 class="booking-title">Book This Gig</h3>
+        <!-- Right Column: Booking Widget (1/3 width, sticky) -->
+        <div class="lg:col-span-1">
+          <div class="dashboard-card sticky top-6 shadow-lg">
+            <h3 class="text-xl font-bold text-text-primary mb-4">Book This Gig</h3>
 
+            <!-- Date Picker -->
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-text-secondary mb-2">
+                <lucide-icon [name]="Calendar" class="w-4 h-4 inline mr-1"></lucide-icon>
+                Select Date
+              </label>
+              <input
+                type="date"
+                [(ngModel)]="selectedDate"
+                [min]="selectedDate()"
+                class="input-field"
+              />
+            </div>
+
+            <!-- Hours Slider (only for hourly gigs) -->
             @if (gigData.rateType === 'hourly') {
-              <div class="hours-selector">
-                <label class="hours-label">How many hours?</label>
-                <div class="hours-input-group">
+              <div class="mb-6">
+                <label class="block text-sm font-medium text-text-secondary mb-2">
+                  Hours Needed
+                </label>
+                <div class="space-y-3">
                   <input
                     type="range"
                     min="1"
-                    max="5"
+                    max="10"
                     [value]="hours()"
                     (input)="updateHours(+$any($event.target).value)"
-                    class="hours-slider"
+                    class="w-full h-2 bg-cream-200 rounded-lg appearance-none cursor-pointer accent-honey-500"
                   />
-                  <div class="hours-display">
-                    <span class="hours-value">{{ hours() }}</span>
-                    <span class="hours-unit">hour{{ hours() !== 1 ? 's' : '' }}</span>
+                  <div class="flex justify-center items-baseline gap-1">
+                    <span class="text-3xl font-bold text-text-primary">{{ hours() }}</span>
+                    <span class="text-sm text-text-secondary">{{ hours() === 1 ? 'hour' : 'hours' }}</span>
                   </div>
                 </div>
               </div>
             }
 
-            <div class="total-section">
-              <span class="total-label">Total:</span>
-              <span class="total-amount">${{ totalCost().toFixed(2) }}</span>
+            <!-- Price Summary -->
+            <div class="bg-cream-100 rounded-xl p-4 mb-4 space-y-2">
+              <div class="flex justify-between items-center">
+                <span class="text-text-secondary">Subtotal:</span>
+                <span class="font-semibold text-text-primary">${{ totalCost().toFixed(2) }}</span>
+              </div>
+              <div class="flex justify-between items-center pt-2 border-t border-cream-300">
+                <span class="text-sm text-text-secondary">Deposit (50%):</span>
+                <span class="text-sm font-medium text-honey-600">${{ depositAmount().toFixed(2) }}</span>
+              </div>
+              <div class="flex justify-between items-center pt-2 border-t border-cream-300">
+                <span class="font-bold text-text-primary">Total:</span>
+                <span class="text-2xl font-bold text-honey-600">${{ totalCost().toFixed(2) }}</span>
+              </div>
             </div>
 
-            <button (click)="bookGig()" class="btn-primary w-full">
-              Book This Gig
+            <!-- Book Button -->
+            <button (click)="bookGig()" class="btn-primary w-full text-center">
+              Pay Deposit & Book Now
             </button>
+
+            <p class="text-xs text-text-tertiary text-center mt-3">
+              You'll pay ${{ depositAmount().toFixed(2) }} now. The remaining balance is due upon completion.
+            </p>
           </div>
         </div>
-      }
+      </div>
     </div>
   } @else {
-    <div class="error-state">
-      <p class="text-gray-500">Gig not found.</p>
+    <!-- Error State -->
+    <div class="flex flex-col items-center justify-center min-h-[60vh] text-center p-6">
+      <h2 class="text-2xl font-bold text-text-primary mb-2">Gig not found</h2>
+      <p class="text-text-secondary mb-4">This gig may have been removed or doesn't exist.</p>
+      <button (click)="goBack()" class="btn-outline">
+        Back to Marketplace
+      </button>
     </div>
   }
 </div>

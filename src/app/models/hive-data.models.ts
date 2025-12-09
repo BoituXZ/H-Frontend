@@ -52,14 +52,27 @@ export interface Gig {
   id: string;
   title: string;
   description: string;
-  category: string;
+  category: 'Academic' | 'Creative' | 'Tech' | 'Physical';
   rate: number;
   rateType: 'hourly' | 'fixed';
-  rating: number;
-  reviewCount: number;
-  providerName: string;
-  providerId: string;
+  provider: {
+    id: string;
+    name: string;
+    avatar: string;
+    rating: number;
+    trustScore: number;
+    isVerified: boolean;
+    memberSince?: string;
+    jobsCompleted?: number;
+  };
+  location: string;
   availability: string;
+  reviewCount?: number;
+  reviews?: Array<{
+    name: string;
+    rating: number;
+    comment: string;
+  }>;
 }
 
 export interface Booking {
@@ -81,6 +94,8 @@ export interface LearningContent {
   points: number;
   tier: 'Beginner' | 'Growing' | 'Established' | 'Trusted';
   isCompleted: boolean;
+  isLocked: boolean;
+  requiredScore?: number;
   category: string;
 }
 
