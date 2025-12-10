@@ -563,7 +563,7 @@ export class MockDataService {
       },
       {
         id: 'circle-3',
-        name: 'Mahachi Family Trust',
+        name: 'Ngwenya Family Trust',
         status: 'active',
         memberCount: 9,
         maxMembers: 12,
@@ -992,7 +992,7 @@ export class MockDataService {
       },
       '3': {
         id: 'circle-3',
-        name: 'Mahachi Family Trust',
+        name: 'Ngwenya Family Trust',
         description: 'Family savings circle for long-term financial planning and wealth building.',
         contributionAmount: 30,
         frequency: 'monthly',

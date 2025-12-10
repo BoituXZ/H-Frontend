@@ -59,8 +59,8 @@ export class TransactPage implements OnInit {
 
   // Mock user data (replace with actual auth service)
   currentUser = {
-    name: 'John Mutasa',
-    phone: '+263771234567'
+    name: 'Boitumelo Ngwenya',
+    phone: '+263789287766'
   };
 
   ngOnInit(): void {
