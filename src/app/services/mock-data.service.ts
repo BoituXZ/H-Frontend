@@ -23,7 +23,12 @@ import {
   Loan,
   ServiceProduct,
 } from '../models/hive-data.models';
-import { Circle, CircleDetail, CircleMember, PayoutEntry } from '../models/circle.model';
+import {
+  Circle,
+  CircleDetail,
+  CircleMember,
+  PayoutEntry,
+} from '../models/circle.model';
 
 @Injectable({
   providedIn: 'root',
@@ -31,7 +36,7 @@ import { Circle, CircleDetail, CircleMember, PayoutEntry } from '../models/circl
 export class MockDataService {
   private http = inject(HttpClient);
   private apiUrl = environment.apiUrl;
-  
+
   // BehaviorSubjects for reactive data
   private userProfileSubject = new BehaviorSubject<UserProfile | null>(null);
   private walletDataSubject = new BehaviorSubject<WalletData | null>(null);
@@ -67,10 +72,12 @@ export class MockDataService {
     if (storefront) {
       // Calculate analytics from storefront data
       const totalRevenue = storefront.orders
-        .filter(o => o.status === 'completed')
+        .filter((o) => o.status === 'completed')
         .reduce((sum, o) => sum + o.total, 0);
-      const completedOrders = storefront.orders.filter(o => o.status === 'completed').length;
-      
+      const completedOrders = storefront.orders.filter(
+        (o) => o.status === 'completed',
+      ).length;
+
       return of({
         revenue: totalRevenue,
         totalOrders: storefront.orders.length,
@@ -80,13 +87,13 @@ export class MockDataService {
           { label: 'Nov', amount: totalRevenue * 0.4 },
           { label: 'Dec', amount: totalRevenue * 0.6 },
         ],
-        topProducts: storefront.products.map(p => ({
+        topProducts: storefront.products.map((p) => ({
           name: p.name,
-          sales: storefront.orders.filter(o => 
-            o.items.some(item => item.productName === p.name)
+          sales: storefront.orders.filter((o) =>
+            o.items.some((item) => item.productName === p.name),
           ).length,
           revenue: storefront.orders
-            .filter(o => o.items.some(item => item.productName === p.name))
+            .filter((o) => o.items.some((item) => item.productName === p.name))
             .reduce((sum, o) => sum + o.total, 0),
         })),
       }).pipe(delay(300));
@@ -102,7 +109,9 @@ export class MockDataService {
         return of(storefront).pipe(delay(300));
       }
       const mockStorefront = this.getMockStorefront();
-      return of(mockStorefront.slug === slug ? mockStorefront : null).pipe(delay(500));
+      return of(mockStorefront.slug === slug ? mockStorefront : null).pipe(
+        delay(500),
+      );
     }
     // Fallback to HTTP only if useMockData is false
     return this.http.get<Storefront>(`${this.apiUrl}/storefronts/${slug}`).pipe(
@@ -113,8 +122,10 @@ export class MockDataService {
           return of(storefront).pipe(delay(300));
         }
         const mockStorefront = this.getMockStorefront();
-        return of(mockStorefront.slug === slug ? mockStorefront : null).pipe(delay(500));
-      })
+        return of(mockStorefront.slug === slug ? mockStorefront : null).pipe(
+          delay(500),
+        );
+      }),
     );
   }
 
@@ -203,7 +214,7 @@ export class MockDataService {
         isLocked: false,
         category: 'Business',
         content:
-          'Learn how to turn your weekend gig into a full-time business. In this comprehensive video lesson, we cover essential strategies for scaling your side hustle:\n\nPricing Strategies: Learn how to price your services to ensure profitability. We discuss cost-plus pricing, value-based pricing, and competitive analysis. Discover how to increase prices without losing customers.\n\nMarketing on a Budget: Master low-cost marketing techniques using WhatsApp Status, Facebook groups, and word-of-mouth. Learn how to create compelling content that attracts customers without expensive advertising.\n\nWhen to Hire Help: Understand the signs that indicate you\'re ready to hire employees or contractors. Learn how to calculate if hiring will increase profits, and how to find reliable help without going into debt.\n\nTime Management: Discover techniques to maximize productivity and balance your side hustle with your day job. Learn when to quit your job and go full-time.\n\nFinancial Management: Understand how to separate business and personal finances, track expenses, and prepare for taxes. Learn when to reinvest profits vs. taking income.',
+          "Learn how to turn your weekend gig into a full-time business. In this comprehensive video lesson, we cover essential strategies for scaling your side hustle:\n\nPricing Strategies: Learn how to price your services to ensure profitability. We discuss cost-plus pricing, value-based pricing, and competitive analysis. Discover how to increase prices without losing customers.\n\nMarketing on a Budget: Master low-cost marketing techniques using WhatsApp Status, Facebook groups, and word-of-mouth. Learn how to create compelling content that attracts customers without expensive advertising.\n\nWhen to Hire Help: Understand the signs that indicate you're ready to hire employees or contractors. Learn how to calculate if hiring will increase profits, and how to find reliable help without going into debt.\n\nTime Management: Discover techniques to maximize productivity and balance your side hustle with your day job. Learn when to quit your job and go full-time.\n\nFinancial Management: Understand how to separate business and personal finances, track expenses, and prepare for taxes. Learn when to reinvest profits vs. taking income.",
       },
       {
         id: '4',
@@ -413,7 +424,7 @@ export class MockDataService {
 
   getMyBookings(type: 'customer' | 'provider'): Observable<Booking[]> {
     return this.bookingsSubject.asObservable().pipe(
-      map((bookings) => bookings.filter(b => b.type === type)),
+      map((bookings) => bookings.filter((b) => b.type === type)),
       delay(300),
     );
   }
@@ -539,9 +550,11 @@ export class MockDataService {
     ];
 
     const walletData: WalletData = {
-      balance: 225.50, // 145.50 + 80 (storefront sale)
+      balance: 225.5, // 145.50 + 80 (storefront sale)
       lastUpdated: '2 mins ago',
-      transactions: transactions.sort((a, b) => b.date.getTime() - a.date.getTime()),
+      transactions: transactions.sort(
+        (a, b) => b.date.getTime() - a.date.getTime(),
+      ),
     };
     this.walletDataSubject.next(walletData);
 
@@ -570,7 +583,7 @@ export class MockDataService {
       },
       {
         id: 'circle-4',
-        name: 'Kuwadzana Ride Club',
+        name: 'MSU Ride Club',
         status: 'completed',
         memberCount: 10,
         maxMembers: 10,
@@ -608,7 +621,9 @@ export class MockDataService {
         description: 'Circle participation',
       },
       {
-        date: new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+        date: new Date(
+          today.getTime() - 30 * 24 * 60 * 60 * 1000,
+        ).toISOString(),
         event: 'Completed Kuwadzana Ride Club',
         pointsChange: 50,
         description: 'Circle completion',
@@ -652,10 +667,12 @@ export class MockDataService {
         id: 'loan-active-1',
         type: 'Short-Term Loan',
         amount: 100,
-        remainingAmount: 82.50,
+        remainingAmount: 82.5,
         progress: 18,
         status: 'active',
-        nextPaymentDate: new Date(today.getTime() + 15 * 24 * 60 * 60 * 1000).toISOString(),
+        nextPaymentDate: new Date(
+          today.getTime() + 15 * 24 * 60 * 60 * 1000,
+        ).toISOString(),
       },
       {
         id: 'loan-completed-1',
@@ -683,7 +700,8 @@ export class MockDataService {
       id: 'storefront-1',
       name: "Taku's Tech Solutions",
       slug: 'takus-tech',
-      description: 'Professional IT support and digital services for Harare SMEs.',
+      description:
+        'Professional IT support and digital services for Harare SMEs.',
       logoUrl: '',
       bannerUrl: '',
       ownerId: 'user-takudzwanashe',
@@ -739,7 +757,8 @@ export class MockDataService {
       {
         id: 'gig-1',
         title: 'Network & WiFi Installation',
-        description: 'Professional network setup and WiFi installation for homes and small businesses in Harare.',
+        description:
+          'Professional network setup and WiFi installation for homes and small businesses in Harare.',
         category: 'Tech',
         rate: 45,
         rateType: 'fixed',
@@ -760,14 +779,16 @@ export class MockDataService {
           {
             name: 'Farai Z.',
             rating: 5,
-            comment: 'Excellent service! Network setup was quick and professional.',
+            comment:
+              'Excellent service! Network setup was quick and professional.',
           },
         ],
       },
       {
         id: 'gig-2',
         title: 'ZIMSEC Math Tutoring',
-        description: 'Expert math tutoring for high school students. Specializing in algebra, calculus, and test prep.',
+        description:
+          'Expert math tutoring for high school students. Specializing in algebra, calculus, and test prep.',
         category: 'Academic',
         rate: 5,
         rateType: 'hourly',
@@ -789,7 +810,8 @@ export class MockDataService {
       {
         id: 'gig-3',
         title: 'Event Photography',
-        description: 'Professional photography for events, portraits, and product shoots.',
+        description:
+          'Professional photography for events, portraits, and product shoots.',
         category: 'Creative',
         rate: 50,
         rateType: 'fixed',
@@ -844,9 +866,14 @@ export class MockDataService {
   }
 
   getWalletData(): Observable<WalletData> {
-    return this.walletDataSubject.asObservable().pipe(
-      map(data => data || { balance: 0, lastUpdated: 'Never', transactions: [] })
-    );
+    return this.walletDataSubject
+      .asObservable()
+      .pipe(
+        map(
+          (data) =>
+            data || { balance: 0, lastUpdated: 'Never', transactions: [] },
+        ),
+      );
   }
 
   getCircles(): Observable<Circle[]> {
@@ -899,7 +926,7 @@ export class MockDataService {
         ...current,
         balance: newBalance,
         transactions: [transaction, ...current.transactions].sort(
-          (a, b) => b.date.getTime() - a.date.getTime()
+          (a, b) => b.date.getTime() - a.date.getTime(),
         ),
         lastUpdated: 'Just now',
       };
@@ -920,7 +947,7 @@ export class MockDataService {
 
   updateCircle(circle: Circle): void {
     const current = this.circlesSubject.value;
-    const index = current.findIndex(c => c.id === circle.id);
+    const index = current.findIndex((c) => c.id === circle.id);
     if (index >= 0) {
       const updated = [...current];
       updated[index] = circle;
@@ -949,7 +976,7 @@ export class MockDataService {
 
   updateLoan(loan: Loan): void {
     const current = this.loansSubject.value;
-    const index = current.findIndex(l => l.id === loan.id);
+    const index = current.findIndex((l) => l.id === loan.id);
     if (index >= 0) {
       const updated = [...current];
       updated[index] = loan;
@@ -962,12 +989,13 @@ export class MockDataService {
   getMockCircleDetail(id: string): CircleDetail | null {
     // Normalize circleId (handle both 'circle-1' and '1' formats)
     const normalizedId = id.replace('circle-', '');
-    
+
     const mockDetails: Record<string, CircleDetail> = {
       '1': {
         id: 'circle-1',
         name: 'Harare CBD Tech Dealers',
-        description: 'A savings circle for tech professionals and entrepreneurs in Harare CBD. Building wealth together through consistent contributions.',
+        description:
+          'A savings circle for tech professionals and entrepreneurs in Harare CBD. Building wealth together through consistent contributions.',
         contributionAmount: 50,
         frequency: 'monthly',
         maxMembers: 10,
@@ -980,7 +1008,8 @@ export class MockDataService {
       '2': {
         id: 'circle-2',
         name: 'MSU Alumni Squad',
-        description: 'Midlands State University alumni supporting each other\'s financial growth. Monthly contributions to help members achieve their goals.',
+        description:
+          "Midlands State University alumni supporting each other's financial growth. Monthly contributions to help members achieve their goals.",
         contributionAmount: 20,
         frequency: 'monthly',
         maxMembers: 10,
@@ -993,7 +1022,8 @@ export class MockDataService {
       '3': {
         id: 'circle-3',
         name: 'Ngwenya Family Trust',
-        description: 'Family savings circle for long-term financial planning and wealth building.',
+        description:
+          'Family savings circle for long-term financial planning and wealth building.',
         contributionAmount: 30,
         frequency: 'monthly',
         maxMembers: 12,
@@ -1006,7 +1036,8 @@ export class MockDataService {
       '4': {
         id: 'circle-4',
         name: 'Kuwadzana Ride Club',
-        description: 'Completed savings circle for transportation and vehicle expenses.',
+        description:
+          'Completed savings circle for transportation and vehicle expenses.',
         contributionAmount: 25,
         frequency: 'monthly',
         maxMembers: 10,
@@ -1024,108 +1055,108 @@ export class MockDataService {
   getMockCircleMembers(circleId: string): CircleMember[] {
     // Normalize circleId (handle both 'circle-1' and '1' formats)
     const normalizedId = circleId.replace('circle-', '');
-    
+
     const mockMembers: Record<string, CircleMember[]> = {
       '1': [
         // Harare CBD Tech Dealers (8/10 Members)
-        { 
-          id: 'm1', 
-          name: 'Takudzwanashe M.', 
+        {
+          id: 'm1',
+          name: 'Takudzwanashe M.',
           avatarUrl: 'TM',
           paymentStatus: 'paid',
           isCreator: false,
-          position: 1
+          position: 1,
         },
-        { 
-          id: 'm2', 
-          name: 'Blessing Chidziva', 
+        {
+          id: 'm2',
+          name: 'Blessing Chidziva',
           avatarUrl: 'BC',
           paymentStatus: 'paid',
           isCreator: true,
-          position: 2
+          position: 2,
         },
-        { 
-          id: 'm3', 
-          name: 'Farai Gwaradzimba', 
+        {
+          id: 'm3',
+          name: 'Farai Gwaradzimba',
           avatarUrl: 'FG',
           paymentStatus: 'paid',
           isCreator: false,
-          position: 3
+          position: 3,
         },
-        { 
-          id: 'm4', 
-          name: 'Rudo Kanyemba', 
+        {
+          id: 'm4',
+          name: 'Rudo Kanyemba',
           avatarUrl: 'RK',
           paymentStatus: 'paid',
           isCreator: false,
-          position: 4
+          position: 4,
         },
-        { 
-          id: 'm5', 
-          name: 'Tendai Zvobgo', 
+        {
+          id: 'm5',
+          name: 'Tendai Zvobgo',
           avatarUrl: 'TZ',
           paymentStatus: 'paid',
           isCreator: false,
-          position: 5
+          position: 5,
         },
-        { 
-          id: 'm6', 
-          name: 'Nyasha Moyo', 
+        {
+          id: 'm6',
+          name: 'Nyasha Moyo',
           avatarUrl: 'NM',
           paymentStatus: 'paid',
           isCreator: false,
-          position: 6
+          position: 6,
         },
-        { 
-          id: 'm7', 
-          name: 'Sipho Ndlovu', 
+        {
+          id: 'm7',
+          name: 'Sipho Ndlovu',
           avatarUrl: 'SN',
           paymentStatus: 'unpaid',
           isCreator: false,
-          position: 7
+          position: 7,
         },
-        { 
-          id: 'm8', 
-          name: 'Tafadzwa Jere', 
+        {
+          id: 'm8',
+          name: 'Tafadzwa Jere',
           avatarUrl: 'TJ',
           paymentStatus: 'unpaid',
           isCreator: false,
-          position: 8
+          position: 8,
         },
       ],
       '2': [
         // MSU Alumni Squad (4/10 Members)
-        { 
-          id: 'm9', 
-          name: 'Chipo Mhere', 
+        {
+          id: 'm9',
+          name: 'Chipo Mhere',
           avatarUrl: 'CM',
           paymentStatus: 'paid',
           isCreator: true,
-          position: 1
+          position: 1,
         },
-        { 
-          id: 'm10', 
-          name: 'Takudzwanashe M.', 
+        {
+          id: 'm10',
+          name: 'Takudzwanashe M.',
           avatarUrl: 'TM',
           paymentStatus: 'paid',
           isCreator: false,
-          position: 2
+          position: 2,
         },
-        { 
-          id: 'm11', 
-          name: 'Brian Tsumba', 
+        {
+          id: 'm11',
+          name: 'Brian Tsumba',
           avatarUrl: 'BT',
           paymentStatus: 'paid',
           isCreator: false,
-          position: 3
+          position: 3,
         },
-        { 
-          id: 'm12', 
-          name: 'Mercy Dube', 
+        {
+          id: 'm12',
+          name: 'Mercy Dube',
           avatarUrl: 'MD',
           paymentStatus: 'unpaid',
           isCreator: false,
-          position: 4
+          position: 4,
         },
       ],
     };
@@ -1136,7 +1167,7 @@ export class MockDataService {
   getMockCircleTimeline(circleId: string): PayoutEntry[] {
     // Normalize circleId
     const normalizedId = circleId.replace('circle-', '');
-    
+
     const mockTimelines: Record<string, PayoutEntry[]> = {
       '1': [
         {
@@ -1212,7 +1243,8 @@ export class MockDataService {
         id: 'service-4',
         provider: 'ZESA',
         name: 'ZESA Prepaid Token',
-        description: 'Purchase electricity tokens for your prepaid meter. Minimum $5',
+        description:
+          'Purchase electricity tokens for your prepaid meter. Minimum $5',
         price: 'Variable',
         category: 'Utilities',
         icon: 'bolt',
