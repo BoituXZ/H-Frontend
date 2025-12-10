@@ -1,12 +1,6 @@
 <div class="page-wrapper p-4 md:p-6 space-y-6">
   <!-- Page Header -->
-  <app-page-header
-    pageTitle="Dashboard"
-    actionLabel="Settings"
-    [actionIcon]="Settings"
-    (actionClick)="navigateToSettings()"
-  />
-
+  <app-page-header pageTitle="Dashboard" />
   <!-- Loading State -->
   @if (loading()) {
     <div class="flex items-center justify-center min-h-[50vh]">
@@ -18,14 +12,16 @@
   @if (error() && !loading()) {
     <div class="flex items-center justify-center min-h-[50vh]">
       <div class="dashboard-card max-w-md w-full text-center" @fadeIn>
-        <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
-          <lucide-angular [img]="RefreshCw" class="w-8 h-8 text-honey-500"></lucide-angular>
+        <div
+          class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4"
+        >
+          <lucide-angular
+            [img]="RefreshCw"
+            class="w-8 h-8 text-honey-500"
+          ></lucide-angular>
         </div>
         <p class="text-text-secondary mb-6">{{ error() }}</p>
-        <button
-          (click)="loadDashboardData()"
-          class="btn-primary w-full"
-        >
+        <button (click)="loadDashboardData()" class="btn-primary w-full">
           Retry
         </button>
       </div>
@@ -37,100 +33,113 @@
     @if (!loading()) {
       <div class="space-y-6" @fadeIn>
         <!-- Top Bar with Stats -->
-        <div class="top-bar">
-          <div class="stats-grid">
-            <!-- Credit Score -->
-            <div
-              id="credit-score-card"
-              class="stat-card-theme card-blue group cursor-pointer flex flex-col justify-between gap-2"
-              (click)="navigateToScore()"
-            >
-              <div
-                class="stat-icon bg-gradient-to-br from-hive-400 to-hive-600"
-              >
-                <lucide-angular
-                  [img]="TrendingUp"
-                  class="w-6 h-6 text-hive-600"
-                  [strokeWidth]="2"
-                ></lucide-angular>
-              </div>
-              <span
-                class="px-3 py-1 rounded-full text-xs font-semibold bg-cream-100 text-text-secondary"
-                [style.background-color]="getTierColor(data.user.tier) + '20'"
-                [style.color]="getTierColor(data.user.tier)"
-              >
-                {{ data.user.tier }}
-              </span>
-            </div>
-            <div>
-              <p class="text-text-secondary text-sm font-medium mb-1">Credit Score</p>
-              <div class="flex items-baseline gap-2">
-                <h3 class="text-3xl font-display font-bold text-text-primary">{{ data.user.creditScore }}</h3>
-                <span class="text-xs font-medium text-success flex items-center">
-                  +{{ data.user.creditScore - 650 }}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Wallet Balance -->
-          <div
-            class="dashboard-card group hover:shadow-honey cursor-pointer transition-all duration-200"
-            (click)="navigateToWallet()"
-          >
-            <div class="flex items-start justify-between mb-4">
-              <div class="w-12 h-12 rounded-full bg-hive-50 flex items-center justify-center group-hover:bg-hive-100 transition-colors">
-                <lucide-angular
-                  [img]="Wallet"
-                  class="w-6 h-6 text-hive-600"
-                  [strokeWidth]="2"
-                ></lucide-angular>
-              </div>
-              <span
-                class="px-3 py-1 rounded-full text-xs font-semibold"
-                [class.bg-success-light]="data.wallet.isConnected"
-                [class.text-success-dark]="data.wallet.isConnected"
-                [class.bg-cream-100]="!data.wallet.isConnected"
-                [class.text-text-tertiary]="!data.wallet.isConnected"
-              >
-                {{ data.wallet.isConnected ? "Connected" : "No Wallet" }}
-              </span>
-            </div>
-            <div>
-              <p class="text-text-secondary text-sm font-medium mb-1">Wallet Balance</p>
-              <h3 class="text-3xl font-display font-bold text-text-primary">
-                ${{ data.wallet.balance | number: "1.2-2" }}
-              </h3>
-            </div>
-          </div>
-
-          <!-- Active Circle -->
-          @if (data.activeCircle) {
-            <div
-              class="dashboard-card group hover:shadow-honey cursor-pointer transition-all duration-200"
-              (click)="navigateToCircles()"
-            >
-              <div class="flex items-start justify-between mb-4">
-                <div class="w-12 h-12 rounded-full bg-honey-50 flex items-center justify-center group-hover:bg-honey-100 transition-colors">
-                  <lucide-angular
-                    [img]="Users"
-                    class="w-6 h-6 text-honey-600"
-                    [strokeWidth]="2"
-                  ></lucide-angular>
+                <div class="top-bar">
+                  <div class="stats-grid">
+                    <!-- Credit Score Card -->
+                    <div
+                      class="dashboard-card group hover:shadow-honey cursor-pointer transition-all duration-200"
+                      (click)="navigateToScore()"
+                    >
+                      <div class="flex items-start justify-between mb-4">
+                        <div
+                          class="w-12 h-12 rounded-full bg-hive-50 flex items-center justify-center group-hover:bg-hive-100 transition-colors"
+                        >
+                          <lucide-angular
+                            [img]="TrendingUp"
+                            class="w-6 h-6 text-hive-600"
+                            [strokeWidth]="2"
+                          ></lucide-angular>
+                        </div>
+                        <span
+                          class="px-3 py-1 rounded-full text-xs font-semibold"
+                          [style.background-color]="getTierColor(data.user.tier) + '20'"
+                          [style.color]="getTierColor(data.user.tier)"
+                        >
+                          {{ data.user.tier }}
+                        </span>
+                      </div>
+                      <div>
+                        <p class="text-text-secondary text-sm font-medium mb-1">Credit Score</p>
+                        <div class="flex items-baseline gap-2">
+                          <h3 class="text-3xl font-display font-bold text-text-primary">{{ data.user.creditScore }}</h3>
+                          <span class="text-xs font-medium text-success flex items-center">
+                            +{{ data.user.creditScore - 650 }}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+        
+                    <!-- Wallet Balance -->
+                    <div
+                      class="dashboard-card group hover:shadow-honey cursor-pointer transition-all duration-200"
+                      (click)="navigateToWallet()"
+                    >
+                      <div class="flex items-start justify-between mb-4">
+                        <div
+                          class="w-12 h-12 rounded-full bg-hive-50 flex items-center justify-center group-hover:bg-hive-100 transition-colors"
+                        >
+                          <lucide-angular
+                            [img]="Wallet"
+                            class="w-6 h-6 text-hive-600"
+                            [strokeWidth]="2"
+                          ></lucide-angular>
+                        </div>
+                        <span
+                          class="px-3 py-1 rounded-full text-xs font-semibold"
+                          [class.bg-success-light]="data.wallet.isConnected"
+                          [class.text-success-dark]="data.wallet.isConnected"
+                          [class.bg-cream-100]="!data.wallet.isConnected"
+                          [class.text-text-tertiary]="!data.wallet.isConnected"
+                        >
+                          {{ data.wallet.isConnected ? "Connected" : "No Wallet" }}
+                        </span>
+                      </div>
+                      <div>
+                        <p class="text-text-secondary text-sm font-medium mb-1">
+                          Wallet Balance
+                        </p>
+                        <h3 class="text-3xl font-display font-bold text-text-primary">
+                          ${{ data.wallet.balance | number: "1.2-2" }}
+                        </h3>
+                      </div>
+                    </div>
+        
+                    <!-- Active Circle -->
+                    @if (data.activeCircle) {
+                      <div
+                        class="dashboard-card group hover:shadow-honey cursor-pointer transition-all duration-200"
+                        (click)="navigateToCircles()"
+                      >
+                        <div class="flex items-start justify-between mb-4">
+                          <div
+                            class="w-12 h-12 rounded-full bg-honey-50 flex items-center justify-center group-hover:bg-honey-100 transition-colors"
+                          >
+                            <lucide-angular
+                              [img]="Users"
+                              class="w-6 h-6 text-honey-600"
+                              [strokeWidth]="2"
+                            ></lucide-angular>
+                          </div>
+                          <span
+                            class="px-3 py-1 rounded-full text-xs font-semibold bg-honey-50 text-honey-700"
+                          >
+                            {{ data.activeCircle.round }}
+                          </span>
+                        </div>
+                        <div>
+                          <p
+                            class="text-text-secondary text-sm font-medium mb-1 line-clamp-1"
+                          >
+                            {{ data.activeCircle.name }}
+                          </p>
+                          <h3 class="text-3xl font-display font-bold text-text-primary">
+                            ${{ data.activeCircle.potValue | number: "1.2-2" }}
+                          </h3>
+                        </div>
+                      </div>
+                    }
+                  </div>
                 </div>
-                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-honey-50 text-honey-700">
-                  {{ data.activeCircle.round }}
-                </span>
-              </div>
-              <div>
-                <p class="text-text-secondary text-sm font-medium mb-1 line-clamp-1">{{ data.activeCircle.name }}</p>
-                <h3 class="text-3xl font-display font-bold text-text-primary">
-                  ${{ data.activeCircle.potValue | number: "1.2-2" }}
-                </h3>
-              </div>
-            </div>
-          }
-        </div>
 
         <!-- Main Content Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -141,31 +150,67 @@
               <div class="dashboard-card relative overflow-hidden">
                 <div class="flex justify-between items-start mb-6">
                   <div>
-                    <h3 class="font-display font-bold text-xl text-text-primary">{{ data.activeCircle.name }}</h3>
-                    <p class="text-text-secondary text-sm">{{ data.activeCircle.round }}</p>
+                    <h3
+                      class="font-display font-bold text-xl text-text-primary"
+                    >
+                      {{ data.activeCircle.name }}
+                    </h3>
+                    <p class="text-text-secondary text-sm">
+                      {{ data.activeCircle.round }}
+                    </p>
                   </div>
-                  <button class="text-hive-600 hover:text-hive-700 text-sm font-semibold transition-colors flex items-center gap-1">
-                    Details <lucide-angular [img]="ArrowDownToLine" class="w-4 h-4"></lucide-angular>
+                  <button
+                    class="text-hive-600 hover:text-hive-700 text-sm font-semibold transition-colors flex items-center gap-1"
+                  >
+                    Details
+                    <lucide-angular
+                      [img]="ArrowDownToLine"
+                      class="w-4 h-4"
+                    ></lucide-angular>
                   </button>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 mb-8">
-                  <div class="p-4 bg-cream-50 rounded-hive border border-cream-200">
-                    <span class="text-text-secondary text-sm block mb-1">Total Pot</span>
-                    <span class="text-2xl font-bold text-text-primary">${{ data.activeCircle.potValue | number: "1.2-2" }}</span>
+                  <div
+                    class="p-4 bg-cream-50 rounded-hive border border-cream-200"
+                  >
+                    <span class="text-text-secondary text-sm block mb-1"
+                      >Total Pot</span
+                    >
+                    <span class="text-2xl font-bold text-text-primary"
+                      >${{ data.activeCircle.potValue | number: "1.2-2" }}</span
+                    >
                   </div>
-                  <div class="p-4 bg-honey-50 rounded-hive border border-honey-100">
-                    <span class="text-honey-700 text-sm block mb-1">Your Share</span>
-                    <span class="text-2xl font-bold text-honey-600">${{ data.activeCircle.contributionAmount | number: "1.2-2" }}</span>
+                  <div
+                    class="p-4 bg-honey-50 rounded-hive border border-honey-100"
+                  >
+                    <span class="text-honey-700 text-sm block mb-1"
+                      >Your Share</span
+                    >
+                    <span class="text-2xl font-bold text-honey-600"
+                      >${{
+                        data.activeCircle.contributionAmount | number: "1.2-2"
+                      }}</span
+                    >
                   </div>
                 </div>
 
-                <div class="flex items-center gap-3 mb-8 p-3 bg-cream-50 rounded-lg">
-                  <div class="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-hive-600">
-                    <lucide-angular [img]="Clock" class="w-5 h-5"></lucide-angular>
+                <div
+                  class="flex items-center gap-3 mb-8 p-3 bg-cream-50 rounded-lg"
+                >
+                  <div
+                    class="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-hive-600"
+                  >
+                    <lucide-angular
+                      [img]="Clock"
+                      class="w-5 h-5"
+                    ></lucide-angular>
                   </div>
                   <div class="flex-1">
-                    <span class="text-text-secondary text-xs font-semibold uppercase tracking-wider">Next Payout</span>
+                    <span
+                      class="text-text-secondary text-xs font-semibold uppercase tracking-wider"
+                      >Next Payout</span
+                    >
                     <div class="text-text-primary font-bold">
                       {{ getCountdown(data.activeCircle.nextPayoutDate) }}
                     </div>
@@ -178,38 +223,65 @@
                       Members ({{ data.activeCircle.members.length }})
                     </span>
                     <div class="text-xs font-medium space-x-2">
-                      <span class="text-success-dark">{{ getPaidCount(data.activeCircle.members) }} paid</span>
+                      <span class="text-success-dark"
+                        >{{
+                          getPaidCount(data.activeCircle.members)
+                        }}
+                        paid</span
+                      >
                       <span class="text-cream-400">•</span>
-                      <span class="text-text-tertiary">{{ getPendingCount(data.activeCircle.members) }} pending</span>
+                      <span class="text-text-tertiary"
+                        >{{
+                          getPendingCount(data.activeCircle.members)
+                        }}
+                        pending</span
+                      >
                     </div>
                   </div>
 
                   <!-- Progress Bar -->
-                  <div class="h-2 w-full bg-cream-100 rounded-full overflow-hidden">
+                  <div
+                    class="h-2 w-full bg-cream-100 rounded-full overflow-hidden"
+                  >
                     <div
                       class="h-full bg-success transition-all duration-500 ease-out"
-                      [style.width.%]="(getPaidCount(data.activeCircle.members) / data.activeCircle.members.length) * 100"
+                      [style.width.%]="
+                        (getPaidCount(data.activeCircle.members) /
+                          data.activeCircle.members.length) *
+                        100
+                      "
                     ></div>
                   </div>
 
                   <!-- Members Grid -->
                   <div class="flex flex-wrap gap-2">
-                    @for (member of data.activeCircle.members; track member.id) {
+                    @for (
+                      member of data.activeCircle.members;
+                      track member.id
+                    ) {
                       <div
                         class="relative w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all"
                         [class.border-honey-500]="member.isCurrentUser"
                         [class.text-honey-600]="member.isCurrentUser"
                         [class.bg-honey-50]="member.isCurrentUser"
                         [class.border-white]="!member.isCurrentUser"
-                        [class.bg-cream-100]="!member.isCurrentUser && member.status !== 'received'"
+                        [class.bg-cream-100]="
+                          !member.isCurrentUser && member.status !== 'received'
+                        "
                         [class.text-text-secondary]="!member.isCurrentUser"
                         [class.bg-success-light]="member.status === 'received'"
                         [title]="member.isCurrentUser ? 'You' : member.initials"
                       >
                         {{ member.initials }}
-                        @if (member.status === 'received') {
-                          <div class="absolute -top-1 -right-1 bg-success text-white rounded-full p-0.5 shadow-sm">
-                            <lucide-angular [img]="Check" class="w-2.5 h-2.5" [strokeWidth]="3"></lucide-angular>
+                        @if (member.status === "received") {
+                          <div
+                            class="absolute -top-1 -right-1 bg-success text-white rounded-full p-0.5 shadow-sm"
+                          >
+                            <lucide-angular
+                              [img]="Check"
+                              class="w-2.5 h-2.5"
+                              [strokeWidth]="3"
+                            ></lucide-angular>
                           </div>
                         }
                       </div>
@@ -219,19 +291,30 @@
               </div>
             } @else {
               <!-- Empty State -->
-              <div class="dashboard-card flex flex-col items-center justify-center text-center p-12 min-h-[300px]">
-                <div class="w-16 h-16 rounded-full bg-cream-100 flex items-center justify-center mb-6">
+              <div
+                class="dashboard-card flex flex-col items-center justify-center text-center p-12 min-h-[300px]"
+              >
+                <div
+                  class="w-16 h-16 rounded-full bg-cream-100 flex items-center justify-center mb-6"
+                >
                   <lucide-angular
                     [img]="RefreshCw"
                     class="w-8 h-8 text-cream-400"
                     [strokeWidth]="2"
                   ></lucide-angular>
                 </div>
-                <h3 class="font-display font-bold text-xl text-text-primary mb-2">No Active Circle</h3>
+                <h3
+                  class="font-display font-bold text-xl text-text-primary mb-2"
+                >
+                  No Active Circle
+                </h3>
                 <p class="text-text-secondary max-w-xs mx-auto mb-8">
-                  Join a savings circle to start building wealth together with your community.
+                  Join a savings circle to start building wealth together with
+                  your community.
                 </p>
-                <button class="btn-primary" (click)="navigateToCircles()">Browse Circles</button>
+                <button class="btn-primary" (click)="navigateToCircles()">
+                  Browse Circles
+                </button>
               </div>
             }
 
@@ -247,25 +330,58 @@
                       [strokeWidth]="2"
                     ></lucide-angular>
                   </div>
-                  <span class="text-sm font-medium text-text-secondary group-hover:text-honey-600 transition-colors">Add Funds</span>
+                  <span
+                    class="text-sm font-medium text-text-secondary group-hover:text-honey-600 transition-colors"
+                    >Add Funds</span
+                  >
                 </button>
-                <button class="flex flex-col items-center justify-center p-4 rounded-xl hover:bg-cream-50 transition-colors group">
-                  <div class="w-12 h-12 rounded-full bg-hive-500 text-white flex items-center justify-center mb-3 shadow-hive group-hover:scale-110 transition-transform">
-                    <lucide-angular [img]="Repeat" class="w-6 h-6"></lucide-angular>
+                <button
+                  class="flex flex-col items-center justify-center p-4 rounded-xl hover:bg-cream-50 transition-colors group"
+                >
+                  <div
+                    class="w-12 h-12 rounded-full bg-hive-500 text-white flex items-center justify-center mb-3 shadow-hive group-hover:scale-110 transition-transform"
+                  >
+                    <lucide-angular
+                      [img]="Repeat"
+                      class="w-6 h-6"
+                    ></lucide-angular>
                   </div>
-                  <span class="text-sm font-medium text-text-secondary group-hover:text-hive-600 transition-colors">Transfer</span>
+                  <span
+                    class="text-sm font-medium text-text-secondary group-hover:text-hive-600 transition-colors"
+                    >Transfer</span
+                  >
                 </button>
-                <button class="flex flex-col items-center justify-center p-4 rounded-xl hover:bg-cream-50 transition-colors group">
-                  <div class="w-12 h-12 rounded-full bg-indigo-500 text-white flex items-center justify-center mb-3 shadow-md group-hover:scale-110 transition-transform">
-                    <lucide-angular [img]="Banknote" class="w-6 h-6"></lucide-angular>
+                <button
+                  class="flex flex-col items-center justify-center p-4 rounded-xl hover:bg-cream-50 transition-colors group"
+                >
+                  <div
+                    class="w-12 h-12 rounded-full bg-indigo-500 text-white flex items-center justify-center mb-3 shadow-md group-hover:scale-110 transition-transform"
+                  >
+                    <lucide-angular
+                      [img]="Banknote"
+                      class="w-6 h-6"
+                    ></lucide-angular>
                   </div>
-                  <span class="text-sm font-medium text-text-secondary group-hover:text-indigo-600 transition-colors">Pay Bill</span>
+                  <span
+                    class="text-sm font-medium text-text-secondary group-hover:text-indigo-600 transition-colors"
+                    >Pay Bill</span
+                  >
                 </button>
-                <button class="flex flex-col items-center justify-center p-4 rounded-xl hover:bg-cream-50 transition-colors group">
-                  <div class="w-12 h-12 rounded-full bg-cream-500 text-white flex items-center justify-center mb-3 shadow-md group-hover:scale-110 transition-transform">
-                    <lucide-angular [img]="History" class="w-6 h-6"></lucide-angular>
+                <button
+                  class="flex flex-col items-center justify-center p-4 rounded-xl hover:bg-cream-50 transition-colors group"
+                >
+                  <div
+                    class="w-12 h-12 rounded-full bg-cream-500 text-white flex items-center justify-center mb-3 shadow-md group-hover:scale-110 transition-transform"
+                  >
+                    <lucide-angular
+                      [img]="History"
+                      class="w-6 h-6"
+                    ></lucide-angular>
                   </div>
-                  <span class="text-sm font-medium text-text-secondary group-hover:text-text-primary transition-colors">History</span>
+                  <span
+                    class="text-sm font-medium text-text-secondary group-hover:text-text-primary transition-colors"
+                    >History</span
+                  >
                 </button>
               </div>
             </div>
@@ -276,7 +392,9 @@
             <!-- Credit Score Progress -->
             <div class="dashboard-card">
               <div class="flex justify-between items-center mb-6">
-                <h3 class="font-display font-bold text-lg text-text-primary">Score Journey</h3>
+                <h3 class="font-display font-bold text-lg text-text-primary">
+                  Score Journey
+                </h3>
                 <span
                   class="px-2 py-1 rounded text-xs font-bold uppercase tracking-wide"
                   [style.background-color]="getTierColor(data.user.tier) + '20'"
@@ -288,8 +406,17 @@
 
               <div class="flex justify-center mb-6">
                 <div class="relative w-48 h-48">
-                  <svg viewBox="0 0 200 200" class="transform -rotate-90 w-full h-full">
-                    <circle cx="100" cy="100" r="85" class="stroke-cream-200 fill-none" stroke-width="12" />
+                  <svg
+                    viewBox="0 0 200 200"
+                    class="transform -rotate-90 w-full h-full"
+                  >
+                    <circle
+                      cx="100"
+                      cy="100"
+                      r="85"
+                      class="stroke-cream-200 fill-none"
+                      stroke-width="12"
+                    />
                     <circle
                       cx="100"
                       cy="100"
@@ -299,30 +426,62 @@
                       stroke-linecap="round"
                       [style.stroke]="getTierColor(data.user.tier)"
                       [style.stroke-dasharray]="534"
-                      [style.stroke-dashoffset]="534 - (534 * getProgressPercentage(data.user.creditScore, data.user.tier)) / 100"
+                      [style.stroke-dashoffset]="
+                        534 -
+                        (534 *
+                          getProgressPercentage(
+                            data.user.creditScore,
+                            data.user.tier
+                          )) /
+                          100
+                      "
                     />
                   </svg>
-                  <div class="absolute inset-0 flex flex-col items-center justify-center">
-                    <span class="text-4xl font-display font-bold text-text-primary">{{ data.user.creditScore }}</span>
-                    <span class="text-text-tertiary text-sm font-medium">/ 900</span>
+                  <div
+                    class="absolute inset-0 flex flex-col items-center justify-center"
+                  >
+                    <span
+                      class="text-4xl font-display font-bold text-text-primary"
+                      >{{ data.user.creditScore }}</span
+                    >
+                    <span class="text-text-tertiary text-sm font-medium"
+                      >/ 900</span
+                    >
                   </div>
                 </div>
               </div>
 
               <div class="space-y-3 mb-6">
-                <div class="flex justify-between text-xs font-medium text-text-secondary">
+                <div
+                  class="flex justify-between text-xs font-medium text-text-secondary"
+                >
                   <span>{{ data.user.creditScore }}</span>
-                  <span>{{ data.user.nextTierScore }} ({{ getNextTier(data.user.tier) }})</span>
+                  <span
+                    >{{ data.user.nextTierScore }} ({{
+                      getNextTier(data.user.tier)
+                    }})</span
+                  >
                 </div>
                 <div class="h-2 bg-cream-100 rounded-full overflow-hidden">
                   <div
                     class="h-full rounded-full transition-all duration-1000"
                     [style.background-color]="getTierColor(data.user.tier)"
-                    [style.width.%]="getProgressPercentage(data.user.creditScore, data.user.tier)"
+                    [style.width.%]="
+                      getProgressPercentage(
+                        data.user.creditScore,
+                        data.user.tier
+                      )
+                    "
                   ></div>
                 </div>
                 <p class="text-center text-xs text-text-secondary mt-2">
-                  <span class="font-semibold text-text-primary">{{ data.user.nextTierScore - data.user.creditScore }} points</span> to reach next tier
+                  <span class="font-semibold text-text-primary"
+                    >{{
+                      data.user.nextTierScore - data.user.creditScore
+                    }}
+                    points</span
+                  >
+                  to reach next tier
                 </p>
               </div>
 
@@ -334,12 +493,25 @@
             <!-- Recent Activity Placeholder -->
             <div class="dashboard-card">
               <div class="flex justify-between items-center mb-4">
-                <h3 class="font-display font-bold text-lg text-text-primary">Recent Activity</h3>
-                <button class="text-hive-600 hover:text-hive-700 text-sm font-semibold">View All</button>
+                <h3 class="font-display font-bold text-lg text-text-primary">
+                  Recent Activity
+                </h3>
+                <button
+                  class="text-hive-600 hover:text-hive-700 text-sm font-semibold"
+                >
+                  View All
+                </button>
               </div>
-              <div class="flex flex-col items-center justify-center py-8 text-center border-2 border-dashed border-cream-200 rounded-xl bg-cream-50">
-                <div class="w-10 h-10 bg-cream-200 rounded-full flex items-center justify-center mb-2 text-text-tertiary">
-                   <lucide-angular [img]="History" class="w-5 h-5"></lucide-angular>
+              <div
+                class="flex flex-col items-center justify-center py-8 text-center border-2 border-dashed border-cream-200 rounded-xl bg-cream-50"
+              >
+                <div
+                  class="w-10 h-10 bg-cream-200 rounded-full flex items-center justify-center mb-2 text-text-tertiary"
+                >
+                  <lucide-angular
+                    [img]="History"
+                    class="w-5 h-5"
+                  ></lucide-angular>
                 </div>
                 <p class="text-sm text-text-secondary">
                   No recent transactions

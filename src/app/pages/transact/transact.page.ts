@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { 
   LucideAngularModule, 
   QrCode, 
@@ -9,11 +10,13 @@ import {
   ShieldCheck, 
   Contact, 
   Building2, 
-  Share2 
+  Share2,
+  Wallet,
+  ArrowDown
 } from 'lucide-angular';
 
 interface TransactState {
-  mode: 'pay' | 'receive';
+  mode: 'pay' | 'receive' | 'deposit' | 'withdraw';
   amount: number | null;
   recipient: string; // Phone or Merchant ID
   isLoading: boolean; // For the USSD trigger state
@@ -28,6 +31,8 @@ interface TransactState {
   styleUrls: ['./transact.page.css']
 })
 export class TransactPage implements OnInit {
+  private route = inject(ActivatedRoute);
+
   // Icons for template
   readonly QrCode = QrCode;
   readonly Smartphone = Smartphone;
@@ -36,10 +41,12 @@ export class TransactPage implements OnInit {
   readonly Contact = Contact;
   readonly Building2 = Building2;
   readonly Share2 = Share2;
+  readonly Wallet = Wallet;
+  readonly ArrowDown = ArrowDown;
 
   // Component state
   state: TransactState = {
-    mode: 'pay',
+    mode: 'pay', // Default to 'pay' (Send)
     amount: null,
     recipient: '',
     isLoading: false,
@@ -57,12 +64,19 @@ export class TransactPage implements OnInit {
 
   ngOnInit(): void {
     this.generateMyQrData();
+    
+    // Check for mode query param
+    this.route.queryParams.subscribe(params => {
+      if (params['mode'] && ['pay', 'receive', 'deposit', 'withdraw'].includes(params['mode'])) {
+        this.state.mode = params['mode'] as any;
+      }
+    });
   }
 
   /**
-   * Switch between Pay and Receive tabs
+   * Switch between modes
    */
-  switchMode(mode: 'pay' | 'receive'): void {
+  switchMode(mode: 'pay' | 'receive' | 'deposit' | 'withdraw'): void {
     this.state.mode = mode;
   }
 

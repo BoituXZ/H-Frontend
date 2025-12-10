@@ -6,14 +6,15 @@
       Transact
     </h1>
     <p class="text-text-secondary text-sm">
-      Send money or receive payments.
+      Send, receive, deposit, or withdraw funds.
     </p>
   </div>
 
   <!-- Main Transaction Card -->
   <div class="dashboard-card">
-    <!-- Segmented Tab Control -->
-    <div class="flex gap-2 mb-6 p-1 bg-cream-200 rounded-xl">
+    
+    <!-- Segmented Tab Control (Visible only for Pay/Receive) -->
+    <div *ngIf="state.mode === 'pay' || state.mode === 'receive'" class="flex gap-2 mb-6 p-1 bg-cream-200 rounded-xl">
       <button
         type="button"
         (click)="switchMode('pay')"
@@ -40,7 +41,99 @@
       </button>
     </div>
 
-    <!-- ==================== TAB 1: PAY SOMEONE ==================== -->
+    <!-- ==================== MODE: DEPOSIT (ADD MONEY) ==================== -->
+    <div *ngIf="state.mode === 'deposit'" class="animate-fade-in">
+      <div class="text-center mb-6">
+        <h2 class="text-xl font-bold text-text-primary">Add Money to HiveFund</h2>
+        <div class="inline-flex items-center gap-2 mt-2 px-3 py-1 bg-hive-50 rounded-full text-hive-600 text-sm font-medium">
+          <lucide-angular [img]="Smartphone" class="w-4 h-4"></lucide-angular>
+          From: EcoCash Wallet
+        </div>
+      </div>
+
+      <!-- Amount Input (Green Accent) -->
+      <div class="mb-8">
+        <label class="block text-sm font-medium text-text-secondary mb-2">
+          Amount to Deposit
+        </label>
+        <div class="relative">
+          <span class="absolute left-4 top-1/2 -translate-y-1/2 text-3xl font-bold text-green-600">
+            $
+          </span>
+          <input
+            type="number"
+            [(ngModel)]="state.amount"
+            placeholder="0.00"
+            class="input-field text-3xl font-bold text-center pl-12 py-4 text-green-600 focus:ring-green-500 focus:border-green-500"
+            [disabled]="state.isLoading"
+          />
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <button
+        type="button"
+        (click)="triggerPayment()"
+        [disabled]="!state.amount || state.amount <= 0 || state.isLoading"
+        class="w-full btn-primary py-4 text-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+      >
+        <lucide-angular *ngIf="!state.isLoading" [img]="ArrowDown" class="w-6 h-6"></lucide-angular>
+        <span *ngIf="!state.isLoading">Deposit Now</span>
+        <span *ngIf="state.isLoading">Processing...</span>
+      </button>
+      
+      <p class="text-center text-xs text-text-tertiary mt-4">
+        This will trigger a USSD prompt on your phone ({{ currentUser.phone }}).
+      </p>
+    </div>
+
+    <!-- ==================== MODE: WITHDRAW (CASH OUT) ==================== -->
+    <div *ngIf="state.mode === 'withdraw'" class="animate-fade-in">
+      <div class="text-center mb-6">
+        <h2 class="text-xl font-bold text-text-primary">Withdraw to EcoCash</h2>
+        <div class="inline-flex items-center gap-2 mt-2 px-3 py-1 bg-hive-50 rounded-full text-hive-600 text-sm font-medium">
+          <lucide-angular [img]="Smartphone" class="w-4 h-4"></lucide-angular>
+          To: EcoCash Wallet
+        </div>
+      </div>
+
+      <!-- Amount Input (Red Accent) -->
+      <div class="mb-8">
+        <label class="block text-sm font-medium text-text-secondary mb-2">
+          Amount to Withdraw
+        </label>
+        <div class="relative">
+          <span class="absolute left-4 top-1/2 -translate-y-1/2 text-3xl font-bold text-honey-600">
+            $
+          </span>
+          <input
+            type="number"
+            [(ngModel)]="state.amount"
+            placeholder="0.00"
+            class="input-field text-3xl font-bold text-center pl-12 py-4 text-honey-600 focus:ring-honey-500 focus:border-honey-500"
+            [disabled]="state.isLoading"
+          />
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <button
+        type="button"
+        (click)="triggerPayment()"
+        [disabled]="!state.amount || state.amount <= 0 || state.isLoading"
+        class="w-full btn-primary py-4 text-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+      >
+        <lucide-angular *ngIf="!state.isLoading" [img]="Smartphone" class="w-6 h-6"></lucide-angular>
+        <span *ngIf="!state.isLoading">Withdraw Funds</span>
+        <span *ngIf="state.isLoading">Processing...</span>
+      </button>
+      
+       <p class="text-center text-xs text-text-tertiary mt-4">
+        Funds will be transferred instantly to {{ currentUser.phone }}.
+      </p>
+    </div>
+
+    <!-- ==================== TAB 1: PAY SOMEONE (EXISTING) ==================== -->
     <div *ngIf="state.mode === 'pay'" class="animate-fade-in">
       <!-- Amount Input -->
       <div class="mb-6">
@@ -48,14 +141,14 @@
           Amount to Send
         </label>
         <div class="relative">
-          <span class="absolute left-4 top-1/2 -translate-y-1/2 text-3xl font-bold text-text-tertiary">
+          <span class="absolute left-4 top-1/2 -translate-y-1/2 text-3xl font-bold text-honey-600">
             $
           </span>
           <input
             type="number"
             [(ngModel)]="state.amount"
             placeholder="0.00"
-            class="input-field text-3xl font-bold text-center pl-12 py-4"
+            class="input-field text-3xl font-bold text-center pl-12 py-4 text-honey-600"
             [disabled]="state.isLoading"
           />
         </div>
@@ -169,17 +262,16 @@
 
     <!-- Powered by EcoCash Badge -->
     <div class="mt-8 bg-hive-50 rounded-lg p-3 flex items-center justify-center gap-2">
-      <!-- Use simple SVG for "badge" like icon or text if needed, prompt says 'Powered by EcoCash' text -->
+      <!-- Simple wallet/phone icon representation -->
       <svg class="w-6 h-6 text-hive-600" fill="currentColor" viewBox="0 0 24 24">
-        <!-- Simple wallet/phone icon representation -->
          <path d="M12 2L2 7v10c0 5.5 3.8 10.7 10 12 6.2-1.3 10-6.5 10-12V7l-10-5zm0 18c-4.4 0-8-3.6-8-8s3.6-8 8-8 8 3.6 8 8-3.6 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
       </svg>
       <span class="font-bold text-hive-600">Powered by EcoCash</span>
     </div>
   </div>
 
-  <!-- Info Cards (Optional) -->
-  <div class="mt-6 grid grid-cols-1 gap-4">
+  <!-- Info Cards (Visible only on default modes) -->
+  <div *ngIf="state.mode === 'pay' || state.mode === 'receive'" class="mt-6 grid grid-cols-1 gap-4">
     <!-- Transaction History Prompt -->
     <div class="bg-white rounded-xl p-4 border border-cream-300 shadow-card">
       <div class="flex items-start gap-3">
