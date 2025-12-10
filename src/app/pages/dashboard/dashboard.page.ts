@@ -76,22 +76,27 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    // Wait for DOM to fully render and data to load, then start tour
-    // Tour runs every time for demo purposes
-    setTimeout(() => {
-      // Check if elements exist before starting tour
-      const creditScoreCard = document.getElementById('credit-score-card');
-      const quickActions = document.getElementById('quick-actions');
-      
-      if (creditScoreCard && quickActions) {
-        this.startTour();
-      } else {
-        // If elements don't exist yet (data still loading), wait a bit more
-        setTimeout(() => {
+    // Check if tour has been shown before
+    const tourShown = localStorage.getItem('dashboard-tour-completed');
+
+    // Only show tour if it hasn't been shown before
+    if (!tourShown) {
+      // Wait for DOM to fully render and data to load, then start tour
+      setTimeout(() => {
+        // Check if elements exist before starting tour
+        const creditScoreCard = document.getElementById('credit-score-card');
+        const quickActions = document.getElementById('quick-actions');
+
+        if (creditScoreCard && quickActions) {
           this.startTour();
-        }, 500);
-      }
-    }, 500);
+        } else {
+          // If elements don't exist yet (data still loading), wait a bit more
+          setTimeout(() => {
+            this.startTour();
+          }, 500);
+        }
+      }, 500);
+    }
   }
 
   ngOnDestroy(): void {
@@ -125,6 +130,10 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
           },
         },
       ],
+      onDestroyStarted: () => {
+        // Mark tour as completed when user closes it or finishes it
+        localStorage.setItem('dashboard-tour-completed', 'true');
+      },
     });
 
     this.tourDriver.drive();
@@ -245,5 +254,22 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
 
   navigateToSettings(): void {
     this.router.navigate(['/app/settings']);
+  }
+
+  navigateToAddFunds(): void {
+    this.router.navigate(['/app/wallet']);
+  }
+
+  navigateToTransfer(): void {
+    this.router.navigate(['/app/transact']);
+  }
+
+  navigateToPayBill(): void {
+    this.router.navigate(['/app/transact']);
+  }
+
+  navigateToHistory(): void {
+    // Navigate to wallet or transactions history
+    this.router.navigate(['/app/wallet']);
   }
 }

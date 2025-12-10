@@ -322,7 +322,7 @@
             <div id="quick-actions" class="card-theme actions-card">
               <h3 class="card-title mb-4">Quick Actions</h3>
               <div class="actions-grid">
-                <button class="action-button">
+                <button class="action-button" (click)="navigateToAddFunds()">
                   <div class="action-icon text-white">
                     <lucide-angular
                       [img]="Plus"
@@ -337,6 +337,7 @@
                 </button>
                 <button
                   class="flex flex-col items-center justify-center p-4 rounded-xl hover:bg-cream-50 transition-colors group"
+                  (click)="navigateToTransfer()"
                 >
                   <div
                     class="w-12 h-12 rounded-full bg-hive-500 text-white flex items-center justify-center mb-3 shadow-hive group-hover:scale-110 transition-transform"
@@ -353,6 +354,7 @@
                 </button>
                 <button
                   class="flex flex-col items-center justify-center p-4 rounded-xl hover:bg-cream-50 transition-colors group"
+                  (click)="navigateToPayBill()"
                 >
                   <div
                     class="w-12 h-12 rounded-full bg-indigo-500 text-white flex items-center justify-center mb-3 shadow-md group-hover:scale-110 transition-transform"
@@ -369,6 +371,7 @@
                 </button>
                 <button
                   class="flex flex-col items-center justify-center p-4 rounded-xl hover:bg-cream-50 transition-colors group"
+                  (click)="navigateToHistory()"
                 >
                   <div
                     class="w-12 h-12 rounded-full bg-cream-500 text-white flex items-center justify-center mb-3 shadow-md group-hover:scale-110 transition-transform"
@@ -498,6 +501,7 @@
                 </h3>
                 <button
                   class="text-hive-600 hover:text-hive-700 text-sm font-semibold"
+                  (click)="navigateToWallet()"
                 >
                   View All
                 </button>

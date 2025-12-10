@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { 
   LucideAngularModule, 
   QrCode, 
@@ -32,6 +32,7 @@ interface TransactState {
 })
 export class TransactPage implements OnInit {
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
 
   // Icons for template
   readonly QrCode = QrCode;
@@ -182,5 +183,12 @@ export class TransactPage implements OnInit {
    */
   getFormattedAmount(): string {
     return (this.state.amount || 0) > 0 ? `$${(this.state.amount || 0).toFixed(2)}` : '$0.00';
+  }
+
+  /**
+   * Navigate to wallet page to view transaction history
+   */
+  navigateToWallet(): void {
+    this.router.navigate(['/app/wallet']);
   }
 }
