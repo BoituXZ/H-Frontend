@@ -39,6 +39,9 @@ export interface CircleMember {
   id: string;
   name: string;
   avatarUrl: string;
+  paymentStatus?: 'paid' | 'unpaid' | 'pending';
+  isCreator?: boolean;
+  position?: number; // Position in the circle (1, 2, 3, etc.)
 }
 
 export interface PayoutEntry {

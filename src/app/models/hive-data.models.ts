@@ -47,6 +47,7 @@ export interface Storefront {
   bannerUrl: string;
   ownerId: string;
   visitCount?: number;
+  merchantId?: string;
   products: Product[];
   orders: Order[];
 }
@@ -170,4 +171,87 @@ export interface BudgetAnalysis {
     wants: number;
     savings: number;
   };
+}
+
+// User Profile
+export interface UserProfile {
+  id: string;
+  name: string;
+  phone: string;
+  bio?: string;
+  creditScore: number;
+  tier: string;
+  profileImage?: string;
+}
+
+// Wallet & Transactions
+export interface Transaction {
+  id: string;
+  title: string;
+  subtitle?: string;
+  amount: number;
+  date: Date;
+  type: 'credit' | 'debit';
+  category: 'contribution' | 'storefront' | 'gig' | 'loan' | 'utilities' | 'food' | 'transport';
+}
+
+export interface WalletData {
+  balance: number;
+  lastUpdated: string;
+  transactions: Transaction[];
+}
+
+// Credit Score
+export interface CreditScore {
+  score: number;
+  tier: string;
+  nextTier: string;
+  pointsToNext: number;
+  breakdown: {
+    paymentConsistency: { current: number; max: number };
+    timeActive: { current: number; max: number };
+    circleActivity?: { current: number; max: number };
+    marketActivity?: { current: number; max: number };
+  };
+}
+
+export interface CreditHistoryItem {
+  date: string;
+  event: string;
+  pointsChange: number;
+  description: string;
+}
+
+// Loans
+export interface LoanProduct {
+  id: string;
+  name: string;
+  range: string;
+  interest: string;
+  duration: string;
+  isEligible: boolean;
+  lockReason?: string;
+}
+
+export interface Loan {
+  id: string;
+  type: string;
+  amount: number;
+  remainingAmount: number;
+  progress: number; // percentage
+  status: 'active' | 'completed' | 'defaulted';
+  nextPaymentDate?: string;
+  completedDate?: string;
+  creditPoints?: number;
+}
+
+// Services
+export interface ServiceProduct {
+  id: string;
+  provider: 'SmartFund' | 'EcoSure' | 'ZESA' | 'Dura';
+  name: string;
+  description: string;
+  price: number | 'Variable';
+  category: 'Connect' | 'Utilities' | 'Security';
+  icon: string; // Heroicon name
 }

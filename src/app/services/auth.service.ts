@@ -1,6 +1,6 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap, BehaviorSubject } from 'rxjs';
+import { Observable, tap, BehaviorSubject, of, catchError } from 'rxjs';
 import { Router } from '@angular/router';
 import { StorageService } from './storage.service';
 import { TokenService } from './token.service';
@@ -45,6 +45,7 @@ export class AuthService {
 
   /**
    * Initialize auth state from storage on app bootstrap
+   * For demo: Auto-login as Takudzwanashe if no valid session
    */
   initializeAuthState(): void {
     const user = this.storageService.getUser();
@@ -54,9 +55,54 @@ export class AuthService {
       this.currentUserSignal.set(user);
       this.isAuthenticatedSignal.set(true);
     } else {
-      // Clear invalid data
-      this.clearAuthData();
+      // For demo: Auto-login as Takudzwanashe
+      this.autoLoginDemo();
     }
+  }
+
+  /**
+   * Generate a mock JWT-like token for demo purposes
+   */
+  private generateMockToken(payload: any): string {
+    // Create a JWT-like token: header.payload.signature
+    const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
+    const payloadBase64 = btoa(JSON.stringify(payload));
+    const signature = btoa('mock-signature');
+    return `${header}.${payloadBase64}.${signature}`;
+  }
+
+  /**
+   * Auto-login as Takudzwanashe for demo purposes
+   */
+  private autoLoginDemo(): void {
+    const takudzwanashe: User = {
+      id: 'user-takudzwanashe',
+      name: 'Takudzwanashe Mahachi',
+      phoneNumber: '+263 77 412 3456',
+      ecocashNumber: '+263 77 412 3456',
+      verified: true,
+      createdAt: new Date('2024-01-01'),
+      updatedAt: new Date()
+    };
+
+    // Generate mock tokens with proper expiration
+    const mockTokenPayload = {
+      sub: takudzwanashe.id,
+      phone: takudzwanashe.phoneNumber,
+      name: takudzwanashe.name,
+      ecocashNumber: takudzwanashe.ecocashNumber,
+      verified: true,
+      exp: Math.floor(Date.now() / 1000) + (7 * 24 * 60 * 60) // 7 days
+    };
+    const mockAccessToken = this.generateMockToken(mockTokenPayload);
+    const mockRefreshToken = this.generateMockToken({ ...mockTokenPayload, type: 'refresh' });
+
+    const tokens: Tokens = {
+      accessToken: mockAccessToken,
+      refreshToken: mockRefreshToken
+    };
+
+    this.setAuthData(tokens, takudzwanashe, false);
   }
 
   /**
@@ -116,15 +162,16 @@ export class AuthService {
 
   /**
    * Login user
+   * For demo: Accept any credentials and return Takudzwanashe's data
    */
   login(phoneNumber: string, password: string, rememberMe: boolean): Observable<AuthResponse> {
+    // For demo: Always return success with Takudzwanashe's data
     return this.http.post<AuthResponse>(`${this.apiUrl}/auth/login`, {
       phoneNumber,
       password
     }).pipe(
       tap(response => {
         const user = this.extractUserFromToken(response.accessToken);
-
         this.setAuthData(
           {
             accessToken: response.accessToken,
@@ -133,6 +180,45 @@ export class AuthService {
           user,
           rememberMe
         );
+      }),
+      catchError(() => {
+        // On error, return mock response for demo
+        const takudzwanashe: User = {
+          id: 'user-takudzwanashe',
+          name: 'Takudzwanashe Mahachi',
+          phoneNumber: '+263 77 412 3456',
+          ecocashNumber: '+263 77 412 3456',
+          verified: true,
+          createdAt: new Date('2024-01-01'),
+          updatedAt: new Date()
+        };
+
+        const mockTokenPayload = {
+          sub: takudzwanashe.id,
+          phone: takudzwanashe.phoneNumber,
+          name: takudzwanashe.name,
+          ecocashNumber: takudzwanashe.ecocashNumber,
+          verified: true,
+          exp: Math.floor(Date.now() / 1000) + (7 * 24 * 60 * 60)
+        };
+        const mockAccessToken = this.generateMockToken(mockTokenPayload);
+        const mockRefreshToken = this.generateMockToken({ ...mockTokenPayload, type: 'refresh' });
+
+        const mockResponse: AuthResponse = {
+          accessToken: mockAccessToken,
+          refreshToken: mockRefreshToken
+        };
+
+        this.setAuthData(
+          {
+            accessToken: mockResponse.accessToken,
+            refreshToken: mockResponse.refreshToken
+          },
+          takudzwanashe,
+          rememberMe
+        );
+
+        return of(mockResponse);
       })
     );
   }

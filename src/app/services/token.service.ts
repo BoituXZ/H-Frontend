@@ -8,17 +8,26 @@ export class TokenService {
 
   /**
    * Decode a JWT token and return its payload
+   * Also handles simple base64 JSON tokens for demo purposes
    */
   decodeToken(token: string): any {
     try {
       const parts = token.split('.');
-      if (parts.length !== 3) {
-        throw new Error('Invalid token format');
+      
+      // Handle standard JWT format (header.payload.signature)
+      if (parts.length === 3) {
+        const payload = parts[1];
+        const decodedPayload = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
+        return JSON.parse(decodedPayload);
       }
-
-      const payload = parts[1];
-      const decodedPayload = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
-      return JSON.parse(decodedPayload);
+      
+      // Handle simple base64 JSON (for demo mock tokens)
+      if (parts.length === 1) {
+        const decodedPayload = atob(token);
+        return JSON.parse(decodedPayload);
+      }
+      
+      throw new Error('Invalid token format');
     } catch (error) {
       console.error('Error decoding token:', error);
       return null;

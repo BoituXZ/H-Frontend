@@ -19,6 +19,7 @@ import {
   Tag,
   BookOpen,
   ArrowRightLeft,
+  Grid3x3,
 } from 'lucide-angular';
 import { AuthService } from '../../services/auth.service';
 import { LayoutService } from '../../services/layout.service';
@@ -49,6 +50,7 @@ export class SidebarComponent {
   protected readonly Tag = Tag;
   protected readonly BookOpen = BookOpen;
   protected readonly ArrowRightLeft = ArrowRightLeft;
+  protected readonly Grid3x3 = Grid3x3;
 
   get currentUser() {
     return this.authService.currentUser();
@@ -66,6 +68,7 @@ export class SidebarComponent {
     { label: 'Marketplace', route: '/app/marketplace', icon: Store },
     { label: 'Storefront', route: '/app/earn/storefront/manage', icon: Tag },
     { label: 'Transact', route: '/app/transact', icon: ArrowRightLeft },
+    { label: 'Services', route: '/app/services', icon: Grid3x3 },
     { label: 'Learn', route: '/app/learning', icon: BookOpen },
     // Wallet endpoint not supported by backend - commenting out
     // { label: 'Wallet', route: '/app/wallet', icon: Wallet },
