@@ -1,0 +1,98 @@
+<!-- Overlay Backdrop -->
+<div 
+  *ngIf="isMenuOpen()" 
+  (click)="closeMenu()"
+  class="lg:hidden fixed inset-0 bg-black/50 z-40 transition-opacity duration-300"
+  aria-hidden="true"
+></div>
+
+<!-- More Menu Sheet -->
+<div 
+  class="lg:hidden fixed bottom-16 left-0 right-0 z-50 bg-white rounded-t-2xl shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)] border-t border-cream-300 p-6 pb-8 transition-transform duration-300 ease-in-out transform"
+  [class.translate-y-0]="isMenuOpen()"
+  [class.translate-y-[150%]]="!isMenuOpen()"
+>
+  <div class="grid grid-cols-4 gap-y-6 gap-x-4">
+    <!-- Secondary Items -->
+    <a routerLink="/app/loans" (click)="closeMenu()" class="flex flex-col items-center gap-2 group">
+      <div class="p-3 rounded-hive bg-honey-50 text-honey-600 group-active:scale-95 transition-transform">
+        <lucide-icon [img]="Banknote" class="w-6 h-6"></lucide-icon>
+      </div>
+      <span class="text-xs font-medium text-text-secondary">Loans</span>
+    </a>
+
+    <a routerLink="/app/credit" (click)="closeMenu()" class="flex flex-col items-center gap-2 group">
+      <div class="p-3 rounded-hive bg-hive-50 text-hive-600 group-active:scale-95 transition-transform">
+        <lucide-icon [img]="ShieldCheck" class="w-6 h-6"></lucide-icon>
+      </div>
+      <span class="text-xs font-medium text-text-secondary">Credit</span>
+    </a>
+
+    <a routerLink="/app/earn/marketplace" (click)="closeMenu()" class="flex flex-col items-center gap-2 group">
+      <div class="p-3 rounded-hive bg-warning-light text-warning-dark group-active:scale-95 transition-transform">
+        <lucide-icon [img]="Briefcase" class="w-6 h-6"></lucide-icon>
+      </div>
+      <span class="text-xs font-medium text-text-secondary">Market</span>
+    </a>
+
+    <a routerLink="/app/earn/storefront" (click)="closeMenu()" class="flex flex-col items-center gap-2 group">
+      <div class="p-3 rounded-hive bg-success-light text-success-dark group-active:scale-95 transition-transform">
+        <lucide-icon [img]="ShoppingBag" class="w-6 h-6"></lucide-icon>
+      </div>
+      <span class="text-xs font-medium text-text-secondary">Shop</span>
+    </a>
+
+    <a routerLink="/app/learning" (click)="closeMenu()" class="flex flex-col items-center gap-2 group">
+      <div class="p-3 rounded-hive bg-purple-50 text-purple-600 group-active:scale-95 transition-transform">
+        <lucide-icon [img]="BookOpen" class="w-6 h-6"></lucide-icon>
+      </div>
+      <span class="text-xs font-medium text-text-secondary">Learn</span>
+    </a>
+
+    <a routerLink="/app/settings" (click)="closeMenu()" class="flex flex-col items-center gap-2 group">
+      <div class="p-3 rounded-hive bg-gray-100 text-gray-600 group-active:scale-95 transition-transform">
+        <lucide-icon [img]="User" class="w-6 h-6"></lucide-icon>
+      </div>
+      <span class="text-xs font-medium text-text-secondary">Profile</span>
+    </a>
+  </div>
+</div>
+
+<!-- Bottom Navbar -->
+<nav class="lg:hidden fixed bottom-0 left-0 right-0 z-50 h-16 bg-white border-t border-cream-300 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] px-2">
+  <div class="h-full max-w-md mx-auto grid grid-cols-5 items-center">
+    
+    <!-- Home -->
+    <a routerLink="/app/dashboard" routerLinkActive="text-honey-600" [routerLinkActiveOptions]="{exact: true}" class="flex flex-col items-center justify-center gap-1 text-text-secondary hover:text-honey-600 transition-colors h-full w-full">
+      <lucide-icon [img]="Home" class="w-6 h-6"></lucide-icon>
+      <span class="text-[10px] font-medium">Home</span>
+    </a>
+
+    <!-- Circles -->
+    <a routerLink="/app/circles" routerLinkActive="text-honey-600" class="flex flex-col items-center justify-center gap-1 text-text-secondary hover:text-honey-600 transition-colors h-full w-full">
+      <lucide-icon [img]="Users" class="w-6 h-6"></lucide-icon>
+      <span class="text-[10px] font-medium">Circles</span>
+    </a>
+
+    <!-- Transact (Central) -->
+    <a routerLink="/app/transact" routerLinkActive="text-honey-600" class="flex flex-col items-center justify-center h-full w-full -mt-6">
+      <div class="w-14 h-14 bg-honey-600 rounded-full flex items-center justify-center shadow-honey border-4 border-white text-white transform hover:scale-105 transition-transform">
+        <lucide-icon [img]="ArrowRightLeft" class="w-7 h-7"></lucide-icon>
+      </div>
+      <span class="text-[10px] font-medium mt-1 text-text-secondary" routerLinkActive="text-honey-600">Transact</span>
+    </a>
+
+    <!-- Wallet -->
+    <a routerLink="/app/wallet" routerLinkActive="text-honey-600" class="flex flex-col items-center justify-center gap-1 text-text-secondary hover:text-honey-600 transition-colors h-full w-full">
+      <lucide-icon [img]="Wallet" class="w-6 h-6"></lucide-icon>
+      <span class="text-[10px] font-medium">Wallet</span>
+    </a>
+
+    <!-- More Menu Trigger -->
+    <button (click)="toggleMenu()" [class.text-honey-600]="isMenuOpen()" class="flex flex-col items-center justify-center gap-1 text-text-secondary hover:text-honey-600 transition-colors h-full w-full">
+      <lucide-icon [img]="Menu" class="w-6 h-6"></lucide-icon>
+      <span class="text-[10px] font-medium">More</span>
+    </button>
+
+  </div>
+</nav>
