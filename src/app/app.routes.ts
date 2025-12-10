@@ -87,6 +87,12 @@ export const routes: Routes = [
         title: 'Transact - HiveFund',
       },
       {
+        path: 'services',
+        loadComponent: () =>
+          import('./pages/services/services.component').then((m) => m.ServicesComponent),
+        title: 'Services - HiveFund',
+      },
+      {
         path: 'learning',
         loadComponent: () =>
           import('./pages/learning/learning-library/learning-library.component').then(

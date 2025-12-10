@@ -12,6 +12,7 @@ import {
   Tag,
   BookOpen,
   ArrowRightLeft,
+  Grid3x3,
 } from 'lucide-angular';
 
 interface NavItem {
@@ -29,6 +30,7 @@ interface NavItem {
 export class BottomNavComponent {
   protected readonly BookOpen = BookOpen;
   protected readonly ArrowRightLeft = ArrowRightLeft;
+  protected readonly Grid3x3 = Grid3x3;
 
   protected readonly navItems: NavItem[] = [
     { label: 'Home', route: '/app/dashboard', icon: Home },
@@ -38,6 +40,7 @@ export class BottomNavComponent {
     // { label: 'Wallet', route: '/app/wallet', icon: Wallet },
     { label: 'Credit', route: '/app/credit', icon: Trophy },
     { label: 'Loans', route: '/app/loans', icon: Banknote },
+    { label: 'Services', route: '/app/services', icon: Grid3x3 },
     { label: 'Learning', route: '/app/learning', icon: BookOpen },
     { label: 'Marketplace', route: '/app/marketplace', icon: Store },
     { label: 'Store', route: '/app/earn/storefront/manage', icon: Tag },

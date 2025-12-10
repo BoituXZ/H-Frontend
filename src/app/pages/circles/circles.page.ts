@@ -62,9 +62,13 @@ export class CirclesPage implements OnInit {
 
     this.circlesService
       .getCircles()
-      .pipe(finalize(() => this.isLoading.set(false)))
+      .pipe(finalize(() => {
+        this.isLoading.set(false);
+        console.log('Circles loading completed');
+      }))
       .subscribe({
         next: (circles) => {
+          console.log('Circles loaded:', circles);
           const active = circles.filter((c) => c.status !== 'completed');
           const completed = circles.filter((c) => c.status === 'completed');
           
@@ -77,14 +81,22 @@ export class CirclesPage implements OnInit {
             
             // Fetch full details for the featured circle
             this.circlesService.getCircleById(first.id).subscribe({
-              next: (detail) => this.featuredCircle.set(detail),
-              error: (err) => console.error('Failed to load featured circle details', err)
+              next: (detail) => {
+                console.log('Featured circle details loaded:', detail);
+                this.featuredCircle.set(detail);
+              },
+              error: (err) => {
+                console.error('Failed to load featured circle details', err);
+                // Set error but don't block the UI
+                this.error.set('Failed to load featured circle details');
+              }
             });
           } else {
             this.otherCircles.set([]);
           }
         },
-        error: () => {
+        error: (err) => {
+          console.error('Error loading circles:', err);
           this.error.set('Failed to load circles. Please try again.');
         },
       });
